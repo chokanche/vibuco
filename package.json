@@ -1,0 +1,27 @@
+{
+  "name": "vibuco",
+  "version": "1.0.0",
+  "description": "Virtual business coach",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next",
+    "build": "next build",
+    "start": "next start"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "masonry-layout": "^4.2.2",
+    "next": "^9.4.4",
+    "next-images": "^1.4.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-grid-gallery": "^0.5.5",
+    "react-image-file-resizer": "^0.2.3",
+    "react-masonry-component": "^6.2.1",
+    "react-medium-image-zoom": "^4.3.0",
+    "react-photo-gallery": "^8.0.0"
+  },
+  "devDependencies": {}
+}
