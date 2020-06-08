@@ -18,6 +18,7 @@ export const photos = [
         background: black1,
         src: myImg1,
         txt : "Some text to be displayed...", 
+        label: ["", "", ""],
         width: 3,
         height: 4
     },
@@ -26,6 +27,7 @@ export const photos = [
         background: black1,
         src: myImg2,
         txt : "Some text to be displayed...", 
+        label: ["", "", ""],
         width: 3,
         height: 4
     },
@@ -34,6 +36,7 @@ export const photos = [
         background: black1,
         src: myImg3,
         txt : "Some text to be displayed...", 
+        label: ["", "", ""],
         width: 4,
         height: 3
     },
@@ -42,6 +45,7 @@ export const photos = [
         background: black1,
         src: myImg11,
         txt : "Some text to be displayed...", 
+        label: ["", "", ""],
         width: 3,
         height: 4
     } ,
@@ -50,6 +54,7 @@ export const photos = [
         background: black1,
         src: myImg5,
         txt : "Some text to be displayed...", 
+        label: ["", "", ""],
         width: 4,
         height: 3
     },
@@ -58,6 +63,7 @@ export const photos = [
         background: black2,
         src: myImg13,
         txt : "Some text to be displayed...", 
+        label: ["", "", ""],
         width: 4,
         height: 3
     },
@@ -66,6 +72,7 @@ export const photos = [
         background: black1,
         src: myImg14,
         txt : "Some text to be displayed...", 
+        label: ["", "", ""],
         width: 3,
         height: 4
     } ,
@@ -74,6 +81,7 @@ export const photos = [
         background: black1,
         src: myImg4,
         txt : "Some text to be displayed...", 
+        label: ["", "", ""],
         width: 3,
         height: 4
     } ,
@@ -82,6 +90,7 @@ export const photos = [
         background: black1,
         src: myImg6,
         txt : "Some text to be displayed...", 
+        label: ["", "", ""],
         width: 4,
         height: 3
     },
@@ -90,6 +99,7 @@ export const photos = [
         background: black2,
         src: myImg12,
         txt : "Some text to be displayed...", 
+        label: ["", "", ""],
         width: 4,
         height: 3
     }  ,
@@ -98,6 +108,7 @@ export const photos = [
         background: black1,
         src: myImg7,
         txt : "Some text to be displayed...", 
+        label: ["", "", ""],
         width: 3,
         height: 4
     } ,
@@ -106,6 +117,7 @@ export const photos = [
         background: black1,
         src: myImg2,
         txt : "Some text to be displayed...", 
+        label: ["", "", ""],
         width: 3,
         height: 4
     } 

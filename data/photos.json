@@ -1,0 +1,119 @@
+{
+"photos": [
+    {
+        "caption": "Water and air",
+        "src": "s3://vibuco-common-photos/Num1.jpg",
+        "txt" : "Some text to be displayed...",
+        "label": ["light", "water", "freedom"]
+    },
+    {
+        "caption": "Water and air",
+        "src": "s3://vibuco-common-photos/Num2.jpg",
+        "txt" : "Some text to be displayed...",
+        "label": ["light", "water", "freedom"]
+    },
+    {
+        "caption": "Water and air",
+        "src": "s3://vibuco-common-photos/Num3.jpg",
+        "txt" : "Some text to be displayed...",
+        "label": ["light", "water", "freedom"]
+    },
+    {
+        "caption": "Water and air",
+        "src": "s3://vibuco-common-photos/Num4.jpg",
+        "txt" : "Some text to be displayed...",
+        "label": ["light", "water", "freedom"]
+    },
+    {
+        "caption": "Water and air",
+        "src": "s3://vibuco-common-photos/Num5.jpg",
+        "txt" : "Some text to be displayed...",
+        "label": ["light", "water", "freedom"]
+    },
+    {
+        "caption": "Water and air",
+        "src": "s3://vibuco-common-photos/Num6.jpg",
+        "txt" : "Some text to be displayed...",
+        "label": ["light", "water", "freedom"]
+    },
+    {
+        "caption": "Water and air",
+        "src": "s3://vibuco-common-photos/Num7.jpg",
+        "txt" : "Some text to be displayed...",
+        "label": ["light", "water", "freedom"]
+    },
+    {
+        "caption": "Water and air",
+        "src": "s3://vibuco-common-photos/Num8.jpg",
+        "txt" : "Some text to be displayed...",
+        "label": ["light", "water", "freedom"]
+    },
+    {
+        "caption": "Water and air",
+        "src": "s3://vibuco-common-photos/Num9.jpg",
+        "txt" : "Some text to be displayed...",
+        "label": ["light", "water", "freedom"]
+    },
+    {
+        "caption": "Water and air",
+        "src": "s3://vibuco-common-photos/Num10.jpg",
+        "txt" : "Some text to be displayed...",
+        "label": ["light", "water", "freedom"]
+    },
+    {
+        "caption": "Water and air",
+        "src": "s3://vibuco-common-photos/Num11.jpg",
+        "txt" : "Some text to be displayed...",
+        "label": ["light", "water", "freedom"]
+    },
+    {
+        "caption": "Water and air",
+        "src": "s3://vibuco-common-photos/Num12.jpg",
+        "txt" : "Some text to be displayed...",
+        "label": ["light", "water", "freedom"]
+    },
+    {
+        "caption": "Water and air",
+        "src": "s3://vibuco-common-photos/Num13.jpg",
+        "txt" : "Some text to be displayed...",
+        "label": ["light", "water", "freedom"]
+    },
+    {
+        "caption": "Water and air",
+        "src": "s3://vibuco-common-photos/Num14.jpg",
+        "txt" : "Some text to be displayed...",
+        "label": ["light", "water", "freedom"]
+    },
+    {
+        "caption": "Water and air",
+        "src": "s3://vibuco-common-photos/Num15.jpg",
+        "txt" : "Some text to be displayed...",
+        "label": ["light", "water", "freedom"]
+    },
+    {
+        "caption": "Water and air",
+        "src": "s3://vibuco-common-photos/Num16.jpg",
+        "txt" : "Some text to be displayed...",
+        "label": ["light", "water", "freedom"]
+    },
+    {
+        "caption": "Water and air",
+        "src": "s3://vibuco-common-photos/Num17.jpg",
+        "txt" : "Some text to be displayed...",
+        "label": ["light", "water", "freedom"]
+    },
+    {
+        "caption": "Water and air",
+        "src": "s3://vibuco-common-photos/Num18.jpg",
+        "txt" : "Some text to be displayed...",
+        "label": ["light", "water", "freedom"]
+    },
+    {
+        "caption": "Water and air",
+        "src": "s3://vibuco-common-photos/Num19.jpg",
+        "txt" : "Some text to be displayed...",
+        "label": ["light", "water", "freedom"]
+    }
+]
+}
+
