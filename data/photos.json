@@ -3,97 +3,97 @@
     {
         "caption": "Water and air",
         "src": "s3://vibuco-common-photos/Num1.jpg",
-        "txt" : "Some text to be displayed...",
+        "txt" : "A wall can be both a barrier and a shield. Where do you put your walls?",
         "label": ["light", "water", "freedom"]
     },
     {
         "caption": "Water and air",
         "src": "s3://vibuco-common-photos/Num2.jpg",
-        "txt" : "Some text to be displayed...",
+        "txt" : "Time is an illusion yet we all run for it. What will happen if you slow down?",
         "label": ["light", "water", "freedom"]
     },
     {
         "caption": "Water and air",
         "src": "s3://vibuco-common-photos/Num3.jpg",
-        "txt" : "Some text to be displayed...",
+        "txt" : "What would you do if time would not exist?",
         "label": ["light", "water", "freedom"]
     },
     {
         "caption": "Water and air",
         "src": "s3://vibuco-common-photos/Num4.jpg",
-        "txt" : "Some text to be displayed...",
+        "txt" : "Imagine that everyone has their start in the sky to protect them. How would you use yours?",
         "label": ["light", "water", "freedom"]
     },
     {
         "caption": "Water and air",
         "src": "s3://vibuco-common-photos/Num5.jpg",
-        "txt" : "Some text to be displayed...",
+        "txt" : "If nothing would stop you, what would you like to achieve?",
         "label": ["light", "water", "freedom"]
     },
     {
         "caption": "Water and air",
         "src": "s3://vibuco-common-photos/Num6.jpg",
-        "txt" : "Some text to be displayed...",
+        "txt" : "What would happen if you choose your desired road?",
         "label": ["light", "water", "freedom"]
     },
     {
         "caption": "Water and air",
         "src": "s3://vibuco-common-photos/Num7.jpg",
-        "txt" : "Some text to be displayed...",
+        "txt" : "What is the piece of puzzle that is missing?",
         "label": ["light", "water", "freedom"]
     },
     {
         "caption": "Water and air",
         "src": "s3://vibuco-common-photos/Num8.jpg",
-        "txt" : "Some text to be displayed...",
+        "txt" : "What is a question you need to ask yourself in order to move forward?",
         "label": ["light", "water", "freedom"]
     },
     {
         "caption": "Water and air",
         "src": "s3://vibuco-common-photos/Num9.jpg",
-        "txt" : "Some text to be displayed...",
+        "txt" : "How does it look when you are gentle towards yourself?",
         "label": ["light", "water", "freedom"]
     },
     {
         "caption": "Water and air",
         "src": "s3://vibuco-common-photos/Num10.jpg",
-        "txt" : "Some text to be displayed...",
+        "txt" : "You came so far and there is alway question of what comes after. How are you going to celebrate?",
         "label": ["light", "water", "freedom"]
     },
     {
         "caption": "Water and air",
         "src": "s3://vibuco-common-photos/Num11.jpg",
-        "txt" : "Some text to be displayed...",
+        "txt" : "If you would alway have a good like what you would be ready to do?",
         "label": ["light", "water", "freedom"]
     },
     {
         "caption": "Water and air",
         "src": "s3://vibuco-common-photos/Num12.jpg",
-        "txt" : "Some text to be displayed...",
+        "txt" : "If you knew you would succeed, what would you stop doing?",
         "label": ["light", "water", "freedom"]
     },
     {
         "caption": "Water and air",
         "src": "s3://vibuco-common-photos/Num13.jpg",
-        "txt" : "Some text to be displayed...",
+        "txt" : "What kind of role would you like to play in your life?",
         "label": ["light", "water", "freedom"]
     },
     {
         "caption": "Water and air",
         "src": "s3://vibuco-common-photos/Num14.jpg",
-        "txt" : "Some text to be displayed...",
+        "txt" : "If you would with curiosity of a child think about possible outcomes, what all comes to your mind?",
         "label": ["light", "water", "freedom"]
     },
     {
         "caption": "Water and air",
         "src": "s3://vibuco-common-photos/Num15.jpg",
-        "txt" : "Some text to be displayed...",
+        "txt" : "If you would look at your life from the eyes of a stranger. What you would see?",
         "label": ["light", "water", "freedom"]
     },
     {
         "caption": "Water and air",
         "src": "s3://vibuco-common-photos/Num16.jpg",
-        "txt" : "Some text to be displayed...",
+        "txt" : "If you take a bird's perspective how do you see things now?",
         "label": ["light", "water", "freedom"]
     },
     {
@@ -116,4 +116,5 @@
     }
 ]
 }
-
+    
+    
