@@ -3,20 +3,30 @@ import Layout from '../components/Layout';
 import { photos } from "../components/photos";
 import { background } from "../components/backgrounds";
 import Gallery from "react-photo-gallery";
+import Popup from '../components/Popup';
 
 class Index extends React.Component {
     constructor(props) {
         super(props);
         this.flipp = this.flipp.bind(this);
+        this.openLightbox = this.openLightbox.bind(this);
+        this.closePopup = this.closePopup.bind(this);
         this.state = {
-            currentImage: 0,
+            currentImageIndex: 0,
             images: photos,
             imageBackgrounds: background,
             isFlipped: true,
+            isPopup: false
         };
       }
     flipp() {
         this.setState({isFlipped: !this.state.isFlipped});
+    }
+    openLightbox(_, { index }) {
+        this.setState({ currentImageIndex: index, isPopup: true });
+    }
+    closePopup() {
+        this.setState({ isPopup: false });
     }
     render() {
         const flipped = this.state.isFlipped;
@@ -38,9 +48,10 @@ class Index extends React.Component {
                     </div>
                     <button onClick={this.flipp}>Flip cards</button>
                     {flipped
-                        ? <Gallery photos = {imagesRendered} onClick={this.openLightbox} />
-                        : <Gallery photos= {imageBackgroundsRendered} onClick={this.openLightbox} />
+                        ? <Gallery photos={imagesRendered} onClick={this.openLightbox} />
+                        : <Gallery photos={imageBackgroundsRendered} onClick={this.openLightbox} />
                     }
+                    <Popup imgPath={this.state.images[this.state.currentImageIndex].src} isOpen={this.state.isPopup} onClose={this.closePopup} />
                 </Layout>
             </>
     }
