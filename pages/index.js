@@ -8,9 +8,7 @@ import Popup from '../components/Popup';
 class Index extends React.Component {
     constructor(props) {
         super(props);
-        this.flipp = this.flipp.bind(this);
-        this.openLightbox = this.openLightbox.bind(this);
-        this.closePopup = this.closePopup.bind(this);
+
         this.state = {
             currentImageIndex: 0,
             images: photos,
@@ -18,6 +16,11 @@ class Index extends React.Component {
             isFlipped: true,
             isPopup: false
         };
+
+        this.flipp = this.flipp.bind(this);
+        this.openLightbox = this.openLightbox.bind(this);
+        this.closePopup = this.closePopup.bind(this);
+
       }
     flipp() {
         this.setState({isFlipped: !this.state.isFlipped});
@@ -32,6 +35,7 @@ class Index extends React.Component {
         const flipped = this.state.isFlipped;
         const imagesRendered = this.state.images;
         const imageBackgroundsRendered = this.state.imageBackgrounds;
+        const currentImage = this.state.images[this.state.currentImageIndex];
         return <>
                 <Layout>
                     <style jsx>{`
@@ -51,7 +55,7 @@ class Index extends React.Component {
                         ? <Gallery photos={imagesRendered} onClick={this.openLightbox} />
                         : <Gallery photos={imageBackgroundsRendered} onClick={this.openLightbox} />
                     }
-                    <Popup imgPath={this.state.images[this.state.currentImageIndex].src} isOpen={this.state.isPopup} onClose={this.closePopup} />
+                    {this.state.isPopup ? <Popup imgPath={currentImage.src} txt={currentImage.txt} onClose={this.closePopup} /> : null}
                 </Layout>
             </>
     }

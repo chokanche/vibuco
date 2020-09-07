@@ -1,4 +1,8 @@
-const Popup = ({ imgPath, isOpen, onClose }) => {
+import { useEffect, useRef, useState } from "react";
+
+const Popup = ({ imgPath, txt, onClose }) => {
+  const [isSideBySide, setSideBySide] = useState(false);
+  const imgRef = useRef();
 
   const handleClose = e => {
     if (e.target.classList.contains('popup-container')) {
@@ -6,11 +10,35 @@ const Popup = ({ imgPath, isOpen, onClose }) => {
     }
   }
 
-  return isOpen ? (
+  const getImageAspectRatio = () => {
+    const { width, height } = imgRef.current;
+
+    return width / height;
+  }
+
+  useEffect(() => {
+    const ratio = getImageAspectRatio();
+
+    console.log(ratio);
+
+    if (ratio <= 1) {
+      setSideBySide(true);
+    } else {
+      setSideBySide(false);
+    }
+  }, []);
+
+  return (
     <>
       <div onClick={handleClose} className="popup-container">
-        <div className="popup">
-          <img src={imgPath} alt=""/>
+        <div className={`popup ${isSideBySide ? 'popup-sidebyside' : ''}`}>
+          <div className="image-container">
+            <img ref={imgRef} src={imgPath} alt=""/>
+          </div>
+
+          <div className="text-container">
+            <p>{txt}</p>
+          </div>
         </div>
       </div>
 
@@ -32,6 +60,21 @@ const Popup = ({ imgPath, isOpen, onClose }) => {
           padding: 5px;
         }
 
+        .popup.popup-sidebyside {
+          display: flex;
+        }
+
+        .popup .text-container {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          padding: 20px;
+        }
+
+        .popup.popup-sidebyside .text-container {
+          max-width: 265px;
+        }
+
         .popup img {
           max-width: 500px;
           max-height: 500px;
@@ -39,7 +82,7 @@ const Popup = ({ imgPath, isOpen, onClose }) => {
 
       `}</style>
     </>
-  ): null;
+  )
 }
 
 export default Popup;
