@@ -58,6 +58,7 @@ const Popup = ({ imgPath, txt, onClose }) => {
         .popup {
           background-color: white;
           padding: 5px;
+          margin: 15px;
         }
 
         .popup.popup-sidebyside {
@@ -76,8 +77,15 @@ const Popup = ({ imgPath, txt, onClose }) => {
         }
 
         .popup img {
-          max-width: 500px;
-          max-height: 500px;
+          width: 100%;
+          max-width: 700px;
+          max-height: 700px;
+        }
+
+        @media(min-width: 720px) {
+          .popup img {
+            width: auto;
+          }
         }
 
       `}</style>
