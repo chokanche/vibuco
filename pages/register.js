@@ -1,17 +1,19 @@
-import Layout from "../components/Layout";
+import React from 'react'
+import Layout from '../components/Layout';
 import Link from 'next/link';
 
-const Login = () => {
-  const onSubmit = (e) => {
+const Register = () => {
+  const onSubmit = e => {
     e.preventDefault();
-    console.log("submit!");
-  };
+    console.log('submit!');
+  }
 
   return (
     <Layout>
       <div className="container my-5">
         <div className="grid">
           <div style={{margin: '0 auto'}} className="grid-item col-md-6">
+            <h2 className="mb-5">Register for Vibuco</h2>
             <form onSubmit={onSubmit}>
               <div className="form-group">
                 <label for="email">Email address</label>
@@ -34,19 +36,19 @@ const Login = () => {
                 />
               </div>
               <button type="submit" className="btn btn-primary">
-                Log in
+                Register
               </button>
             </form>
 
             <div className="mt-5">
-              <Link href="/register"><a>Register</a></Link>
+              <Link href="/login"><a>Login</a></Link>
             </div>
 
           </div>
         </div>
       </div>
     </Layout>
-  );
-};
+  )
+}
 
-export default Login;
+export default Register
