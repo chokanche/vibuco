@@ -1,13 +1,8 @@
 import Layout from "../components/Layout";
 import Link from 'next/link';
-import { useAuthFunctions } from 'aws-cognito-next';
 import NotLoggedIn from '../components/auth/NotLoggedIn';
-import { useAuth } from "./_auth";
 
 const Login = () => {
-  const auth = useAuth(null);
-  const { login } = useAuthFunctions();
-
   const onSubmit = (e) => {
     e.preventDefault();
     console.log("submit!");
@@ -48,9 +43,7 @@ const Login = () => {
           <div className="grid">
             <div style={{margin: '0 auto'}} className="grid-item col-md-6">
               
-              {/* {showForm()} */}
-
-              {!auth ? <button onClick={login} className="btn btn-primary">Login</button> : null }
+              {showForm()}
 
               <div className="mt-5">
                 <Link href="/register"><a>Register</a></Link>
