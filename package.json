@@ -6,14 +6,19 @@
   "scripts": {
     "dev": "next",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "pems:prepare": "prepare-pems --region $USER_POOL_REGION --userPoolId $USER_POOL_ID"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@aws-amplify/auth": "^3.4.1",
+    "@aws-amplify/core": "^3.5.1",
+    "aws-cognito-next": "^3.0.0",
+    "dotenv": "^8.2.0",
     "masonry-layout": "^4.2.2",
-    "next": "^9.4.4",
+    "next": "^9.5.3",
     "next-images": "^1.4.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
