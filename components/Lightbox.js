@@ -1,20 +1,20 @@
 import { useEffect, useRef, useState } from "react";
 
-const Popup = ({ imgPath, txt, onClose }) => {
+const Lightbox = ({ imgPath, txt, onClose }) => {
   const [isSideBySide, setSideBySide] = useState(false);
   const imgRef = useRef();
 
-  const handleClose = e => {
-    if (e.target.classList.contains('popup-container')) {
+  const handleClose = (e) => {
+    if (e.target.classList.contains("popup-container")) {
       onClose();
     }
-  }
+  };
 
   const getImageAspectRatio = () => {
     const { width, height } = imgRef.current;
 
     return width / height;
-  }
+  };
 
   useEffect(() => {
     const ratio = getImageAspectRatio();
@@ -31,9 +31,9 @@ const Popup = ({ imgPath, txt, onClose }) => {
   return (
     <>
       <div onClick={handleClose} className="popup-container">
-        <div className={`popup ${isSideBySide ? 'popup-sidebyside' : ''}`}>
+        <div className={`popup ${isSideBySide ? "popup-sidebyside" : ""}`}>
           <div className="image-container">
-            <img ref={imgRef} src={imgPath} alt=""/>
+            <img ref={imgRef} src={imgPath} alt="" />
           </div>
 
           <div className="text-container">
@@ -82,15 +82,14 @@ const Popup = ({ imgPath, txt, onClose }) => {
           max-height: 700px;
         }
 
-        @media(min-width: 720px) {
+        @media (min-width: 720px) {
           .popup img {
             width: auto;
           }
         }
-
       `}</style>
     </>
-  )
-}
+  );
+};
 
-export default Popup;
+export default Lightbox;
