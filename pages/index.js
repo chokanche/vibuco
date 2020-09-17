@@ -1,16 +1,42 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Layout from "../components/Layout";
-import { photos } from "../components/photos";
 import { background } from "../components/backgrounds";
 import Gallery from "react-photo-gallery";
 import Lightbox from "../components/Lightbox";
+import { useAuth } from "./_auth";
+import getDataFromDDBTable from "../actions/getDataFromDDBTable";
+import s3UrlToHttps from "../helpers/s3UrlToHttps";
+import { PUBLIC_BUCKET_NAME } from "../config";
 
 const Index = () => {
+  const auth = useAuth(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [images, setImages] = useState(photos);
+  const [images, setImages] = useState([]);
   const [imageBackgrounds, setImageBackgrounds] = useState(background);
   const [isFlipped, setFlipped] = useState(false);
   const [isLightbox, setLightbox] = useState(false);
+
+  const fetchPublicImagesData = async () => {
+    const imageData = await getDataFromDDBTable("vibuco-photos-public");
+    const imageDataWithImageSources = imageData.map((img) => {
+      img.src = s3UrlToHttps(img.src, PUBLIC_BUCKET_NAME);
+      return img;
+    });
+
+    setImages(imageDataWithImageSources);
+  };
+
+  const fetchCommonImagesData = async () => {
+    // TODO
+  };
+
+  useEffect(() => {
+    if (!auth) {
+      fetchPublicImagesData();
+    } else {
+      fetchCommonImagesData();
+    }
+  }, [auth]);
 
   const flip = () => setFlipped((prevState) => !prevState);
 
@@ -24,7 +50,25 @@ const Index = () => {
   const currentImage = images[currentImageIndex];
 
   return (
-    <Layout>
+    <>
+      <Layout>
+        <div>
+          <h1>Welcome to Virtual Business Coach!</h1>
+        </div>
+        <button onClick={flip}>Flip cards</button>
+        {isFlipped ? (
+          <Gallery photos={imageBackgrounds} onClick={openLightbox} />
+        ) : (
+          <Gallery photos={images} onClick={openLightbox} />
+        )}
+        {isLightbox ? (
+          <Lightbox
+            imgPath={currentImage.src}
+            txt={currentImage.txt}
+            onClose={closeLightbox}
+          />
+        ) : null}
+      </Layout>
       <style jsx>
         {`
           h1 {
@@ -33,23 +77,7 @@ const Index = () => {
           }
         `}
       </style>
-      <div>
-        <h1>Welcome to Virtual Business Coach!</h1>
-      </div>
-      <button onClick={flip}>Flip cards</button>
-      {isFlipped ? (
-        <Gallery photos={imageBackgrounds} onClick={openLightbox} />
-      ) : (
-        <Gallery photos={images} onClick={openLightbox} />
-      )}
-      {isLightbox ? (
-        <Lightbox
-          imgPath={currentImage.src}
-          txt={currentImage.txt}
-          onClose={closeLightbox}
-        />
-      ) : null}
-    </Layout>
+    </>
   );
 };
 
