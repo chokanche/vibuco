@@ -56,11 +56,13 @@ const Index = () => {
           <h1>Welcome to Virtual Business Coach!</h1>
         </div>
         <button onClick={flip}>Flip cards</button>
+
         {isFlipped ? (
           <Gallery photos={imageBackgrounds} onClick={openLightbox} />
-        ) : (
-          <Gallery photos={images} onClick={openLightbox} />
-        )}
+        ) : null}
+
+        {!isFlipped ? <Gallery photos={images} onClick={openLightbox} /> : null}
+
         {isLightbox ? (
           <Lightbox
             imgPath={currentImage.src}
