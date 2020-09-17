@@ -19,8 +19,6 @@ const Lightbox = ({ imgPath, txt, onClose }) => {
   useEffect(() => {
     const ratio = getImageAspectRatio();
 
-    console.log(ratio);
-
     if (ratio <= 1) {
       setSideBySide(true);
     } else {
