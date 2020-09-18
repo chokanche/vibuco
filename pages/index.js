@@ -3,13 +3,13 @@ import Layout from "../components/Layout";
 import { background } from "../components/backgrounds";
 import Gallery from "react-photo-gallery";
 import Lightbox from "../components/Lightbox";
-import { useAuth } from "./_auth";
+import { getServerSideAuth, useAuth } from "./_auth";
 import getDataFromDDBTable from "../actions/getDataFromDDBTable";
 import s3UrlToHttps from "../helpers/s3UrlToHttps";
 import { PUBLIC_BUCKET_NAME } from "../config";
 
-const Index = () => {
-  const auth = useAuth(null);
+const Index = ({ initialAuth }) => {
+  const auth = useAuth(initialAuth);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [images, setImages] = useState([]);
   const [imageBackgrounds, setImageBackgrounds] = useState(background);
@@ -27,7 +27,9 @@ const Index = () => {
   };
 
   const fetchCommonImagesData = async () => {
-    // TODO
+    const imageData = await getDataFromDDBTable("vibuco-photos-common");
+
+    console.log(imageData);
   };
 
   useEffect(() => {
@@ -36,7 +38,7 @@ const Index = () => {
     } else {
       fetchCommonImagesData();
     }
-  }, [auth]);
+  }, []);
 
   const flip = () => setFlipped((prevState) => !prevState);
 
@@ -81,6 +83,12 @@ const Index = () => {
       </style>
     </>
   );
+};
+
+export const getServerSideProps = async (ctx) => {
+  const initialAuth = getServerSideAuth(ctx.req);
+
+  return { props: { initialAuth } };
 };
 
 export default Index;
