@@ -9,9 +9,12 @@ These are:
 
 ```
 IDP_DOMAIN=<domain>
+PUBLIC_BUCKET_NAME='vibuco-public-photos'
+COMMON_BUCKET_NAME='vibuco-common-photos'
 USER_POOL_REGION=<region>
 USER_POOL_ID=<pool_id>
 USER_POOL_CLIENT_ID=<client_id>
+IDENTITY_POOL_ID='<identity-pool-id>'
 REDIRECT_SIGN_IN=<domain>
 REDIRECT_SIGN_OUT=<domain>
 AUTH_COOKIE_DOMAIN=<domain_name>
