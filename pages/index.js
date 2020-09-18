@@ -9,10 +9,12 @@ import s3UrlToHttps from "../helpers/s3UrlToHttps";
 import presignImageSources from "../helpers/presignImageSources";
 import { PUBLIC_BUCKET_NAME, COMMON_BUCKET_NAME } from "../config";
 import getImageAspectRatio from "../helpers/getImageAspectRatio";
+import Loading from "../components/Loading";
 
 const Index = ({ initialAuth }) => {
   const auth = useAuth(initialAuth);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isLoading, setLoading] = useState(true);
   const [images, setImages] = useState([]);
   const [imageBackgrounds, setImageBackgrounds] = useState(background);
   const [isFlipped, setFlipped] = useState(false);
@@ -48,6 +50,7 @@ const Index = ({ initialAuth }) => {
     const imagesWithWidth = await getImageWidths(imageDataWithSources);
 
     setImages(imagesWithWidth);
+    setLoading(false);
   };
 
   const fetchCommonImagesData = async () => {
@@ -64,6 +67,7 @@ const Index = ({ initialAuth }) => {
     console.log(imagesWithWidth);
 
     setImages(imagesWithWidth);
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -92,6 +96,8 @@ const Index = ({ initialAuth }) => {
           <h1>Welcome to Virtual Business Coach!</h1>
         </div>
         <button onClick={flip}>Flip cards</button>
+
+        {isLoading ? <Loading /> : null}
 
         {isFlipped ? (
           <Gallery photos={imageBackgrounds} onClick={openLightbox} />
