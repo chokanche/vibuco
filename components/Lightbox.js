@@ -1,8 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
+import getImageAspectRatio from "../helpers/getImageAspectRatio";
 
 const Lightbox = ({ imgPath, txt, onClose }) => {
   const [isSideBySide, setSideBySide] = useState(false);
-  const imgRef = useRef();
 
   const handleClose = (e) => {
     if (e.target.classList.contains("popup-container")) {
@@ -10,20 +10,14 @@ const Lightbox = ({ imgPath, txt, onClose }) => {
     }
   };
 
-  const getImageAspectRatio = () => {
-    const { width, height } = imgRef.current;
+  const setRatioSideBySide = async () => {
+    const ratio = await getImageAspectRatio(imgPath);
 
-    return width / height;
+    setSideBySide(ratio <= 1);
   };
 
   useEffect(() => {
-    const ratio = getImageAspectRatio();
-
-    if (ratio <= 1) {
-      setSideBySide(true);
-    } else {
-      setSideBySide(false);
-    }
+    setRatioSideBySide();
   }, []);
 
   return (
@@ -31,7 +25,7 @@ const Lightbox = ({ imgPath, txt, onClose }) => {
       <div onClick={handleClose} className="popup-container">
         <div className={`popup ${isSideBySide ? "popup-sidebyside" : ""}`}>
           <div className="image-container">
-            <img ref={imgRef} src={imgPath} alt="" />
+            <img src={imgPath} alt="" />
           </div>
 
           <div className="text-container">
@@ -57,6 +51,7 @@ const Lightbox = ({ imgPath, txt, onClose }) => {
           background-color: white;
           padding: 5px;
           margin: 15px;
+          max-width: 710px;
         }
 
         .popup.popup-sidebyside {
