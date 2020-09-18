@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Layout from "../components/Layout";
-import { background } from "../components/backgrounds";
+import { background } from "../backgrounds";
 import Gallery from "react-photo-gallery";
 import Lightbox from "../components/Lightbox";
 import { getServerSideAuth, useAuth } from "../auth";
