@@ -10,11 +10,13 @@ import presignImageSources from "../helpers/presignImageSources";
 import { PUBLIC_BUCKET_NAME, COMMON_BUCKET_NAME } from "../config";
 import getImageAspectRatio from "../helpers/getImageAspectRatio";
 import Loading from "../components/Loading";
+import Container from "../components/grid/Container";
 
 const Index = ({ initialAuth }) => {
   const auth = useAuth(initialAuth);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isLoading, setLoading] = useState(true);
+  const [showText, setShowText] = useState(true);
   const [images, setImages] = useState([]);
   const [imageBackgrounds, setImageBackgrounds] = useState(background);
   const [isFlipped, setFlipped] = useState(false);
@@ -64,8 +66,6 @@ const Index = ({ initialAuth }) => {
 
     const imagesWithWidth = await getImageWidths(imageWithPresignedUrls);
 
-    console.log(imagesWithWidth);
-
     setImages(imagesWithWidth);
     setLoading(false);
   };
@@ -77,6 +77,10 @@ const Index = ({ initialAuth }) => {
       fetchCommonImagesData();
     }
   }, []);
+
+  const toggleTextSwitch = () => {
+    setShowText((prevShowText) => !prevShowText);
+  };
 
   const flip = () => setFlipped((prevState) => !prevState);
 
@@ -95,7 +99,35 @@ const Index = ({ initialAuth }) => {
         <div>
           <h1>Welcome to Virtual Business Coach!</h1>
         </div>
-        <button onClick={flip}>Flip cards</button>
+
+        {!isLoading ? (
+          <Container className="my-5" xs="12">
+            <div className="d-flex align-items-center justify-content-center">
+              <button
+                className={`btn ${isFlipped ? "btn-dark" : "btn-light"}`}
+                onClick={flip}
+              >
+                Flip cards
+              </button>
+
+              <div
+                onChange={toggleTextSwitch}
+                style={{ position: "absolute", right: 0 }}
+                className="custom-control custom-switch"
+              >
+                <input
+                  type="checkbox"
+                  className="custom-control-input"
+                  id="customSwitch1"
+                  checked={showText}
+                />
+                <label className="custom-control-label" htmlFor="customSwitch1">
+                  Show image question
+                </label>
+              </div>
+            </div>
+          </Container>
+        ) : null}
 
         {isLoading ? <Loading /> : null}
 
@@ -110,6 +142,7 @@ const Index = ({ initialAuth }) => {
             imgPath={currentImage.src}
             txt={currentImage.txt}
             onClose={closeLightbox}
+            showText={showText}
           />
         ) : null}
       </Layout>

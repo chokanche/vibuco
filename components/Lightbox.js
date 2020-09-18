@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import getImageAspectRatio from "../helpers/getImageAspectRatio";
 
-const Lightbox = ({ imgPath, txt, onClose }) => {
+const Lightbox = ({ imgPath, txt, onClose, showText }) => {
   const [isSideBySide, setSideBySide] = useState(false);
 
   const handleClose = (e) => {
@@ -28,9 +28,11 @@ const Lightbox = ({ imgPath, txt, onClose }) => {
             <img src={imgPath} alt="" />
           </div>
 
-          <div className="text-container">
-            <p>{txt}</p>
-          </div>
+          {showText ? (
+            <div className="text-container">
+              <p>{txt}</p>
+            </div>
+          ) : null}
         </div>
       </div>
 
@@ -45,6 +47,7 @@ const Lightbox = ({ imgPath, txt, onClose }) => {
           display: flex;
           align-items: center;
           justify-content: center;
+          z-index: 2;
         }
 
         .popup {
