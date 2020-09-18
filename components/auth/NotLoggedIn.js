@@ -1,5 +1,5 @@
-import React from 'react'
-import { useAuth } from '../../pages/_auth';
+import React from "react";
+import { useAuth } from "../../_auth";
 import { useEffect } from "react";
 import Router from "next/router";
 
@@ -10,11 +10,11 @@ const NotLoggedIn = ({ children }) => {
 
   useEffect(() => {
     if (auth) {
-      Router.replace('/');
+      Router.replace("/");
     }
   }, [auth]);
 
-  return children
-}
+  return children;
+};
 
-export default NotLoggedIn
+export default NotLoggedIn;

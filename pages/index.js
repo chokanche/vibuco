@@ -3,7 +3,7 @@ import Layout from "../components/Layout";
 import { background } from "../components/backgrounds";
 import Gallery from "react-photo-gallery";
 import Lightbox from "../components/Lightbox";
-import { getServerSideAuth, useAuth } from "./_auth";
+import { getServerSideAuth, useAuth } from "../_auth";
 import getDataFromDDBTable from "../actions/getDataFromDDBTable";
 import s3UrlToHttps from "../helpers/s3UrlToHttps";
 import { PUBLIC_BUCKET_NAME } from "../config";

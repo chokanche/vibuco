@@ -1,9 +1,6 @@
 import React from "react";
 import { useRouter } from "next/router";
 
-// Here we import useAuthRedirect from _auth.tsx, instead
-// of from aws-cognito-next.
-// We created that file in the previous step.
 import { useAuthRedirect } from "aws-cognito-next";
 import Layout from "../components/Layout";
 
