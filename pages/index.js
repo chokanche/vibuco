@@ -110,21 +110,26 @@ const Index = ({ initialAuth }) => {
                 Flip cards
               </button>
 
-              <div
-                onChange={toggleTextSwitch}
-                style={{ position: "absolute", right: 0 }}
-                className="custom-control custom-switch"
-              >
-                <input
-                  type="checkbox"
-                  className="custom-control-input"
-                  id="customSwitch1"
-                  checked={showText}
-                />
-                <label className="custom-control-label" htmlFor="customSwitch1">
-                  Show image question
-                </label>
-              </div>
+              {auth ? (
+                <div
+                  onChange={toggleTextSwitch}
+                  style={{ position: "absolute", right: 0 }}
+                  className="custom-control custom-switch"
+                >
+                  <input
+                    type="checkbox"
+                    className="custom-control-input"
+                    id="customSwitch1"
+                    checked={showText}
+                  />
+                  <label
+                    className="custom-control-label"
+                    htmlFor="customSwitch1"
+                  >
+                    Show image question
+                  </label>
+                </div>
+              ) : null}
             </div>
           </Container>
         ) : null}
