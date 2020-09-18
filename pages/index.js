@@ -41,7 +41,10 @@ const Index = ({ initialAuth }) => {
   };
 
   const fetchCommonImagesData = async () => {
-    const imageData = await getDataFromDDBTable("vibuco-photos-common");
+    const imageData = await getDataFromDDBTable(
+      "vibuco-photos-common",
+      auth.idToken
+    );
 
     console.log(imageData);
   };
