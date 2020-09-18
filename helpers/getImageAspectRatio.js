@@ -3,6 +3,7 @@ const getImageAspectRatio = (imgPath) => {
     const img = new Image();
 
     img.onload = () => {
+      console.log("hi");
       const { height, width } = img;
 
       const ratio = width / height;

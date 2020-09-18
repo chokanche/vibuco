@@ -7,6 +7,7 @@ import { getServerSideAuth, useAuth } from "./_auth";
 import getDataFromDDBTable from "../actions/getDataFromDDBTable";
 import s3UrlToHttps from "../helpers/s3UrlToHttps";
 import { PUBLIC_BUCKET_NAME } from "../config";
+import getImageAspectRatio from "../helpers/getImageAspectRatio";
 
 const Index = ({ initialAuth }) => {
   const auth = useAuth(initialAuth);
@@ -16,14 +17,27 @@ const Index = ({ initialAuth }) => {
   const [isFlipped, setFlipped] = useState(false);
   const [isLightbox, setLightbox] = useState(false);
 
+  const getImageWidths = async (imgData) => {
+    const promises = imgData.map(async (img) => ({
+      ...img,
+      height: 1,
+      width: await getImageAspectRatio(img.src),
+    }));
+
+    return await Promise.all(promises);
+  };
+
   const fetchPublicImagesData = async () => {
     const imageData = await getDataFromDDBTable("vibuco-photos-public");
-    const imageDataWithImageSources = imageData.map((img) => {
-      img.src = s3UrlToHttps(img.src, PUBLIC_BUCKET_NAME);
-      return img;
-    });
 
-    setImages(imageDataWithImageSources);
+    const imageDataWithSources = imageData.map((img) => ({
+      ...img,
+      src: s3UrlToHttps(img.src, PUBLIC_BUCKET_NAME),
+    }));
+
+    const imagesWithWidth = await getImageWidths(imageDataWithSources);
+
+    setImages(imagesWithWidth);
   };
 
   const fetchCommonImagesData = async () => {
