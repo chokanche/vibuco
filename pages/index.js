@@ -6,7 +6,8 @@ import Lightbox from "../components/Lightbox";
 import { getServerSideAuth, useAuth } from "../auth";
 import getDataFromDDBTable from "../actions/getDataFromDDBTable";
 import s3UrlToHttps from "../helpers/s3UrlToHttps";
-import { PUBLIC_BUCKET_NAME } from "../config";
+import presignImageSources from "../helpers/presignImageSources";
+import { PUBLIC_BUCKET_NAME, COMMON_BUCKET_NAME } from "../config";
 import getImageAspectRatio from "../helpers/getImageAspectRatio";
 
 const Index = ({ initialAuth }) => {
@@ -21,19 +22,28 @@ const Index = ({ initialAuth }) => {
     const promises = imgData.map(async (img) => ({
       ...img,
       height: 1,
-      width: await getImageAspectRatio(img.src),
+      width: await getImageAspectRatio(img.src).catch((err) => {
+        return 1;
+      }),
     }));
 
     return await Promise.all(promises);
   };
 
+  const convertSourcesToHttps = (data, bucketName) => {
+    return data.map((img) => ({
+      ...img,
+      src: s3UrlToHttps(img.src, bucketName),
+    }));
+  };
+
   const fetchPublicImagesData = async () => {
     const imageData = await getDataFromDDBTable("vibuco-photos-public");
 
-    const imageDataWithSources = imageData.map((img) => ({
-      ...img,
-      src: s3UrlToHttps(img.src, PUBLIC_BUCKET_NAME),
-    }));
+    const imageDataWithSources = convertSourcesToHttps(
+      imageData,
+      PUBLIC_BUCKET_NAME
+    );
 
     const imagesWithWidth = await getImageWidths(imageDataWithSources);
 
@@ -41,12 +51,19 @@ const Index = ({ initialAuth }) => {
   };
 
   const fetchCommonImagesData = async () => {
-    const imageData = await getDataFromDDBTable(
-      "vibuco-photos-common",
-      auth.idToken
+    const imageData = await getDataFromDDBTable("vibuco-photos", auth.idToken);
+
+    const imageWithPresignedUrls = await presignImageSources(
+      imageData,
+      COMMON_BUCKET_NAME,
+      auth
     );
 
-    console.log(imageData);
+    const imagesWithWidth = await getImageWidths(imageWithPresignedUrls);
+
+    console.log(imagesWithWidth);
+
+    setImages(imagesWithWidth);
   };
 
   useEffect(() => {

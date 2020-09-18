@@ -4,7 +4,7 @@ import AWS from "../aws.config";
 const getCredentials = (token) => {
   AWS.config.credentials = new AWS.CognitoIdentityCredentials({
     IdentityPoolId: IDENTITY_POOL_ID,
-    Login: token
+    Logins: token
       ? {
           [`cognito-idp.${USER_POOL_REGION}.amazonaws.com/${USER_POOL_ID}`]: token,
         }
@@ -16,8 +16,6 @@ const getCredentials = (token) => {
 
 const getDataFromDDBTable = (tableName, token) => {
   const credentials = getCredentials(token);
-
-  console.log(token);
 
   return new Promise((resolve) => {
     credentials.get((err) => {
