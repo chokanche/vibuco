@@ -1,6 +1,6 @@
 import logo from "../public/logo.png";
 import { useAuthFunctions } from "aws-cognito-next";
-import { useAuth } from "../_auth";
+import { useAuth } from "../auth";
 
 const Navbar = () => {
   const auth = useAuth(null);

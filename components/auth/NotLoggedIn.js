@@ -1,5 +1,5 @@
 import React from "react";
-import { useAuth } from "../../_auth";
+import { useAuth } from "../../auth";
 import { useEffect } from "react";
 import Router from "next/router";
 
