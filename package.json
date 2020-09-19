@@ -19,6 +19,7 @@
     "aws-cognito-next": "^3.0.0",
     "aws-sdk": "^2.751.0",
     "dotenv": "^8.2.0",
+    "lodash": "^4.17.20",
     "masonry-layout": "^4.2.2",
     "next": "^9.5.3",
     "next-images": "^1.4.0",

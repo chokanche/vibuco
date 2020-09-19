@@ -11,6 +11,7 @@ import { PUBLIC_BUCKET_NAME, COMMON_BUCKET_NAME } from "../config";
 import getImageAspectRatio from "../helpers/getImageAspectRatio";
 import Loading from "../components/Loading";
 import Container from "../components/grid/Container";
+import _ from "lodash";
 
 const Index = ({ initialAuth }) => {
   const auth = useAuth(initialAuth);
@@ -51,7 +52,7 @@ const Index = ({ initialAuth }) => {
 
     const imagesWithWidth = await getImageWidths(imageDataWithSources);
 
-    setImages(imagesWithWidth);
+    setImages(_.shuffle(imagesWithWidth));
     setLoading(false);
   };
 
@@ -66,7 +67,7 @@ const Index = ({ initialAuth }) => {
 
     const imagesWithWidth = await getImageWidths(imageWithPresignedUrls);
 
-    setImages(imagesWithWidth);
+    setImages(_.shuffle(imagesWithWidth));
     setLoading(false);
   };
 
@@ -77,6 +78,12 @@ const Index = ({ initialAuth }) => {
       fetchCommonImagesData();
     }
   }, []);
+
+  useEffect(() => {
+    if (!isFlipped) {
+      setImages((prevImgs) => _.shuffle(prevImgs));
+    }
+  }, [isFlipped]);
 
   const toggleTextSwitch = () => {
     setShowText((prevShowText) => !prevShowText);
@@ -101,35 +108,35 @@ const Index = ({ initialAuth }) => {
         </div>
 
         {!isLoading ? (
-          <Container className="my-5" xs="12">
-            <div className="d-flex align-items-center justify-content-center">
-              <button
-                className={`btn ${isFlipped ? "btn-dark" : "btn-light"}`}
-                onClick={flip}
-              >
-                Flip cards
-              </button>
-
-              {auth ? (
-                <div
-                  onChange={toggleTextSwitch}
-                  style={{ position: "absolute", right: 0 }}
-                  className="custom-control custom-switch"
+          <Container className="mt-5 mb-4" xs="12">
+            <div className="d-flex align-items-center justify-content-end text-right">
+              <div>
+                <button
+                  className={`btn mb-4 ${isFlipped ? "btn-dark" : "btn-light"}`}
+                  onClick={flip}
                 >
-                  <input
-                    type="checkbox"
-                    className="custom-control-input"
-                    id="customSwitch1"
-                    checked={showText}
-                  />
-                  <label
-                    className="custom-control-label"
-                    htmlFor="customSwitch1"
+                  Flip cards
+                </button>
+                {auth ? (
+                  <div
+                    onChange={toggleTextSwitch}
+                    className="custom-control custom-switch"
                   >
-                    Show image question
-                  </label>
-                </div>
-              ) : null}
+                    <input
+                      type="checkbox"
+                      className="custom-control-input"
+                      id="customSwitch1"
+                      checked={showText}
+                    />
+                    <label
+                      className="custom-control-label"
+                      htmlFor="customSwitch1"
+                    >
+                      Show image question
+                    </label>
+                  </div>
+                ) : null}
+              </div>
             </div>
           </Container>
         ) : null}

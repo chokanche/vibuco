@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import getImageAspectRatio from "../helpers/getImageAspectRatio";
 
-const Lightbox = ({ imgPath, txt, onClose, showText }) => {
+const Lightbox = ({ imgPath, txt, onClose, showText, isBackground, index }) => {
   const [isSideBySide, setSideBySide] = useState(false);
 
   const handleClose = (e) => {
