@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Layout from "../components/Layout";
 import { background } from "../backgrounds";
 import Gallery from "react-photo-gallery";
@@ -12,6 +12,7 @@ import getImageAspectRatio from "../helpers/getImageAspectRatio";
 import Loading from "../components/Loading";
 import Container from "../components/grid/Container";
 import _ from "lodash";
+import NumberedGalleryImage from "../components/NumberedGalleryImage";
 
 const Index = ({ initialAuth }) => {
   const auth = useAuth(initialAuth);
@@ -144,7 +145,11 @@ const Index = ({ initialAuth }) => {
         {isLoading ? <Loading /> : null}
 
         {isFlipped ? (
-          <Gallery photos={imageBackgrounds} onClick={openLightbox} />
+          <Gallery
+            photos={imageBackgrounds}
+            renderImage={NumberedGalleryImage}
+            onClick={openLightbox}
+          />
         ) : null}
 
         {!isFlipped ? <Gallery photos={images} onClick={openLightbox} /> : null}
