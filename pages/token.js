@@ -1,11 +1,9 @@
 import React from "react";
 import { useRouter } from "next/router";
- 
-// Here we import useAuthRedirect from _auth.tsx, instead
-// of from aws-cognito-next.
-// We created that file in the previous step.
+
 import { useAuthRedirect } from "aws-cognito-next";
- 
+import Layout from "../components/Layout";
+
 // When a user comes back from authenticating, the url looks
 // like this: /token#id_token=....
 // At this point, there will be no cookies yet.
@@ -19,10 +17,14 @@ import { useAuthRedirect } from "aws-cognito-next";
 // the necessary cookies ready.
 export default function Token() {
   const router = useRouter();
- 
+
   useAuthRedirect(() => {
     router.replace("/");
   });
- 
-  return <p>loading..</p>;
+
+  return (
+    <Layout>
+      <p className="my-5 text-center">Loading...</p>
+    </Layout>
+  );
 }

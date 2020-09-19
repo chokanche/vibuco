@@ -1,44 +1,38 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
+import getImageAspectRatio from "../helpers/getImageAspectRatio";
 
-const Popup = ({ imgPath, txt, onClose }) => {
+const Lightbox = ({ imgPath, txt, onClose, showText, isBackground, index }) => {
   const [isSideBySide, setSideBySide] = useState(false);
-  const imgRef = useRef();
 
-  const handleClose = e => {
-    if (e.target.classList.contains('popup-container')) {
+  const handleClose = (e) => {
+    if (e.target.classList.contains("popup-container")) {
       onClose();
     }
-  }
+  };
 
-  const getImageAspectRatio = () => {
-    const { width, height } = imgRef.current;
+  const setRatioSideBySide = async () => {
+    const ratio = await getImageAspectRatio(imgPath);
 
-    return width / height;
-  }
+    setSideBySide(ratio <= 1);
+  };
 
   useEffect(() => {
-    const ratio = getImageAspectRatio();
-
-    console.log(ratio);
-
-    if (ratio <= 1) {
-      setSideBySide(true);
-    } else {
-      setSideBySide(false);
-    }
+    setRatioSideBySide();
   }, []);
 
   return (
     <>
       <div onClick={handleClose} className="popup-container">
-        <div className={`popup ${isSideBySide ? 'popup-sidebyside' : ''}`}>
+        <div className={`popup ${isSideBySide ? "popup-sidebyside" : ""}`}>
           <div className="image-container">
-            <img ref={imgRef} src={imgPath} alt=""/>
+            <img src={imgPath} alt="" />
           </div>
 
-          <div className="text-container">
-            <p>{txt}</p>
-          </div>
+          {showText ? (
+            <div className="text-container">
+              <p>{txt}</p>
+            </div>
+          ) : null}
         </div>
       </div>
 
@@ -53,12 +47,14 @@ const Popup = ({ imgPath, txt, onClose }) => {
           display: flex;
           align-items: center;
           justify-content: center;
+          z-index: 2;
         }
 
         .popup {
           background-color: white;
           padding: 5px;
           margin: 15px;
+          max-width: 710px;
         }
 
         .popup.popup-sidebyside {
@@ -82,15 +78,14 @@ const Popup = ({ imgPath, txt, onClose }) => {
           max-height: 700px;
         }
 
-        @media(min-width: 720px) {
+        @media (min-width: 720px) {
           .popup img {
             width: auto;
           }
         }
-
       `}</style>
     </>
-  )
-}
+  );
+};
 
-export default Popup;
+export default Lightbox;

@@ -1,64 +1,184 @@
-import React from 'react';
-import Layout from '../components/Layout';
-import { photos } from "../components/photos";
-import { background } from "../components/backgrounds";
+import React, { useCallback, useEffect, useState } from "react";
+import Layout from "../components/Layout";
+import { background } from "../backgrounds";
 import Gallery from "react-photo-gallery";
-import Popup from '../components/Popup';
+import Lightbox from "../components/Lightbox";
+import { getServerSideAuth, useAuth } from "../auth";
+import getDataFromDDBTable from "../actions/getDataFromDDBTable";
+import s3UrlToHttps from "../helpers/s3UrlToHttps";
+import presignImageSources from "../helpers/presignImageSources";
+import { PUBLIC_BUCKET_NAME, COMMON_BUCKET_NAME } from "../config";
+import getImageAspectRatio from "../helpers/getImageAspectRatio";
+import Loading from "../components/Loading";
+import Container from "../components/grid/Container";
+import _ from "lodash";
+import NumberedGalleryImage from "../components/NumberedGalleryImage";
 
-class Index extends React.Component {
-    constructor(props) {
-        super(props);
+const Index = ({ initialAuth }) => {
+  const auth = useAuth(initialAuth);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isLoading, setLoading] = useState(true);
+  const [showText, setShowText] = useState(true);
+  const [images, setImages] = useState([]);
+  const [imageBackgrounds, setImageBackgrounds] = useState(background);
+  const [isFlipped, setFlipped] = useState(false);
+  const [isLightbox, setLightbox] = useState(false);
 
-        this.state = {
-            currentImageIndex: 0,
-            images: photos,
-            imageBackgrounds: background,
-            isFlipped: true,
-            isPopup: false
-        };
+  const getImageWidths = async (imgData) => {
+    const promises = imgData.map(async (img) => ({
+      ...img,
+      height: 1,
+      width: await getImageAspectRatio(img.src).catch((err) => {
+        return 1;
+      }),
+    }));
 
-        this.flipp = this.flipp.bind(this);
-        this.openLightbox = this.openLightbox.bind(this);
-        this.closePopup = this.closePopup.bind(this);
+    return await Promise.all(promises);
+  };
 
-      }
-    flipp() {
-        this.setState({isFlipped: !this.state.isFlipped});
+  const convertSourcesToHttps = (data, bucketName) => {
+    return data.map((img) => ({
+      ...img,
+      src: s3UrlToHttps(img.src, bucketName),
+    }));
+  };
+
+  const fetchPublicImagesData = async () => {
+    const imageData = await getDataFromDDBTable("vibuco-photos-public");
+
+    const imageDataWithSources = convertSourcesToHttps(
+      imageData,
+      PUBLIC_BUCKET_NAME
+    );
+
+    const imagesWithWidth = await getImageWidths(imageDataWithSources);
+
+    setImages(_.shuffle(imagesWithWidth));
+    setLoading(false);
+  };
+
+  const fetchCommonImagesData = async () => {
+    const imageData = await getDataFromDDBTable("vibuco-photos", auth.idToken);
+
+    const imageWithPresignedUrls = await presignImageSources(
+      imageData,
+      COMMON_BUCKET_NAME,
+      auth
+    );
+
+    const imagesWithWidth = await getImageWidths(imageWithPresignedUrls);
+
+    setImages(_.shuffle(imagesWithWidth));
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    if (!auth) {
+      fetchPublicImagesData();
+    } else {
+      fetchCommonImagesData();
     }
-    openLightbox(_, { index }) {
-        this.setState({ currentImageIndex: index, isPopup: true });
+  }, []);
+
+  useEffect(() => {
+    if (!isFlipped) {
+      setImages((prevImgs) => _.shuffle(prevImgs));
     }
-    closePopup() {
-        this.setState({ isPopup: false });
-    }
-    render() {
-        const flipped = this.state.isFlipped;
-        const imagesRendered = this.state.images;
-        const imageBackgroundsRendered = this.state.imageBackgrounds;
-        const currentImage = this.state.images[this.state.currentImageIndex];
-        return <>
-                <Layout>
-                    <style jsx>{`
-                            h1 {
-                                text-align: center;
-                                padding: 20px;
-                            }
-                        `}
-                    </style>
-                    <div>
-                        <h1>
-                            Welcome to Virtual Business Coach!
-                        </h1>
-                    </div>
-                    <button onClick={this.flipp}>Flip cards</button>
-                    {flipped
-                        ? <Gallery photos={imagesRendered} onClick={this.openLightbox} />
-                        : <Gallery photos={imageBackgroundsRendered} onClick={this.openLightbox} />
-                    }
-                    {this.state.isPopup ? <Popup imgPath={currentImage.src} txt={currentImage.txt} onClose={this.closePopup} /> : null}
-                </Layout>
-            </>
-    }
-}
+  }, [isFlipped]);
+
+  const toggleTextSwitch = () => {
+    setShowText((prevShowText) => !prevShowText);
+  };
+
+  const flip = () => setFlipped((prevState) => !prevState);
+
+  const openLightbox = (_, { index }) => {
+    setCurrentImageIndex(index);
+    setLightbox(true);
+  };
+
+  const closeLightbox = () => setLightbox(false);
+
+  const currentImage = images[currentImageIndex];
+
+  return (
+    <>
+      <Layout>
+        <div>
+          <h1>Welcome to Virtual Business Coach!</h1>
+        </div>
+
+        {!isLoading ? (
+          <Container className="mt-5 mb-4" xs="12">
+            <div className="d-flex align-items-center justify-content-end text-right">
+              <div>
+                <button
+                  className={`btn mb-4 ${isFlipped ? "btn-dark" : "btn-light"}`}
+                  onClick={flip}
+                >
+                  Flip cards
+                </button>
+                {auth ? (
+                  <div
+                    onChange={toggleTextSwitch}
+                    className="custom-control custom-switch"
+                  >
+                    <input
+                      type="checkbox"
+                      className="custom-control-input"
+                      id="customSwitch1"
+                      checked={showText}
+                    />
+                    <label
+                      className="custom-control-label"
+                      htmlFor="customSwitch1"
+                    >
+                      Show image question
+                    </label>
+                  </div>
+                ) : null}
+              </div>
+            </div>
+          </Container>
+        ) : null}
+
+        {isLoading ? <Loading /> : null}
+
+        {isFlipped ? (
+          <Gallery
+            photos={imageBackgrounds}
+            renderImage={NumberedGalleryImage}
+            onClick={openLightbox}
+          />
+        ) : null}
+
+        {!isFlipped ? <Gallery photos={images} onClick={openLightbox} /> : null}
+
+        {isLightbox ? (
+          <Lightbox
+            imgPath={currentImage.src}
+            txt={currentImage.txt}
+            onClose={closeLightbox}
+            showText={showText}
+          />
+        ) : null}
+      </Layout>
+      <style jsx>
+        {`
+          h1 {
+            text-align: center;
+            padding: 20px;
+          }
+        `}
+      </style>
+    </>
+  );
+};
+
+export const getServerSideProps = async (ctx) => {
+  const initialAuth = getServerSideAuth(ctx.req);
+
+  return { props: { initialAuth } };
+};
 
 export default Index;
