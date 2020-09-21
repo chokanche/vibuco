@@ -111,14 +111,16 @@ const Index = ({ initialAuth }) => {
         {!isLoading ? (
           <Container className="mt-5 mb-4" xs="12">
             <div className="d-flex align-items-center justify-content-end text-right">
-              <div>
-                <button
-                  className={`btn mb-4 ${isFlipped ? "btn-dark" : "btn-light"}`}
-                  onClick={flip}
-                >
-                  Flip cards
-                </button>
-                {auth ? (
+              {auth ? (
+                <div>
+                  <button
+                    className={`btn mb-4 ${
+                      isFlipped ? "btn-dark" : "btn-light"
+                    }`}
+                    onClick={flip}
+                  >
+                    Flip cards
+                  </button>
                   <div
                     onChange={toggleTextSwitch}
                     className="custom-control custom-switch"
@@ -136,8 +138,8 @@ const Index = ({ initialAuth }) => {
                       Show image question
                     </label>
                   </div>
-                ) : null}
-              </div>
+                </div>
+              ) : null}
             </div>
           </Container>
         ) : null}
