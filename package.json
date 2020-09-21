@@ -8,7 +8,7 @@
     "build": "next build",
     "start": "next start",
     "pems:prepare": "prepare-pems --region $USER_POOL_REGION --userPoolId $USER_POOL_ID",
-    "export": "npm run build && npm run generate && next export"
+    "export": "npm run build && next export"
   },
   "keywords": [],
   "author": "",

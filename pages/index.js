@@ -1,9 +1,9 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Layout from "../components/Layout";
 import { background } from "../backgrounds";
 import Gallery from "react-photo-gallery";
 import Lightbox from "../components/Lightbox";
-import { getServerSideAuth, useAuth } from "../auth";
+import { useAuth } from "../auth";
 import getDataFromDDBTable from "../actions/getDataFromDDBTable";
 import s3UrlToHttps from "../helpers/s3UrlToHttps";
 import presignImageSources from "../helpers/presignImageSources";
@@ -73,12 +73,14 @@ const Index = ({ initialAuth }) => {
   };
 
   useEffect(() => {
-    if (!auth) {
-      fetchPublicImagesData();
-    } else {
-      fetchCommonImagesData();
+    if (isLoading) {
+      if (!auth) {
+        fetchPublicImagesData();
+      } else {
+        fetchCommonImagesData();
+      }  
     }
-  }, []);
+  }, [auth]);
 
   useEffect(() => {
     if (!isFlipped) {
@@ -175,12 +177,6 @@ const Index = ({ initialAuth }) => {
       </style>
     </>
   );
-};
-
-export const getServerSideProps = async (ctx) => {
-  const initialAuth = getServerSideAuth(ctx.req);
-
-  return { props: { initialAuth } };
 };
 
 export default Index;
