@@ -13,7 +13,7 @@ const Lightbox = ({ imgPath, txt, onClose, showText, isBackground, index }) => {
   const setRatioSideBySide = async () => {
     const ratio = await getImageAspectRatio(imgPath);
 
-    setSideBySide(ratio <= 1);
+    setSideBySide(ratio < 1);
   };
 
   useEffect(() => {
