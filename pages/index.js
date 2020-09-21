@@ -1,9 +1,9 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Layout from "../components/Layout";
 import { background } from "../backgrounds";
 import Gallery from "react-photo-gallery";
 import Lightbox from "../components/Lightbox";
-import { getServerSideAuth, useAuth } from "../auth";
+import { useAuth } from "../auth";
 import getDataFromDDBTable from "../actions/getDataFromDDBTable";
 import s3UrlToHttps from "../helpers/s3UrlToHttps";
 import presignImageSources from "../helpers/presignImageSources";
@@ -73,12 +73,14 @@ const Index = ({ initialAuth }) => {
   };
 
   useEffect(() => {
-    if (!auth) {
-      fetchPublicImagesData();
-    } else {
-      fetchCommonImagesData();
+    if (isLoading) {
+      if (!auth) {
+        fetchPublicImagesData();
+      } else {
+        fetchCommonImagesData();
+      }
     }
-  }, []);
+  }, [auth]);
 
   useEffect(() => {
     if (!isFlipped) {
@@ -110,15 +112,17 @@ const Index = ({ initialAuth }) => {
 
         {!isLoading ? (
           <Container className="mt-5 mb-4" xs="12">
-            <div className="d-flex align-items-center justify-content-end text-right">
-              <div>
-                <button
-                  className={`btn mb-4 ${isFlipped ? "btn-dark" : "btn-light"}`}
-                  onClick={flip}
-                >
-                  Flip cards
-                </button>
-                {auth ? (
+            <div className="d-flex align-items-center justify-content-center justify-content-md-end">
+              {auth ? (
+                <div className="d-flex mb-4 justify-content-center align-items-center">
+                  <button
+                    className={`btn mr-4 ${
+                      isFlipped ? "btn-dark" : "btn-light"
+                    }`}
+                    onClick={flip}
+                  >
+                    Flip cards
+                  </button>
                   <div
                     onChange={toggleTextSwitch}
                     className="custom-control custom-switch"
@@ -136,8 +140,8 @@ const Index = ({ initialAuth }) => {
                       Show image question
                     </label>
                   </div>
-                ) : null}
-              </div>
+                </div>
+              ) : null}
             </div>
           </Container>
         ) : null}
@@ -173,12 +177,6 @@ const Index = ({ initialAuth }) => {
       </style>
     </>
   );
-};
-
-export const getServerSideProps = async (ctx) => {
-  const initialAuth = getServerSideAuth(ctx.req);
-
-  return { props: { initialAuth } };
 };
 
 export default Index;
