@@ -78,7 +78,7 @@ const Index = ({ initialAuth }) => {
         fetchPublicImagesData();
       } else {
         fetchCommonImagesData();
-      }  
+      }
     }
   }, [auth]);
 
@@ -112,11 +112,11 @@ const Index = ({ initialAuth }) => {
 
         {!isLoading ? (
           <Container className="mt-5 mb-4" xs="12">
-            <div className="d-flex align-items-center justify-content-end text-right">
+            <div className="d-flex align-items-center justify-content-center justify-content-md-end">
               {auth ? (
-                <div>
+                <div className="d-flex mb-4 justify-content-center align-items-center">
                   <button
-                    className={`btn mb-4 ${
+                    className={`btn mr-4 ${
                       isFlipped ? "btn-dark" : "btn-light"
                     }`}
                     onClick={flip}
