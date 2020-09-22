@@ -12,6 +12,7 @@ import {
   REDIRECT_SIGN_OUT,
 } from "../config";
 
+// Configure Amplify with everything it needs to handle authentication
 Amplify.configure({
   Auth: {
     region: USER_POOL_REGION,
@@ -29,6 +30,7 @@ Amplify.configure({
   },
 });
 
+// Configure Auth from Amplify with all the information it needs
 Auth.configure({
   oauth: {
     domain: IDP_DOMAIN,
@@ -42,6 +44,7 @@ Auth.configure({
   },
 });
 
+// Main app component
 function MyApp({ Component, pageProps }) {
   return <Component {...pageProps} />;
 }

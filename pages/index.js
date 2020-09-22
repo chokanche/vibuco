@@ -15,15 +15,22 @@ import _ from "lodash";
 import NumberedGalleryImage from "../components/NumberedGalleryImage";
 
 const Index = ({ initialAuth }) => {
+  // authentication object which represents logged in user
   const auth = useAuth(initialAuth);
+  // current image index for lightbox
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
   const [isLoading, setLoading] = useState(true);
+
   const [showText, setShowText] = useState(true);
+
   const [images, setImages] = useState([]);
   const [imageBackgrounds, setImageBackgrounds] = useState(background);
+
   const [isFlipped, setFlipped] = useState(false);
   const [isLightbox, setLightbox] = useState(false);
 
+  // get image widths for all the images in the imgData array that is passed in. Will return same array with added width and height attributes
   const getImageWidths = async (imgData) => {
     const promises = imgData.map(async (img) => ({
       ...img,
@@ -36,6 +43,7 @@ const Index = ({ initialAuth }) => {
     return await Promise.all(promises);
   };
 
+  // convert s3 urls to https urls
   const convertSourcesToHttps = (data, bucketName) => {
     return data.map((img) => ({
       ...img,
@@ -46,6 +54,7 @@ const Index = ({ initialAuth }) => {
   const fetchPublicImagesData = async () => {
     const imageData = await getDataFromDDBTable("vibuco-photos-public");
 
+    // convert all s3 urls to https urls
     const imageDataWithSources = convertSourcesToHttps(
       imageData,
       PUBLIC_BUCKET_NAME
@@ -53,6 +62,7 @@ const Index = ({ initialAuth }) => {
 
     const imagesWithWidth = await getImageWidths(imageDataWithSources);
 
+    // shuffle images
     setImages(_.shuffle(imagesWithWidth));
     setLoading(false);
   };
@@ -60,6 +70,7 @@ const Index = ({ initialAuth }) => {
   const fetchCommonImagesData = async () => {
     const imageData = await getDataFromDDBTable("vibuco-photos", auth.idToken);
 
+    // presign our image urls for authenticated access
     const imageWithPresignedUrls = await presignImageSources(
       imageData,
       COMMON_BUCKET_NAME,
@@ -68,10 +79,12 @@ const Index = ({ initialAuth }) => {
 
     const imagesWithWidth = await getImageWidths(imageWithPresignedUrls);
 
+    // shuffle images
     setImages(_.shuffle(imagesWithWidth));
     setLoading(false);
   };
 
+  // Fetch the right data based on authentication (will happen on page load)
   useEffect(() => {
     if (isLoading) {
       if (!auth) {
@@ -82,6 +95,7 @@ const Index = ({ initialAuth }) => {
     }
   }, [auth]);
 
+  // shuffle images whenever we flip from backgrounds back to normal images
   useEffect(() => {
     if (!isFlipped) {
       setImages((prevImgs) => _.shuffle(prevImgs));
@@ -94,6 +108,7 @@ const Index = ({ initialAuth }) => {
 
   const flip = () => setFlipped((prevState) => !prevState);
 
+  // open the light box (handler comes from React-gallery) setting the current image and opening the light box
   const openLightbox = (_, { index }) => {
     setCurrentImageIndex(index);
     setLightbox(true);
@@ -101,6 +116,7 @@ const Index = ({ initialAuth }) => {
 
   const closeLightbox = () => setLightbox(false);
 
+  // helper var to get the current image based on the index in the images array
   const currentImage = images[currentImageIndex];
 
   return (

@@ -1,5 +1,5 @@
 import { createUseAuth } from "aws-cognito-next";
 import pems from "./pems.json";
 
-// create functions by passing pems
+// create useAuth hook by passing pems
 export const useAuth = createUseAuth({ pems });
