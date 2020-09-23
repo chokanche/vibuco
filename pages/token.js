@@ -18,6 +18,8 @@ import Layout from "../components/Layout";
 export default function Token() {
   const router = useRouter();
 
+  console.log("test");
+
   useAuthRedirect(() => {
     router.replace("/");
   });
