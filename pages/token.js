@@ -3,6 +3,8 @@ import { useRouter } from "next/router";
 
 import { useAuthRedirect } from "aws-cognito-next";
 import Layout from "../components/Layout";
+import { AUTH_COOKIE_DOMAIN } from "../config";
+import Auth from "@aws-amplify/auth";
 
 // When a user comes back from authenticating, the url looks
 // like this: /token#id_token=....
@@ -15,13 +17,19 @@ import Layout from "../components/Layout";
 // is present. Then we redirect the user back to the main page.
 // That page can now use SSR as the user will have
 // the necessary cookies ready.
+
 export default function Token() {
   const router = useRouter();
 
   console.log(useAuthRedirect);
 
+  console.log(AUTH_COOKIE_DOMAIN);
+
+  console.log(Auth);
+
   useAuthRedirect(() => {
-    router.replace("/");
+    console.log("hi");
+    // router.replace("/");
   });
 
   return (
