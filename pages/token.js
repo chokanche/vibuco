@@ -21,15 +21,11 @@ import Auth from "@aws-amplify/auth";
 export default function Token() {
   const router = useRouter();
 
-  console.log(useAuthRedirect);
-
-  console.log(AUTH_COOKIE_DOMAIN);
-
   console.log(Auth);
 
   useAuthRedirect(() => {
-    console.log("hi");
-    // router.replace("/");
+    console.log("Successful login");
+    router.replace("/");
   });
 
   return (

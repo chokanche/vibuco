@@ -22,7 +22,7 @@ Amplify.configure({
     // Configuration for cookie storage
     // see https://aws-amplify.github.io/docs/js/authentication
     cookieStorage: {
-      domain: AUTH_COOKIE_DOMAIN,
+      domain: "vibuco.com",
       path: "/",
       expires: 7,
       secure: NODE_ENV === "production",
