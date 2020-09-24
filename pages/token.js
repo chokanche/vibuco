@@ -21,10 +21,7 @@ import Auth from "@aws-amplify/auth";
 export default function Token() {
   const router = useRouter();
 
-  console.log(Auth);
-
   useAuthRedirect(() => {
-    console.log("Successful login");
     router.replace("/");
   });
 
