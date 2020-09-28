@@ -1,6 +1,7 @@
 import logo from "../public/logo.png";
 import { useAuthFunctions } from "aws-cognito-next";
 import { useAuth } from "../auth";
+import HeaderBase, { NavLinks, NavLink, PrimaryLink } from "./headers/light.js";
 
 const Navbar = () => {
   const auth = useAuth(null);
@@ -30,7 +31,11 @@ const Navbar = () => {
               About
             </a>
           </li>
-
+          <li className="nav-item">
+            <a className="nav-link" href="/cards">
+              Cards
+            </a>
+          </li>
           {!auth ? (
             <li className="nav-item">
               <button onClick={login} className="btn btn-link nav-link">
