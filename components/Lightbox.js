@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import getImageAspectRatio from "../helpers/getImageAspectRatio";
 
 const Lightbox = ({ imgPath, txt, onClose, showText, isBackground, index }) => {
@@ -55,6 +55,7 @@ const Lightbox = ({ imgPath, txt, onClose, showText, isBackground, index }) => {
           padding: 5px;
           margin: 15px;
           max-width: 710px;
+          max-height: 90%;
         }
 
         .popup.popup-sidebyside {
@@ -74,6 +75,7 @@ const Lightbox = ({ imgPath, txt, onClose, showText, isBackground, index }) => {
 
         .popup img {
           width: 100%;
+          height: 100%;
           max-width: 700px;
           max-height: 700px;
         }
@@ -81,6 +83,12 @@ const Lightbox = ({ imgPath, txt, onClose, showText, isBackground, index }) => {
         @media (min-width: 720px) {
           .popup img {
             width: auto;
+          }
+        }
+
+        @media (max-height: 720px) {
+          .popup img {
+            width: auto !important;
           }
         }
       `}</style>
