@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import getImageAspectRatio from "../helpers/getImageAspectRatio";
+import useViewport from "../hooks/useViewport";
 
 const Lightbox = ({ imgPath, txt, onClose, showText, isBackground, index }) => {
   const [isSideBySide, setSideBySide] = useState(false);
@@ -9,6 +10,12 @@ const Lightbox = ({ imgPath, txt, onClose, showText, isBackground, index }) => {
       onClose();
     }
   };
+
+  const popup = useRef(null);
+  const img = useRef(null);
+  const text = useRef(null);
+
+  const { vw, vh } = useViewport();
 
   const setRatioSideBySide = async () => {
     const ratio = await getImageAspectRatio(imgPath);
@@ -20,16 +27,29 @@ const Lightbox = ({ imgPath, txt, onClose, showText, isBackground, index }) => {
     setRatioSideBySide();
   }, []);
 
+  useEffect(() => {
+    if (isSideBySide) {
+      img.current.style.maxHeight = `${popup.current.offsetHeight - 10}px`;
+    } else {
+      img.current.style.maxHeight = `${
+        popup.current.offsetHeight - text.current.offsetHeight - 10
+      }px`;
+    }
+  }, [vh]);
+
   return (
     <>
       <div onClick={handleClose} className="popup-container">
-        <div className={`popup ${isSideBySide ? "popup-sidebyside" : ""}`}>
+        <div
+          ref={popup}
+          className={`popup ${isSideBySide ? "popup-sidebyside" : ""}`}
+        >
           <div className="image-container">
-            <img src={imgPath} alt="" />
+            <img ref={img} src={imgPath} alt="" />
           </div>
 
           {showText ? (
-            <div className="text-container">
+            <div ref={text} className="text-container">
               <p>{txt}</p>
             </div>
           ) : null}
@@ -55,6 +75,8 @@ const Lightbox = ({ imgPath, txt, onClose, showText, isBackground, index }) => {
           padding: 5px;
           margin: 15px;
           max-width: 710px;
+          max-height: 90%;
+          overflow: hidden;
         }
 
         .popup.popup-sidebyside {
@@ -76,6 +98,7 @@ const Lightbox = ({ imgPath, txt, onClose, showText, isBackground, index }) => {
           width: 100%;
           max-width: 700px;
           max-height: 700px;
+          object-fit: contain;
         }
 
         @media (min-width: 720px) {
