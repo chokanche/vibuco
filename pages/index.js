@@ -30,15 +30,23 @@ const Index = ({ initialAuth }) => {
   const [isFlipped, setFlipped] = useState(false);
   const [isLightbox, setLightbox] = useState(false);
 
-  // get image widths for all the images in the imgData array that is passed in. Will return same array with added width and height attributes
+  // get image widths for all the images in the imgData array that is passed in. Will return same array with added width and height attributes if not added in DB
   const getImageWidths = async (imgData) => {
-    const promises = imgData.map(async (img) => ({
-      ...img,
-      height: 1,
-      width: await getImageAspectRatio(img.src).catch((err) => {
-        return 1;
-      }),
-    }));
+    const promises = imgData.map(async (img) => {
+      const hasHeightWidth = (img) => img.height && img.width;
+
+      const width = hasHeightWidth(img)
+        ? img.width
+        : await getImageAspectRatio(img.src).catch((err) => {
+            return 1;
+          });
+
+      return {
+        ...img,
+        height: hasHeightWidth(img) ? img.height : 1,
+        width,
+      };
+    });
 
     return await Promise.all(promises);
   };
