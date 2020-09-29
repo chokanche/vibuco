@@ -7,7 +7,7 @@ const Navbar = () => {
   const { login, logout } = useAuthFunctions();
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-light bg-light">
+    <nav className="navbar navbar-expand navbar-light bg-light">
       <style jsx>
         {`
           #logoImage {
