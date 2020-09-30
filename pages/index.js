@@ -7,6 +7,7 @@ import { useAuth } from "../auth";
 import getDataFromDDBTable from "../actions/getDataFromDDBTable";
 import s3UrlToHttps from "../helpers/s3UrlToHttps";
 import presignImageSources from "../helpers/presignImageSources";
+import getImageObjects from "../helpers/getImageObjects";
 import { PUBLIC_BUCKET_NAME, COMMON_BUCKET_NAME } from "../config";
 import getImageAspectRatio from "../helpers/getImageAspectRatio";
 import Loading from "../components/Loading";
@@ -30,15 +31,23 @@ const Index = ({ initialAuth }) => {
   const [isFlipped, setFlipped] = useState(false);
   const [isLightbox, setLightbox] = useState(false);
 
-  // get image widths for all the images in the imgData array that is passed in. Will return same array with added width and height attributes
+  const hasHeightWidth = (img) => img.height && img.width;
+
+  // get image widths for all the images in the imgData array that is passed in. Will return same array with added width and height attributes if not added in DB
   const getImageWidths = async (imgData) => {
-    const promises = imgData.map(async (img) => ({
-      ...img,
-      height: 1,
-      width: await getImageAspectRatio(img.src).catch((err) => {
-        return 1;
-      }),
-    }));
+    const promises = imgData.map(async (img) => {
+      const width = hasHeightWidth(img)
+        ? img.width
+        : await getImageAspectRatio(img.src).catch((err) => {
+            return 1;
+          });
+
+      return {
+        ...img,
+        height: hasHeightWidth(img) ? img.height : 1,
+        width,
+      };
+    });
 
     return await Promise.all(promises);
   };
@@ -67,20 +76,39 @@ const Index = ({ initialAuth }) => {
     setLoading(false);
   };
 
+  // encode file.Body response into a base64 string
+  const encode = (data) => {
+    const str = data.reduce((a, b) => {
+      return a + String.fromCharCode(b);
+    }, "");
+    return btoa(str).replace(/.{76}(?=.)/g, "$&\n");
+  };
+
   const fetchCommonImagesData = async () => {
     const imageData = await getDataFromDDBTable("vibuco-photos", auth.idToken);
 
     // presign our image urls for authenticated access
-    const imageWithPresignedUrls = await presignImageSources(
+    const imageObjects = await getImageObjects(
       imageData,
       COMMON_BUCKET_NAME,
       auth
     );
 
-    const imagesWithWidth = await getImageWidths(imageWithPresignedUrls);
+    const completeImageDataWithObjects = imageData.map(async (img, i) => {
+      const obj = imageObjects[i];
+      img.src = `data:${obj.ContentType};base64,` + encode(obj.Body);
 
-    // shuffle images
-    setImages(_.shuffle(imagesWithWidth));
+      if (!hasHeightWidth(img)) {
+        img.height = 1;
+        img.width = await getImageAspectRatio(img.src);
+      }
+
+      return img;
+    });
+
+    const data = await Promise.all(completeImageDataWithObjects);
+
+    setImages(_.shuffle(data));
     setLoading(false);
   };
 
