@@ -25,7 +25,7 @@
     "feather-icons": "^4.28.0",
     "file-loader": "^6.1.0",
     "formik": "^2.1.5",
-    "framer-motion": "^2.6.15",
+    "framer-motion": "^2.7.7",
     "fs": "0.0.1-security",
     "import-fresh": "^3.2.1",
     "lodash": "^4.17.20",
@@ -34,6 +34,7 @@
     "next-images": "^1.4.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-feather": "^2.0.8",
     "react-grid-gallery": "^0.5.5",
     "react-image-file-resizer": "^0.2.3",
     "react-masonry-component": "^6.2.1",
@@ -45,19 +46,18 @@
     "resolve-from": "^5.0.0",
     "slick-carousel": "^1.8.1",
     "styled-components": "^5.2.0",
-    "tailwindcss": "^1.8.10",
-    "twin.macro": "^1.9.0",
+    "twin.macro": "^1.10.0",
     "use-in-view": "^1.0.15"
   },
   "devDependencies": {
     "@babel/core": "^7.7.4",
     "@babel/runtime-corejs2": "^7.9.2",
+    "@emotion/core": "^10.0.35",
     "autoprefixer": "^9.8.0",
     "babel-plugin-inline-react-svg": "^1.1.1",
     "babel-plugin-root-import": "^6.4.1",
     "emotion-server": "^10.0.27",
-    "svg-url-loader": "^5.0.0",
-    "tailwindcss": "^1.4.6",
+    "tailwindcss": "^1.8.10",
     "webpack": "^4.44.2"
   }
 }

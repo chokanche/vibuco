@@ -2,11 +2,11 @@ import React from "react";
 import { motion } from "framer-motion";
 import tw from "twin.macro";
 import styled from "styled-components";
-import useAnimatedNavToggler from "../../helpers/useAnimatedNavToggler.js";
+import useAnimatedNavToggler from "../../helpers/useAnimatedNavToggler";
 
 import logo from "../../images/logo.svg";
-import { ReactComponent as MenuIcon } from "feather-icons/dist/icons/menu.svg";
-import { ReactComponent as CloseIcon } from "feather-icons/dist/icons/x.svg";
+import { Menu as MenuIcon } from "react-feather";
+import { X as CloseIcon } from "react-feather";
 
 const Header = tw.header`
   flex justify-between items-center
