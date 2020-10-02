@@ -11,6 +11,7 @@ import {
   REDIRECT_SIGN_IN,
   REDIRECT_SIGN_OUT,
 } from "../config";
+import { GlobalStyles } from "twin.macro";
 
 // Configure Amplify with everything it needs to handle authentication
 Amplify.configure({
@@ -46,7 +47,12 @@ Auth.configure({
 
 // Main app component
 function MyApp({ Component, pageProps }) {
-  return <Component {...pageProps} />;
+  return (
+    <>
+      <GlobalStyles />
+      <Component {...pageProps} />
+    </>
+  );
 }
 
 export default MyApp;
