@@ -13,6 +13,8 @@ import {
 } from "../config";
 import { GlobalStyles } from "twin.macro";
 
+import "../styles/globalStyles.css";
+
 // Configure Amplify with everything it needs to handle authentication
 Amplify.configure({
   Auth: {
