@@ -2,6 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+.content {
+    min-height: calc(100vh - 136px);
+}
+.footer {
+    height: 50px;
+}
+
 /* Below animations are fore modal created using React-Modal */
 .ReactModal__Overlay {
     transition: transform 300ms ease-in-out;
