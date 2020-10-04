@@ -16,6 +16,7 @@
   "dependencies": {
     "@aws-amplify/auth": "^3.4.1",
     "@aws-amplify/core": "^3.5.1",
+    "@svgr/webpack": "^5.4.0",
     "@zeit/next-css": "^1.0.1",
     "aws-cognito-next": "^3.0.0",
     "aws-sdk": "^2.751.0",
@@ -23,10 +24,10 @@
     "classnames": "^2.2.6",
     "dotenv": "^8.2.0",
     "feather-icons": "^4.28.0",
-    "file-loader": "^6.1.0",
     "formik": "^2.1.5",
     "framer-motion": "^2.7.7",
     "fs": "0.0.1-security",
+    "gsap": "^3.5.1",
     "import-fresh": "^3.2.1",
     "lodash": "^4.17.20",
     "masonry-layout": "^4.2.2",
@@ -42,6 +43,7 @@
     "react-modal": "^3.11.2",
     "react-photo-gallery": "^8.0.0",
     "react-router-dom": "^5.2.0",
+    "react-scripts": "^3.4.3",
     "react-slick": "^0.27.11",
     "resolve-from": "^5.0.0",
     "slick-carousel": "^1.8.1",
@@ -56,9 +58,13 @@
     "autoprefixer": "^9.8.0",
     "babel-plugin-inline-react-svg": "^1.1.1",
     "babel-plugin-root-import": "^6.4.1",
+    "css-loader": "^4.3.0",
     "emotion-server": "^10.0.27",
+    "file-loader": "^6.1.0",
     "svg-url-loader": "^5.0.1",
     "tailwindcss": "^1.8.10",
-    "webpack": "^4.44.2"
+    "url-loader": "^4.1.0",
+    "webpack": "^4.44.2",
+    "use-in-view": "^1.0.15"
   }
 }

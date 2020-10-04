@@ -1,9 +1,11 @@
 const withImages = require("next-images");
 const withCSS = require("@zeit/next-css");
+
 require("dotenv").config();
 
 module.exports = withImages(
   withCSS({
+    fileExtensions: ["jpg", "jpeg", "png", "gif"],
     publicRuntimeConfig: {
       USER_POOL_REGION: process.env.USER_POOL_REGION,
       USER_POOL_ID: process.env.USER_POOL_ID,
@@ -35,6 +37,17 @@ module.exports = withImages(
           },
         ],
       });
+
+      config.module.rules.push({
+        test: /\.(eot|woff|woff2|ttf|svg|png|jpg|gif)$/,
+        use: {
+          loader: 'url-loader',
+          options: {
+            limit: 100000,
+            name: '[name].[ext]'
+          }
+        }
+      })
 
       return config;
     },
