@@ -3,7 +3,6 @@ import { useAuthFunctions } from "aws-cognito-next";
 import { useAuth } from "../auth";
 
 import ActiveLink from "./ActiveLink";
-import HeaderBase, { NavLinks, NavLink, PrimaryLink } from "./headers/light.js";
 
 const Navbar = () => {
   const auth = useAuth(null);

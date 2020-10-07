@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import tw from "twin.macro";
 import { css } from "styled-components/macro";
+
+import "../../styles/landingPageStyles.css";
 import HeaderBase, { NavLinks, NavLink, PrimaryLink } from  './light.js'
 const Header = tw(HeaderBase)`max-w-none`;
 
@@ -10,9 +12,7 @@ class Viheader extends Component {
         const navLinks = [
           <NavLinks key={1}>
             <NavLink href="/">Home</NavLink>
-            <NavLink href="/">Try it out</NavLink>
-            <NavLink href="/">Blog</NavLink>
-            <NavLink href="/">Pricing</NavLink>
+            <NavLink href="/cards">Try it out</NavLink>
             <NavLink href="/">About Us</NavLink>
             <NavLink href="/">Contact Us</NavLink>
           </NavLinks>,

@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@500;700&family=Lobster&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=David+Libre:wght@500&display=swap');
 
 * {
     margin: 0;
@@ -6,15 +7,25 @@
     box-sizing: border-box;
   }
   main {
-    font-family: "Heebo", sans-serif;
+    font-family: 'David Libre', serif;
   }
-  
+  .navList {
+    min-height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 10vh;
+  }
+
   .landingImage {
     min-height: 100vh;
     background: url("/static/home-background2.jpg");
     background-size: cover;
     padding: 0rem 5rem;
   }
+
   nav {
     display: flex;
     align-items: center;
@@ -28,23 +39,31 @@
   .nav-links li {
     padding-left: 10rem;
     font-size: 1.2rem;
+    justify-content: center;
+    align-items: center;
   }
   #logo {
-    font-family: "Lobster", cursive;
+    font-family: 'David Libre', serif;
     font-weight: lighter;
     font-size: 2rem;
   }
   
   .big-text {
     position: absolute;
-    top: 30%;
+    top: 25%;
     left: 50%;
     transform: translate(-50%, -30%);
-    font-size: 5rem;
-    font-family: "Lobster", cursive;
+    font-size: 4rem;
+    font-family: 'David Libre', serif;
     color: rgb(61, 61, 61);
   }
-  
+
+  .green {
+    font-family: 'David Libre', serif;
+    color: rgb(151, 216, 196);
+  }
+
+
   .intro {
     background: black;
     position: fixed;
@@ -68,7 +87,7 @@
   
   .intro-text {
     color: rgb(233, 233, 233);
-    font-family: "Heebo", sans-serif;
+    font-family: 'David Libre', serif;
     font-size: 3rem;
   }
   
@@ -81,4 +100,3 @@
     transform: translateY(100%);
     display: inline-block;
   }
-  

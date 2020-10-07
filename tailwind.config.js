@@ -151,6 +151,20 @@ module.exports = {
           800: '#97266d',
           900: '#702459',
         },
+        vibuco : {
+          100 : '#97d8c4',
+          200 : '#6b9ac4',
+        },
+        beach : {
+          bone: '#CDC5B2ff',
+          gainsboro: '#DDDDE2ff',
+          silverchalice: '#A2AEAEff',
+          steelteal: '#54909Dff',
+          steelteal2: '#6696A2ff',
+          pewterblue: '#77A6B0ff',
+          opal: '#8DB5B4ff',
+          jet: '#3E3B3Bff',
+        },
       },
       spacing: {
         px: '1px',

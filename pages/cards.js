@@ -13,6 +13,7 @@ import Loading from "../components/Loading";
 import Container from "../components/grid/Container";
 import _ from "lodash";
 import NumberedGalleryImage from "../components/NumberedGalleryImage";
+import Viheader from "../components/headers/viheader"
 
 const Cards = ({ initialAuth }) => {
   // authentication object which represents logged in user
@@ -29,6 +30,8 @@ const Cards = ({ initialAuth }) => {
 
   const [isFlipped, setFlipped] = useState(false);
   const [isLightbox, setLightbox] = useState(false);
+
+  const [isEnglish, setEnglish] = useState(false);
 
   // get image widths for all the images in the imgData array that is passed in. Will return same array with added width and height attributes
   const getImageWidths = async (imgData) => {
@@ -61,7 +64,6 @@ const Cards = ({ initialAuth }) => {
     );
 
     const imagesWithWidth = await getImageWidths(imageDataWithSources);
-
     // shuffle images
     setImages(_.shuffle(imagesWithWidth));
     setLoading(false);
@@ -121,16 +123,19 @@ const Cards = ({ initialAuth }) => {
 
   return (
     <>
-      <Layout>
-        <div>
-          <h1>Welcome to Virtual Business Coach!</h1>
-        </div>
-
+    <Viheader />
         {!isLoading ? (
           <Container className="mt-5 mb-4" xs="12">
             <div className="d-flex align-items-center justify-content-center justify-content-md-end">
               {auth ? (
                 <div className="d-flex mb-4 justify-content-center align-items-center">
+                  <button
+                    className={`btn mr-2 ${
+                      isFlipped ? "btn-dark" : "btn-light"
+                    }`}
+                  >
+                    English
+                  </button>
                   <button
                     className={`btn mr-4 ${
                       isFlipped ? "btn-dark" : "btn-light"
@@ -153,7 +158,7 @@ const Cards = ({ initialAuth }) => {
                       className="custom-control-label"
                       htmlFor="customSwitch1"
                     >
-                      Show image question
+                      Show questions
                     </label>
                   </div>
                 </div>
@@ -182,7 +187,6 @@ const Cards = ({ initialAuth }) => {
             showText={showText}
           />
         ) : null}
-      </Layout>
       <style jsx>
         {`
           h1 {

@@ -1,10 +1,12 @@
 const withImages = require("next-images");
 const withCSS = require("@zeit/next-css");
+const withSvgr = require("next-svgr")
+const withPlugins = require('next-compose-plugins');
 
 require("dotenv").config();
 
-module.exports = withImages(
-  withCSS({
+module.exports = withPlugins( [withCSS, [withImages, {}], withSvgr],
+  {
     fileExtensions: ["jpg", "jpeg", "png", "gif"],
     publicRuntimeConfig: {
       USER_POOL_REGION: process.env.USER_POOL_REGION,
@@ -39,20 +41,18 @@ module.exports = withImages(
       });
 
       config.module.rules.push({
-        test: /\.(eot|woff|woff2|ttf|svg|png|jpg|gif)$/,
+        test: /\.(eot|woff|woff2|ttf|svg|PNG|png|jpg|JPG|gif)$/,
         use: {
-          loader: 'url-loader',
+          loader: 'file-loader',
           options: {
             limit: 100000,
             name: '[name].[ext]'
           }
         }
       })
-
       return config;
     },
     resolve: {
       extensions: [".js", ".jsx"],
     },
-  })
-);
+  });

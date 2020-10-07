@@ -2,10 +2,10 @@ import React from "react";
 import tw from "twin.macro";
 import styled from "styled-components";
 import { css } from "styled-components/macro"; //eslint-disable-line
-import { SectionHeading, Subheading as SubheadingBase } from "components/misc/Headings.js";
-import { PrimaryButton as PrimaryButtonBase } from "components/misc/Buttons.js";
-import TeamIllustrationSrc from "images/team-illustration-2.svg";
-import { ReactComponent as SvgDotPattern } from "images/dot-pattern.svg";
+import { SectionHeading, Subheading as SubheadingBase } from "../misc/Headings.js";
+import { PrimaryButton as PrimaryButtonBase } from "../misc/Buttons.js";
+import TeamIllustrationSrc from "../../static/team-illustration-2.svg";
+import { ReactComponent as SvgDotPattern } from "../../static/dot-pattern.svg";
 import { ReactComponent as BriefcaseIcon } from "feather-icons/dist/icons/briefcase.svg";
 import { ReactComponent as MoneyIcon } from "feather-icons/dist/icons/dollar-sign.svg";
 
@@ -67,9 +67,9 @@ export default ({
     </>
   ),
   description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-  primaryButtonText = "Learn More",
-  primaryButtonUrl = "https://timerse.com",
-  imageSrc = TeamIllustrationSrc,
+  primaryButtonText = "Read More",
+  primaryButtonUrl = "https://dajanadamjanovic.com/sr/kakva-pitanja-sebi-postavljate/",
+  imageSrc = "../../static/decison.svg",
   buttonRounded = true,
   imageRounded = true,
   imageBorder = false,

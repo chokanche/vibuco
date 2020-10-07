@@ -4,11 +4,10 @@ import styled from "styled-components";
 import { css } from "styled-components/macro"; //eslint-disable-line
 import { PrimaryButton as PrimaryButtonBase } from "../misc/Buttons.js";
 
-//TODO: fix svg loader
 //import LogoImage from "../../static/logo.svg";
-//import FacebookIcon from "../../static/facebook-icon.svg";
-//import TwitterIcon from "../../static/twitter-icon.svg";
-//import YoutubeIcon from "../../static/youtube-icon.svg";
+import FacebookIcon from "../../static/facebook-icon.svg";
+import TwitterIcon from "../../static/twitter.svg";
+import YoutubeIcon from "../../static/youtube-icon.svg";
 
 const Container = tw.div`relative bg-gray-200 text-gray-700 -mb-8 -mx-8 px-8 py-20 lg:py-24`;
 const Content = tw.div`max-w-screen-xl mx-auto relative z-10`;
@@ -65,7 +64,7 @@ export default () => {
                 <Link href="#">Support</Link>
               </LinkListItem>
               <LinkListItem>
-                <Link href="#">About Us</Link>
+                <Link href="#">Meet Us</Link>
               </LinkListItem>
             </LinkList>
           </Column>
@@ -73,33 +72,13 @@ export default () => {
             <ColumnHeading>Product</ColumnHeading>
             <LinkList>
               <LinkListItem>
-                <Link href="#">Log In</Link>
+                <Link href="#">Get Access</Link>
               </LinkListItem>
               <LinkListItem>
-                <Link href="#">Personal</Link>
-              </LinkListItem>
-              <LinkListItem>
-                <Link href="#">Business</Link>
+                <Link href="#">Learn More</Link>
               </LinkListItem>
               <LinkListItem>
                 <Link href="#">Team</Link>
-              </LinkListItem>
-            </LinkList>
-          </Column>
-          <Column>
-            <ColumnHeading>Press</ColumnHeading>
-            <LinkList>
-              <LinkListItem>
-                <Link href="#">Logos</Link>
-              </LinkListItem>
-              <LinkListItem>
-                <Link href="#">Events</Link>
-              </LinkListItem>
-              <LinkListItem>
-                <Link href="#">Stories</Link>
-              </LinkListItem>
-              <LinkListItem>
-                <Link href="#">Office</Link>
               </LinkListItem>
             </LinkList>
           </Column>
@@ -141,10 +120,13 @@ export default () => {
           <CopywrightNotice>&copy; 2020 Vibuco Inc. All Rights Reserved.</CopywrightNotice>
           <SocialLinksContainer>
             <SocialLink href="https://facebook.com">
+            <FacebookIcon />
             </SocialLink>
             <SocialLink href="https://twitter.com">
+              <TwitterIcon />
             </SocialLink>
             <SocialLink href="https://youtube.com">
+              <YoutubeIcon />
             </SocialLink>
           </SocialLinksContainer>
         </ThreeColRow>

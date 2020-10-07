@@ -12,9 +12,7 @@ const Layout = (props) => (
         href="https://bootswatch.com/4/minty/bootstrap.min.css"
       />
     </Head>
-    <Navbar />
-    <div className="content">{props.children}</div>
-    <Footer />
+    <div>{props.children}</div>
   </>
 );
 export default Layout;

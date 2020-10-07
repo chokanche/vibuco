@@ -6,7 +6,7 @@ import { css } from "styled-components/macro";
 import { SectionHeading, Subheading as SubheadingBase } from "../misc/Headings";
 import { SectionDescription } from "../misc/Typography";
 import { ReactComponent as SvgDotPatternIcon } from "../../images/dot-pattern.svg";
-import miniphoto from "../../static/dd-blog.jpg";
+import miniphoto  from "../../static/dd-blog.jpg";
 
 const HeadingContainer = tw.div`text-center`;
 const Subheading = tw(SubheadingBase)`mb-4`;
@@ -68,7 +68,7 @@ export default ({
     {
       postImageSrc:
         "https://images.unsplash.com/photo-1457369804613-52c61a468e7d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=768&q=80",
-      authorImageSrc: miniphoto,
+      authorImageSrc: "../../static/dd-blog.jpg",
       title: "EGO: THE DIFFERENCE BETWEEN A GOOD AND A GREAT LEADER?",
       description:
         "There are many things that can help you become a good leader. And just as many that could drive you to become a great one.",
