@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import Layout from "../components/Layout";
-import { background } from "../backgrounds";
+import black1 from '../public/black1.jpg';
+import black2 from '../public/black2.jpg';
 import Gallery from "react-photo-gallery";
 import Lightbox from "../components/Lightbox";
 import { useAuth } from "../auth";
 import getDataFromDDBTable from "../actions/getDataFromDDBTable";
 import s3UrlToHttps from "../helpers/s3UrlToHttps";
-import presignImageSources from "../helpers/presignImageSources";
 import getImageObjects from "../helpers/getImageObjects";
 import { PUBLIC_BUCKET_NAME, COMMON_BUCKET_NAME } from "../config";
 import getImageAspectRatio from "../helpers/getImageAspectRatio";
@@ -26,7 +26,6 @@ const Index = ({ initialAuth }) => {
   const [showText, setShowText] = useState(true);
 
   const [images, setImages] = useState([]);
-  const [imageBackgrounds, setImageBackgrounds] = useState(background);
 
   const [isFlipped, setFlipped] = useState(false);
   const [isLightbox, setLightbox] = useState(false);
@@ -194,7 +193,16 @@ const Index = ({ initialAuth }) => {
 
         {isFlipped ? (
           <Gallery
-            photos={imageBackgrounds}
+            photos={images.map(img => {
+              const ratio = img.width / img.height;
+
+              if (ratio >= 1) {
+                return { ...img, src: black1 }
+              } else {
+                return { ...img, src: black2 }
+              }
+
+            })}
             renderImage={NumberedGalleryImage}
             onClick={openLightbox}
           />
