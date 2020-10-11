@@ -154,6 +154,7 @@ module.exports = {
         vibuco : {
           100 : '#97d8c4',
           200 : '#6b9ac4',
+          300 : '#2ca6a4',
         },
         beach : {
           bone: '#CDC5B2ff',

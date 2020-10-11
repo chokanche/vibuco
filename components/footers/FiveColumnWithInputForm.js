@@ -9,11 +9,15 @@ import FacebookIcon from "../../static/facebook-icon.svg";
 import TwitterIcon from "../../static/twitter.svg";
 import YoutubeIcon from "../../static/youtube-icon.svg";
 
-const Container = tw.div`relative bg-gray-200 text-gray-700 -mb-8 -mx-8 px-8 py-20 lg:py-24`;
-const Content = tw.div`max-w-screen-xl mx-auto relative z-10`;
-const SixColumns = tw.div`flex flex-wrap text-center sm:text-left justify-center sm:justify-start md:justify-between -mt-12`;
+const Container = tw.div`relative bg-gray-200 text-gray-700 -mb-8 px-8`;
+
+// pt-16 
+const Content = tw.div`max-w-screen-xl mx-auto pt-1 pb-8`
+
+const FiveColumns = tw.div`flex flex-wrap justify-between`;
 
 const Column = tw.div`px-4 sm:px-0 sm:w-1/4 md:w-auto mt-12`;
+//const Column = tw.div`w-1/2 md:w-1/5 mb-8 md:mb-0 text-sm sm:text-base text-center md:text-left`;
 
 const ColumnHeading = tw.h5`uppercase font-bold`;
 
@@ -50,21 +54,18 @@ export default () => {
   return (
     <Container>
       <Content>
-        <SixColumns>
+        <FiveColumns>
           <Column>
             <ColumnHeading>Main</ColumnHeading>
             <LinkList>
               <LinkListItem>
-                <Link href="#">Blog</Link>
+                <Link href="https://dajanadamjanovic.com/en/#!/blog_en">Blog</Link>
               </LinkListItem>
               <LinkListItem>
-                <Link href="#">FAQs</Link>
+                <Link href="/contact">Support</Link>
               </LinkListItem>
               <LinkListItem>
-                <Link href="#">Support</Link>
-              </LinkListItem>
-              <LinkListItem>
-                <Link href="#">Meet Us</Link>
+                <Link href="/meetus">Meet Us</Link>
               </LinkListItem>
             </LinkList>
           </Column>
@@ -75,10 +76,7 @@ export default () => {
                 <Link href="#">Get Access</Link>
               </LinkListItem>
               <LinkListItem>
-                <Link href="#">Learn More</Link>
-              </LinkListItem>
-              <LinkListItem>
-                <Link href="#">Team</Link>
+                <Link href="/about">Learn More</Link>
               </LinkListItem>
             </LinkList>
           </Column>
@@ -106,12 +104,18 @@ export default () => {
                 We deliver high quality blog posts written by professionals weekly. And we promise no spam.
               </SubscribeText>
               <SubscribeForm method="get" action="#">
-                <Input type="email" placeholder="Your Email Address" />
-                <SubscribeButton type="submit">Subscribe</SubscribeButton>
+                <SubscribeButton  
+                  onClick=  {(e) => {
+                    e.preventDefault();
+                    window.location.href="https://dajanadamjanovic.us4.list-manage.com/subscribe?u=f67ad67aefed8316a33535fce&id=ff22e4189d" ;
+                    }}
+                  type="button">
+                    Subscribe
+                </SubscribeButton>
               </SubscribeForm>
             </SubscribeNewsletterContainer>
           </SubscribeNewsletterColumn>
-        </SixColumns>
+        </FiveColumns>
         <Divider />
         <ThreeColRow>
           <LogoContainer>

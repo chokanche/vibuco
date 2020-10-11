@@ -2,17 +2,12 @@ import React from "react";
 import styled from "styled-components";
 import tw from "twin.macro";
 //eslint-disable-next-line
-import { css } from "styled-components/macro";
-import { SectionHeading, Subheading as SubheadingBase } from "../misc/Headings.js";
-import { SectionDescription } from "../misc/Typography.js";
+import { css } from "styled-components/macro"; //eslint-disable-line
+import { SectionHeading, Subheading as SubheadingBase } from "components/misc/Headings.js";
+import { SectionDescription } from "components/misc/Typography.js";
 
-import defaultCardImage from "../../images/shield-icon.svg";
+import { ReactComponent as SvgDecoratorBlob3 } from "images/svg-decorator-blob-3.svg";
 
-import ShieldIconImage from "../../images/shield-icon.svg";
-import CustomizeIconImage from "../../images/customize-icon.svg";
-
-const isServer = typeof window === 'undefined'
-const WOW = !isServer ? require('wow.js') : null
 const Container = tw.div`relative`;
 
 const ThreeColumnContainer = styled.div`
@@ -50,62 +45,57 @@ const Card = styled.div`
   }
 `;
 
-class ThreeColWithSideImage extends React.Component {
+const DecoratorBlob = styled(SvgDecoratorBlob3)`
+  ${tw`pointer-events-none absolute right-0 bottom-0 w-64 opacity-25 transform translate-x-32 translate-y-48 `}
+`;
 
-  componentDidMount() {
-    new WOW().init()
-}
-
-  render() {
+export default ({ cards = null, heading = "Our Offices", subheading = "Locations", description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." }) => {
   /*
    * This componets has an array of object denoting the cards defined below. Each object in the cards array can have the key (Change it according to your need, you can also add more objects to have more cards in this feature component) or you can directly pass this using the cards prop:
-   *  1) imageSrc - the image shown at the top of the card
-   *  2) title - the title of the card
-   *  3) description - the description of the card
+   *  1) title - the title of the card
+   *  2) description - the description of the card
    *  If a key for a particular card is not provided, a default value is used
    */
-  var cards = this.props.cards;
-  var heading = this.props.heading;
-
-  var subheading = this.props.subheading && null;
-  var description = this.props.description && null;
-
-  var animation = this.props.animation;
 
   const defaultCards = [
     {
-      imageSrc: ShieldIconImage,
-      title: "Powerful photos",
-      description: "You can also use photos without questions to give your clients’ imagination to complete freedom.."
+      title: "Secure",
+      description: "We strictly only deal with vendors that provide top notch security."
     },
-    { imageSrc: "../../static/support-icon.svg", 
-      title: "Powerful questions",
-      description: "You can use a combination of a photo and a question to help your client change perspective, unpack thoughts, approach their topic differently."
+    { 
+      title: "24/7 Support",
+      description: "Lorem ipsum donor amet siti ceali ut enim ad minim veniam, quis nostrud."
     },
-    { imageSrc: CustomizeIconImage, 
+    { 
+      title: "Reliable",
+      description: "Lorem ipsum donor amet siti ceali ut enim ad minim veniam, quis nostrud."
+    },
+    { 
+      title: "Easy",
+      description: "Lorem ipsum donor amet siti ceali ut enim ad minim veniam, quis nostrud."
+    },
+    { 
       title: "Customizable",
-      description: "You can use photos face up to give your clients’ intuition to lead a tough process or face down to bring a surprise effect in exercise." 
-    }
+      description: "Lorem ipsum donor amet siti ceali ut enim ad minim veniam, quis nostrud."
+    },
+    { 
+      title: "Fast",
+      description: "Lorem ipsum donor amet siti ceali ut enim ad minim veniam, quis nostrud."
+    },
   ];
-
 
   if (!cards) cards = defaultCards;
 
   return (
-    <div>
     <Container>
       <ThreeColumnContainer>
         {subheading && <Subheading>{subheading}</Subheading>}
-        <Heading className={animation} data-wow-duration="4s" >{heading}</Heading>
+        <Heading>{heading}</Heading>
         {description && <Description>{description}</Description>}
         <VerticalSpacer />
         {cards.map((card, i) => (
           <Column key={i}>
-            <div className={animation} data-wow-duration="2s">
             <Card>
-              <span className="imageContainer">
-                <img src={card.imageSrc || defaultCardImage} alt="" />
-              </span>
               <span className="textContainer">
                 <span className="title">{card.title || "Fully Secure"}</span>
                 <p className="description">
@@ -113,15 +103,10 @@ class ThreeColWithSideImage extends React.Component {
                 </p>
               </span>
             </Card>
-            </div>
           </Column>
         ))}
       </ThreeColumnContainer>
+      <DecoratorBlob />
     </Container>
-    </div>
   );
-  }
-}
-
-
-export default ThreeColWithSideImage;
+};

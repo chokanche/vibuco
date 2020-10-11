@@ -6,7 +6,6 @@ import { css } from "styled-components/macro";
 import { SectionHeading, Subheading as SubheadingBase } from "../misc/Headings";
 import { SectionDescription } from "../misc/Typography";
 import { ReactComponent as SvgDotPatternIcon } from "../../images/dot-pattern.svg";
-import miniphoto  from "../../static/dd-blog.jpg";
 
 const HeadingContainer = tw.div`text-center`;
 const Subheading = tw(SubheadingBase)`mb-4`;
@@ -26,7 +25,7 @@ const AuthorInfo = tw.div`flex`;
 const AuthorImage = tw.img`w-12 h-12 rounded-full mr-3`;
 const AuthorTextInfo = tw.div`text-xs text-gray-600`;
 const AuthorName = tw.div`font-semibold mt-2`;
-const AuthorProfile = tw.div`pt-1 font-medium`;
+const AuthorProfile = tw.a`pt-1 font-medium`;
 
 const PostContainer = styled.div`
   ${tw`relative z-20 mt-10 sm:pt-3 pr-3 w-full sm:w-1/2 lg:w-1/3 max-w-sm mx-auto sm:max-w-none sm:mx-0`}
@@ -74,6 +73,7 @@ export default ({
         "There are many things that can help you become a good leader. And just as many that could drive you to become a great one.",
       authorName: "Dajana Damjanovic",
       authorProfile: "Associate Certified Coach (ACC)",
+      profileLink : "https://www.youracclaim.com/badges/3d107ca7-df59-4b9e-81c7-ee8e687dc1f4",
       url: "https://dajanadamjanovic.com/en/ego-the-difference-between-a-good-and-a-great-leader/",
       featured: true
     },
@@ -127,7 +127,7 @@ export default ({
                     {post.featured && <AuthorImage src={post.authorImageSrc} />}
                     <AuthorTextInfo>
                       <AuthorName>{post.authorName}</AuthorName>
-                      {post.featured && <AuthorProfile>{post.authorProfile}</AuthorProfile>}
+                      {post.featured && <AuthorProfile className="blog" href={post.profileLink}>{post.authorProfile}</AuthorProfile>}
                     </AuthorTextInfo>
                   </AuthorInfo>
                 </PostText>

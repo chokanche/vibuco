@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { gsap } from 'gsap';
 import Viheader from "./headers/viheader"
 
-import "../styles/landingPageStyles.css";
+import "../styles/customStyles.css";
 
 class Landing extends Component {
 
@@ -28,25 +28,23 @@ class Landing extends Component {
 
     render() {
         return (
-        <div className="content is-loading">
+        <div className="content">
             <main>
-                <section className="landingImage">
-                    <div>
-                        <Viheader />
-                    </div>
+                <div className="landingImage">
+                    <Viheader/>
                     <h2 className="big-text">Unpack your Thougths</h2>
-                </section>
+                </div>
             </main>
             <div className="intro">
                 <div className="intro-text">
                     <h1 className="hide">
-                    <span className="text"><span className="green">Vi</span>rtual</span>
+                    <span className="text"><span className="green">vi</span>rtual</span>
                     </h1>
                     <h1 className="hide">
-                    <span className="text"><span className="green">Bu</span>siness</span>
+                    <span className="text"><span className="green">bu</span>siness</span>
                     </h1>
                     <h1 className="hide">
-                    <span className="text"><span className="green">Co</span>aching</span>
+                    <span className="text"><span className="green">co</span>aching</span>
                     </h1>
                 </div>
                 </div>

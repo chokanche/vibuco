@@ -123,7 +123,7 @@ const Cards = ({ initialAuth }) => {
 
   return (
     <>
-    <Viheader />
+        <Viheader />
         {!isLoading ? (
           <Container className="mt-5 mb-4" xs="12">
             <div className="d-flex align-items-center justify-content-center justify-content-md-end">

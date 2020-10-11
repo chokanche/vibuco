@@ -6,6 +6,26 @@
     padding: 0;
     box-sizing: border-box;
   }
+  /* unvisited link */
+  a.blog:link {
+    color: red;
+  }
+
+  /* visited link */
+  a.blog:visited {
+    color: rgb(119, 175, 119);
+  }
+
+  /* mouse over link */
+  a.blog:hover {
+    color: rgb(175, 168, 102);
+  }
+
+  /* selected link */
+  a.blog:active {
+    color: blue;
+  }
+
   main {
     font-family: 'David Libre', serif;
   }
@@ -19,11 +39,23 @@
     min-height: 10vh;
   }
 
+  .customFont {
+    font-family: 'David Libre', serif;
+  }
+
+  .textJustify {
+    text-align: justify;
+    text-justify: inter-word;
+  }
+
   .landingImage {
     min-height: 100vh;
-    background: url("/static/home-background2.jpg");
+    background: url("/static/Vorderrhein.png");
     background-size: cover;
-    padding: 0rem 5rem;
+  }
+
+  .navpadding {
+    padding: 0.5rem 2rem 0rem;
   }
 
   nav {

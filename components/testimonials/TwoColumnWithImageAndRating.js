@@ -69,11 +69,11 @@ const ControlButton = styled.button`
 `;
 
 export default ({
-  imageSrc = "../../static/love.svg",
+  imageSrc = "../../static/questions.svg",
   imageRounded = true,
   imageBorder = false,
   imageShadow = false,
-  subheading = "Testimonials",
+  subheading = "",
   heading = "Our Clients Love Us.",
   description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua enim ad minim veniam.",
   textOnLeft = false,
