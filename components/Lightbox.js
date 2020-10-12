@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import getImageAspectRatio from "../helpers/getImageAspectRatio";
 import useViewport from "../hooks/useViewport";
 
-const Lightbox = ({ imgPath, txt, onClose, showText, isBackground, index }) => {
+const Lightbox = ({ imgPath, txt, onClose, showText }) => {
   const [isSideBySide, setSideBySide] = useState(false);
 
   const handleClose = (e) => {
@@ -28,7 +28,7 @@ const Lightbox = ({ imgPath, txt, onClose, showText, isBackground, index }) => {
   }, []);
 
   useEffect(() => {
-    if (isSideBySide) {
+    if (isSideBySide || !showText) {
       img.current.style.maxHeight = `${popup.current.offsetHeight - 10}px`;
     } else {
       img.current.style.maxHeight = `${
