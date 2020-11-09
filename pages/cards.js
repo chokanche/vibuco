@@ -2,13 +2,14 @@ import React, { useEffect, useState } from "react";
 import tw from "twin.macro";
 
 import Layout from "../components/Layout";
-import { background } from "../backgrounds";
+import black1 from '../public/black1.jpg';
+import black2 from '../public/black2.jpg';
 import Gallery from "react-photo-gallery";
 import Lightbox from "../components/Lightbox";
 import { useAuth } from "../auth";
 import getDataFromDDBTable from "../actions/getDataFromDDBTable";
 import s3UrlToHttps from "../helpers/s3UrlToHttps";
-import presignImageSources from "../helpers/presignImageSources";
+import getImageObjects from "../helpers/getImageObjects";
 import { PUBLIC_BUCKET_NAME, COMMON_BUCKET_NAME } from "../config";
 import getImageAspectRatio from "../helpers/getImageAspectRatio";
 import Loading from "../components/Loading";
@@ -30,22 +31,28 @@ const Cards = ({ initialAuth }) => {
   const [showText, setShowText] = useState(true);
 
   const [images, setImages] = useState([]);
-  const [imageBackgrounds, setImageBackgrounds] = useState(background);
 
   const [isFlipped, setFlipped] = useState(false);
   const [isLightbox, setLightbox] = useState(false);
 
   const [isEnglish, setEnglish] = useState(true);
+  const hasHeightWidth = (img) => img.height && img.width;
 
-  // get image widths for all the images in the imgData array that is passed in. Will return same array with added width and height attributes
+  // get image widths for all the images in the imgData array that is passed in. Will return same array with added width and height attributes if not added in DB
   const getImageWidths = async (imgData) => {
-    const promises = imgData.map(async (img) => ({
-      ...img,
-      height: 1,
-      width: await getImageAspectRatio(img.src).catch((err) => {
-        return 1;
-      }),
-    }));
+    const promises = imgData.map(async (img) => {
+      const width = hasHeightWidth(img)
+        ? img.width
+        : await getImageAspectRatio(img.src).catch((err) => {
+            return 1;
+          });
+
+      return {
+        ...img,
+        height: hasHeightWidth(img) ? img.height : 1,
+        width,
+      };
+    });
 
     return await Promise.all(promises);
   };
@@ -73,22 +80,41 @@ const Cards = ({ initialAuth }) => {
     setLoading(false);
   };
 
+   // encode file.Body response into a base64 string
+   const encode = (data) => {
+    const str = data.reduce((a, b) => {
+      return a + String.fromCharCode(b);
+    }, "");
+    return btoa(str).replace(/.{76}(?=.)/g, "$&\n");
+  };
+
   const fetchCommonImagesData = async () => {
     const imageData = await getDataFromDDBTable("vibuco-photos", auth.idToken);
 
     // presign our image urls for authenticated access
-    const imageWithPresignedUrls = await presignImageSources(
+    const imageObjects = await getImageObjects(
       imageData,
       COMMON_BUCKET_NAME,
       auth
     );
 
-    const imagesWithWidth = await getImageWidths(imageWithPresignedUrls);
+    const completeImageDataWithObjects = imageData.map(async (img, i) => {
+      const obj = imageObjects[i];
+      img.src = `data:${obj.ContentType};base64,` + encode(obj.Body);
 
-    // shuffle images
-    setImages(_.shuffle(imagesWithWidth));
+      if (!hasHeightWidth(img)) {
+        img.height = 1;
+        img.width = await getImageAspectRatio(img.src);
+      }
+
+      return img;
+    });
+
+    const data = await Promise.all(completeImageDataWithObjects);
+
+    setImages(_.shuffle(data));
     setLoading(false);
-  };
+  }; 
 
   // Fetch the right data based on authentication (will happen on page load)
   useEffect(() => {
@@ -184,7 +210,16 @@ const Cards = ({ initialAuth }) => {
 
         {isFlipped ? (
           <Gallery
-            photos={imageBackgrounds}
+            photos={images.map(img => {
+              const ratio = img.width / img.height;
+
+              if (ratio >= 1) {
+                return { ...img, src: black1 }
+              } else {
+                return { ...img, src: black2 }
+              }
+
+            })}
             renderImage={NumberedGalleryImage}
             onClick={openLightbox}
           />
