@@ -67,7 +67,7 @@ export default ({
     {
       postImageSrc:
         "https://images.unsplash.com/photo-1457369804613-52c61a468e7d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=768&q=80",
-      authorImageSrc: "../../static/dd-blog.jpg",
+      authorImageSrc: "../../static/dd.jpg",
       title: "EGO: THE DIFFERENCE BETWEEN A GOOD AND A GREAT LEADER?",
       description:
         "There are many things that can help you become a good leader. And just as many that could drive you to become a great one.",
@@ -118,7 +118,7 @@ export default ({
         <Posts>
           {posts.map((post, index) => (
             <PostContainer featured={post.featured} key={index}>
-              <Post className="group" href={post.url}>
+              <Post className="group" href={post.url} componentClass='span'>
                 <PostImage imageSrc={post.postImageSrc} />
                 <PostText>
                   <PostTitle>{post.title}</PostTitle>
@@ -127,7 +127,10 @@ export default ({
                     {post.featured && <AuthorImage src={post.authorImageSrc} />}
                     <AuthorTextInfo>
                       <AuthorName>{post.authorName}</AuthorName>
-                      {post.featured && <AuthorProfile className="blog" href={post.profileLink}>{post.authorProfile}</AuthorProfile>}
+                        {/*
+                          This causes issues. Should not be <a></a>
+                        */}
+                      <AuthorProfile className="blog" href={post.profileLink}>{post.authorProfile}</AuthorProfile>
                     </AuthorTextInfo>
                   </AuthorInfo>
                 </PostText>

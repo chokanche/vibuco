@@ -101,7 +101,7 @@ export default () => {
             <SubscribeNewsletterContainer>
               <ColumnHeading>Subscribe to our Newsletter</ColumnHeading>
               <SubscribeText>
-                We deliver high quality blog posts written by professionals weekly. And we promise no spam.
+                We deliver high quality blog posts written by professionals. And we promise no spam.
               </SubscribeText>
               <SubscribeForm method="get" action="#">
                 <SubscribeButton  

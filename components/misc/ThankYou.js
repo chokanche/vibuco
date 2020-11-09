@@ -1,18 +1,7 @@
 import React from 'react'
 import "../../styles/customStyles.css";
-import tw from "twin.macro";
-import styled, { css } from "styled-components/macro"; //eslint-disable-line
-import { Container, ContentWithPaddingXl } from "../misc/Layouts.js";
-import { Subheading as SubheadingBase } from "../misc/Headings.js";
-import { SectionDescription } from "../misc/Typography.js";
 
-const PrimaryBackgroundContainer = tw(Container)`-mx-8 px-8 bg-primary-900 text-gray-100`;
-const SectionHeading = tw.div`text-4xl sm:text-5xl font-black tracking-wide text-center`
 
-const HeadingContainer = tw.div``;
-const Subheading = tw(SubheadingBase)`text-center text-gray-100 mb-4`;
-const Heading = tw(SectionHeading)``;
-const Description = tw(SectionDescription)`mx-auto text-center text-gray-300`;
 
 export default ({
     heading = "Frequently Asked Questions",

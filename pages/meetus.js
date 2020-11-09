@@ -6,6 +6,7 @@ import { Container, ContentWithPaddingXl } from "../components/misc/Layouts.js";
 import { SectionHeading, Subheading as SubheadingBase } from "../components/misc/Headings";
 import {SectionDescription} from "../components/misc/Typography";
 import { ReactComponent as LinkedinIcon} from "../images/linkedin-icon.svg";
+import Viheader from "../components/headers/viheader";
 
 const HeadingContainer = tw.div``
 const Heading = tw(SectionHeading)``
@@ -44,7 +45,7 @@ export default ({
   description = "",
   cards = [
     {
-      imageSrc: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&fit=facearea&facepad=2.95&w=512&h=512&q=80",
+      imageSrc: "../../static/dd.jpg",
       position: "Founder",
       name: "Dajana Damjanovic",
       links: [
@@ -68,32 +69,35 @@ export default ({
   ]
 }) => {
   return (
-    <Container>
-      <ContentWithPaddingXl>
-        <HeadingContainer>
-          {subheading && <Subheading>{subheading}</Subheading>}
-          {heading && <Heading>{heading}</Heading> }
-          {description && <Description>{description}</Description> }
-        </HeadingContainer>
-        <Cards>
-          {cards.map((card, index) => (
-            <Card key={index}>
-              <CardImage imageSrc={card.imageSrc} />
-              <CardContent>
-                <span className="position">{card.position}</span>
-                <span className="name">{card.name}</span>
-                <CardLinks>
-                  {card.links.map((link, linkIndex) => (
-                    <a key={linkIndex} className="link" href={link.url}>
-                        <link.icon className="icon" />
-                    </a>
-                  ))}
-                </CardLinks>
-              </CardContent>
-            </Card>
-          ))}
-        </Cards>
-      </ContentWithPaddingXl>
-    </Container>
+    <div className="customFont">
+      <Viheader />
+      <Container>
+        <ContentWithPaddingXl>
+          <HeadingContainer>
+            {subheading && <Subheading>{subheading}</Subheading>}
+            {heading && <Heading>{heading}</Heading> }
+            {description && <Description>{description}</Description> }
+          </HeadingContainer>
+          <Cards>
+            {cards.map((card, index) => (
+              <Card key={index}>
+                <CardImage imageSrc={card.imageSrc} />
+                <CardContent>
+                  <span className="position">{card.position}</span>
+                  <span className="name">{card.name}</span>
+                  <CardLinks>
+                    {card.links.map((link, linkIndex) => (
+                      <a key={linkIndex} className="link" href={link.url}>
+                          <link.icon className="icon" />
+                      </a>
+                    ))}
+                  </CardLinks>
+                </CardContent>
+              </Card>
+            ))}
+          </Cards>
+        </ContentWithPaddingXl>
+      </Container>
+    </div>
   );
 };

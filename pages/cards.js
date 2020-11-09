@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import tw from "twin.macro";
+
 import Layout from "../components/Layout";
 import { background } from "../backgrounds";
 import Gallery from "react-photo-gallery";
@@ -14,6 +16,8 @@ import Container from "../components/grid/Container";
 import _ from "lodash";
 import NumberedGalleryImage from "../components/NumberedGalleryImage";
 import Viheader from "../components/headers/viheader"
+import HeaderBase, { NavLinks, NavLink, NavButton, PrimaryButton, PrimaryLink } from  '../components/headers/light'
+import "../styles/customStyles.css";
 
 const Cards = ({ initialAuth }) => {
   // authentication object which represents logged in user
@@ -31,7 +35,7 @@ const Cards = ({ initialAuth }) => {
   const [isFlipped, setFlipped] = useState(false);
   const [isLightbox, setLightbox] = useState(false);
 
-  const [isEnglish, setEnglish] = useState(false);
+  const [isEnglish, setEnglish] = useState(true);
 
   // get image widths for all the images in the imgData array that is passed in. Will return same array with added width and height attributes
   const getImageWidths = async (imgData) => {
@@ -110,6 +114,8 @@ const Cards = ({ initialAuth }) => {
 
   const flip = () => setFlipped((prevState) => !prevState);
 
+  const changeLanguage = () => setEnglish((prevState) => !prevState);
+
   // open the light box (handler comes from React-gallery) setting the current image and opening the light box
   const openLightbox = (_, { index }) => {
     setCurrentImageIndex(index);
@@ -120,25 +126,32 @@ const Cards = ({ initialAuth }) => {
 
   // helper var to get the current image based on the index in the images array
   const currentImage = images[currentImageIndex];
+  const Header = tw.header`
+    flex items-center
+    max-w-screen-xl mx-auto justify-center m-4
+  `;
 
   return (
     <>
         <Viheader />
         {!isLoading ? (
-          <Container className="mt-5 mb-4" xs="12">
-            <div className="d-flex align-items-center justify-content-center justify-content-md-end">
+            <Header className="customFont">
               {auth ? (
-                <div className="d-flex mb-4 justify-content-center align-items-center">
+                <>
                   <button
-                    className={`btn mr-2 ${
-                      isFlipped ? "btn-dark" : "btn-light"
+                    id="switchToEnglish"
+                    className={`border border-vibuco-100 rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-gray-300 focus:outline-none focus:shadow-outline mr-2 ${
+                      isEnglish ? "bg-gray-600 text-gray-200" : "bg-gray-200 text-gray-700"
                     }`}
+                    onClick={changeLanguage}
                   >
                     English
                   </button>
+
                   <button
-                    className={`btn mr-4 ${
-                      isFlipped ? "btn-dark" : "btn-light"
+                    id="flipCards"
+                    className={`border border-vibuco-100 rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-gray-300 focus:outline-none focus:shadow-outline mr-2 ${
+                      isFlipped ? "bg-gray-600 text-gray-200" : "bg-gray-200 text-gray-700"
                     }`}
                     onClick={flip}
                   >
@@ -153,6 +166,7 @@ const Cards = ({ initialAuth }) => {
                       className="custom-control-input"
                       id="customSwitch1"
                       checked={showText}
+                      onChange={e => {}}
                     />
                     <label
                       className="custom-control-label"
@@ -161,10 +175,9 @@ const Cards = ({ initialAuth }) => {
                       Show questions
                     </label>
                   </div>
-                </div>
+                </>
               ) : null}
-            </div>
-          </Container>
+            </Header>
         ) : null}
 
         {isLoading ? <Loading /> : null}

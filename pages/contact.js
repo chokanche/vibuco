@@ -4,9 +4,10 @@ import styled from "styled-components";
 import { css } from "styled-components/macro"; //eslint-disable-line
 import { SectionHeading, Subheading as SubheadingBase } from "../components/misc/Headings.js";
 import { PrimaryButton as PrimaryButtonBase } from "../components/misc/Buttons.js";
+import SimpleHeader from "../components/headers/headersimple.js"
 
 const Container = tw.div`relative`;
-const TwoColumn = tw.div`flex flex-col md:flex-row justify-between max-w-screen-xl mx-auto py-20 md:py-12`;
+const TwoColumn = tw.div`flex flex-col md:flex-row justify-between max-w-screen-xl mx-auto py-20 md:py-0`;
 const Column = tw.div`w-full max-w-md mx-auto md:max-w-none md:mx-0`;
 const ImageColumn = tw(Column)`md:w-5/12 flex-shrink-0 h-80 md:h-auto`;
 const TextColumn = styled(Column)(props => [
@@ -45,7 +46,8 @@ export default ({
   // The textOnLeft boolean prop can be used to display either the text on left or right side of the image.
 
   return (
-    <div className = "customFont">
+    <>
+    <SimpleHeader />
       <Container>
         <TwoColumn>
           <ImageColumn>
@@ -68,6 +70,6 @@ export default ({
           </TextColumn>
         </TwoColumn>
       </Container>
-    </div>
+    </>
   );
 };

@@ -5,7 +5,8 @@ import "../styles/customStyles.css";
 import Footer from "../components/footers/FiveColumnWithInputForm";
 import Features from "../components/features/ThreeColWithSideImage.js";
 import Clients from "../components/testimonials/TwoColumnWithImageAndRating"
-
+import { useAuthFunctions } from "aws-cognito-next";
+import { useAuth } from "../auth";
 import { ReactComponent as BriefcaseIcon } from "feather-icons/dist/icons/briefcase.svg";
 import { ReactComponent as MoneyIcon } from "feather-icons/dist/icons/dollar-sign.svg";
 import { ReactComponent as HeartIcon } from "feather-icons/dist/icons/heart.svg";
@@ -30,10 +31,11 @@ function ScrollToTopOnMount() {
 }
 
 const Index = ({ initialAuth }) => {
-  
+  const auth = useAuth(null);
+  const { login, logout } = useAuthFunctions();
   // authentication object which represents logged in user
   return (
-    <div className="customFont">
+    <>
       <ScrollToTopOnMount />
       <Landing />
       <Details 
@@ -46,7 +48,7 @@ const Index = ({ initialAuth }) => {
         }
         imageSrc = "../../static/through_the_park.svg"
         imageDecoratorBlob = {true}
-        primaryButtonUrl = "https://google.com"
+        primaryButtonUrl = {login}
         primaryButtonText = "Get access"
         buttonRounded = {true}
         animationHeading = "wow fadeIn"
@@ -55,7 +57,7 @@ const Index = ({ initialAuth }) => {
         features = {[
         "If  you need to unpack your thoughts.",
         "If you need to help your clients get new ideas, insights or shift in perspective.",
-        "If you need to support them in unpacking their thoughts.",
+        "If you need to support your clients in unpacking their thoughts.",
         "If you want to use reflection cards, powerful questions, and metaphors."
         ]}
       />
@@ -68,45 +70,45 @@ const Index = ({ initialAuth }) => {
           {
             imageSrc: "../../static/camera.svg", 
             title: "Powerful photos",
-            description: "You can also use photos without questions to give your clients’ imagination to complete freedom.."
+            description: "We give you a pool of powerfull photos that will provoke your clients’ imagination."
           },
           { imageSrc: "../../static/camera.svg", 
             title: "Powerful questions",
-            description: "You can use a combination of a photo and a question to help your client change perspective, unpack thoughts, approach their topic differently."
+            description: "We prepared a set of powerfull questions you can use in combination with photos to help your client in changing perspective and unpacking their thoughts."
           },
           { imageSrc: "../../static/camera.svg",  
-            title: "Customizable",
-            description: "You can use photos face up to give your clients’ intuition to lead a tough process or face down to bring a surprise effect in exercise." 
+            title: "Intuitive",
+            description: "You can use photos face up to let clients’ intuition lead a thinking process or face down to bring a surprise effect in exercise." 
           }]
         }
       />
       <Features 
-        heading={<><HighlightedText>For</HighlightedText></>}
+        heading={<><HighlightedText>- - -</HighlightedText></>}
         description = ""
         subheading = ""
         animation = "wow slideInRight"
         cards = {[
         {
           imageSrc: "../../static/camera.svg", 
-          title: "Who?",
-          description: "Coaches, trainers, facilitators, you. Those who need to deliver virtually their coaching, workshops, brainstorming sessions, team meetings, training, etc. Those who are looking for inspiration."
+          title: "For who?",
+          description: "Coaches, trainers, facilitators, you. Those who need to deliver virtually their coaching, workshops, brainstorming sessions, team meetings, training. Those who are looking for inspiration."
         },
         { imageSrc: "../../static/camera.svg", 
           title: "When?",
-          description: "Initial coaching sessions, during a coaching process - when you or your client feel stuck in the process, when they need a new perspective, brainstorming sessions, workshop openings or closing, as an ice-breaker, as an energizer..."
+          description: "Initial coaching sessions, during a coaching process when you or your client feel stuck in it, when they need a new perspective, for brainstorming sessions, workshop openings or closing, as an ice-breaker, as an energizer."
         },
         { imageSrc: "../../static/camera.svg",  
           title: "How?",
-          description: "Digital tools easy to use, with provided examples of coaching exercises. Available any time during your virtual or face to face work. You just need to sign up. Available in English and Serbian." 
+          description: "Digital coaching tool, with carefully selected examples of coaching exercises. Available any time during your virtual or face to face session. Available in English and Serbian." 
         }
       ]}
       />
       <MainFeatures
         heading={<>Built by <HighlightedText>professional coaches</HighlightedText> and <HighlightedText>their clients</HighlightedText></>}
-        description={<>Inspiration for this tool came from great collaborations we have with professional coaches. Partnering our clients on their journey as coaches we continuously learn new powerful questions. This tool would not exist without all those great people.</>}
+        description={<>Inspiration for this tool came from everyday collaborations we have with professional coaches. Partnering our clients on their journey as coaches we continuously learn new powerful questions. This tool would not exist without all those great people.</>}
         subheading = ""
         primaryButtonText = "Read More"
-        primaryButtonUrl = "https://dajanadamjanovic.com/sr/kakva-pitanja-sebi-postavljate/"
+        primaryButtonUrl = "https://dajanadamjanovic.com/en/have-you-mastered-the-art-of-asking-yourself-questions/"
         imageSrc = "../../static/ideas-female.svg"
         buttonRounded = {true}
         imageRounded = {true}
@@ -149,7 +151,7 @@ const Index = ({ initialAuth }) => {
           description={<>If you would like to read more about topics that bothers all of us who are eager to change and grow - check our blog.</>}
         />
       <Footer />
-    </div>
+    </>  
   );
 };
 

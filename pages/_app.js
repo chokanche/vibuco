@@ -16,6 +16,7 @@ import {
 import { GlobalStyles } from "twin.macro";
 
 import "../styles/globalStyles.css";
+import "../styles/customStyles.css";
 
 // Configure Amplify with everything it needs to handle authentication
 Amplify.configure({
@@ -52,13 +53,13 @@ Auth.configure({
 // Main app component
 function MyApp({ Component, pageProps }) {
   return (
-    <>
-        <Head>
-        <title>vibuco</title>
-        </Head>
+    <div className="customFont scrollhost"> 
+      <Head>
+      <title>vibuco</title>
+      </Head>
       <GlobalStyles />
       <Component {...pageProps} />
-    </>
+    </div>
   );
 }
 

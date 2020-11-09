@@ -4,14 +4,15 @@ import Viheader from "../components/headers/viheader";
 import Footer from "../components/footers/FiveColumnWithInputForm.js";
 import MainFeature1 from "../components/features/TwoColWithButton.js";
 import ThankYou from "../components/misc/ThankYou.js";
+import Navbar from "../components/Navbar.js"
 
 const isServer = typeof window === 'undefined'
 const WOW = !isServer ? require('wow.js') : null
 const HighlightedText = tw.span`text-vibuco-100`
+const Middle = tw.div`mt-8 flex flex-col sm:flex-row items-center justify-center flex-wrap max-w-screen-md justify-between mx-auto`
 
 class About extends React.Component {
   componentDidMount() {
-    console.log("mounted")
     new WOW().init()
 }
 
@@ -40,7 +41,7 @@ class About extends React.Component {
         <MainFeature1
           subheading=""
           heading={<><HighlightedText>vibuco</HighlightedText> team invites you to participate</>}
-          description="We want to provide you not just a digital tool, but space where you can together with us build more digital coaching tools. We wanted to provide you space to use our tool according  to your needs, to add more content in it and  to share it with others.
+          description="We want to provide you not just a digital tool, but a space where you can, together with us, build more digital coaching tools. We wanted to provide you space to use our tool according  to your needs, to add more content in it and  to share it with others.
           We are driven by continuous learning and improvement. Therefore we invite you to share with us your ideas, needs, tools you would like to see transformed to digital.
           Your feedback is more than welcome."
           buttonRounded={false}
@@ -51,12 +52,15 @@ class About extends React.Component {
         />
       </div>
       <div className="wow fadeIn" data-wow-duration="2s">
+        <Middle>
         <ThankYou 
           heading="Thank you note."
           description={<>I would like to thank all those generous photographers who share their photos on website Unsplash, and my partner and his sister for allowing us to use photos created by them.  
             I would like to thank my clients who are my continuous inspiration and discovery of human excellence. 
             Finally, this thank you note would not be complete if I would not mention my coaching mentor, Brankica Ljamic, without whom the power of asking the right questions would never be revealed to me.</>}
           />
+        </Middle>
+
       </div>
       <Footer />
       </div>

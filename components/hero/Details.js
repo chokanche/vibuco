@@ -63,7 +63,7 @@ class Details extends React.Component {
                   <Heading>{heading}</Heading>
                   </div>
                   <Description className="textJustify">{description}</Description>
-                  <PrimaryButton as="a" href={primaryButtonUrl} css={buttonRoundedCss}>
+                  <PrimaryButton onClick={primaryButtonUrl} css={buttonRoundedCss}>
                     {primaryButtonText}
                   </PrimaryButton>
                   <FeatureList>

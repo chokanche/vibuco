@@ -43,11 +43,42 @@
     font-family: 'David Libre', serif;
   }
 
+  ul.square {
+    list-style-type: square;
+    margin: 10px 10px 10px 50px;;
+    padding: 0;
+  }
+
   .textJustify {
     text-align: justify;
     text-justify: inter-word;
   }
+  .textSizeLarge {
+    font-size: x-large;
+  }
 
+  span.i {
+    font-style: italic;
+  }
+
+  span.center {
+    font-size: large;
+    display:table;
+    margin:0 auto;
+}
+
+  .textCenter {
+    display: flex;
+    justify-content: center; /* align horizontal */
+    align-items: center; /* align vertical */
+  }
+  .vertical-align {
+    position: relative;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+}
   .landingImage {
     min-height: 100vh;
     background: url("/static/Vorderrhein.png");

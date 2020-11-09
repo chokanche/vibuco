@@ -23,7 +23,20 @@ export const NavLink = tw.a`
   font-semibold tracking-wide transition duration-300
   pb-1 border-b-2 border-transparent hover:border-green-500 hocus:text-green-500
 `;
-
+/* hocus: stands for "on hover or focus"
+ * hocus:bg-primary-700 will apply the bg-primary-700 class on hover or focus
+ */
+export const NavButton = tw.button`
+  text-lg my-2 lg:text-sm lg:mx-6 lg:my-0
+  font-semibold tracking-wide transition duration-300
+  pb-1 border-b-2 border-transparent hover:border-green-500 hocus:text-green-500
+`;
+export const PrimaryButton = tw(NavButton)`
+  lg:mx-0
+  px-4 py-2 rounded bg-vibuco-100 text-gray-100
+  hocus:bg-green-700 hocus:text-gray-200 focus:shadow-outline
+  border-b-0
+`;
 export const PrimaryLink = tw(NavLink)`
   lg:mx-0
   px-8 py-3 rounded bg-vibuco-100 text-gray-100
