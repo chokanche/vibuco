@@ -2,9 +2,6 @@ import React from "react";
 import { useRouter } from "next/router";
 
 import { useAuthRedirect } from "aws-cognito-next";
-import Layout from "../components/Layout";
-import { AUTH_COOKIE_DOMAIN } from "../config";
-import Auth from "@aws-amplify/auth";
 
 // When a user comes back from authenticating, the url looks
 // like this: /token#id_token=....
@@ -22,12 +19,11 @@ export default function Token() {
   const router = useRouter();
 
   useAuthRedirect(() => {
-    router.replace("/");
+    // go to the cards page directly
+    router.replace("/cards");
   });
 
   return (
-    <Layout>
       <p className="my-5 text-center">Loading...</p>
-    </Layout>
   );
 }

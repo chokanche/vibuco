@@ -1,6 +1,8 @@
 import "react-medium-image-zoom/dist/styles.css";
 import Amplify from "@aws-amplify/core";
 import Auth from "@aws-amplify/auth";
+import Head from 'next/head'
+
 import {
   USER_POOL_REGION,
   USER_POOL_ID,
@@ -11,6 +13,10 @@ import {
   REDIRECT_SIGN_IN,
   REDIRECT_SIGN_OUT,
 } from "../config";
+import { GlobalStyles } from "twin.macro";
+
+import "../styles/globalStyles.css";
+import "../styles/customStyles.css";
 
 // Configure Amplify with everything it needs to handle authentication
 Amplify.configure({
@@ -46,7 +52,15 @@ Auth.configure({
 
 // Main app component
 function MyApp({ Component, pageProps }) {
-  return <Component {...pageProps} />;
+  return (
+    <div className="customFont scrollhost"> 
+      <Head>
+      <title>vibuco</title>
+      </Head>
+      <GlobalStyles />
+      <Component {...pageProps} />
+    </div>
+  );
 }
 
 export default MyApp;
