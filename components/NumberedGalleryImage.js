@@ -1,6 +1,4 @@
 const NumberedGalleryImage = ({ photo, margin, onClick, index, key }) => {
-  console.log({...photo})
-  console.log({index})
   return (
     <>
       <div key={key} className="gallery-image">
