@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import tw from "twin.macro";
-
 import Layout from "../components/Layout";
-import black1 from '../public/black1.jpg';
-import black2 from '../public/black2.jpg';
+
 import Gallery from "react-photo-gallery";
 import Lightbox from "../components/Lightbox";
 import { useAuth } from "../auth";
@@ -17,7 +15,6 @@ import Container from "../components/grid/Container";
 import _ from "lodash";
 import NumberedGalleryImage from "../components/NumberedGalleryImage";
 import Viheader from "../components/headers/viheader"
-import HeaderBase, { NavLinks, NavLink, NavButton, PrimaryButton, PrimaryLink } from  '../components/headers/light'
 import "../styles/customStyles.css";
 
 const Cards = ({ initialAuth }) => {
@@ -152,16 +149,14 @@ const Cards = ({ initialAuth }) => {
 
   // helper var to get the current image based on the index in the images array
   const currentImage = images[currentImageIndex];
-  const Header = tw.header`
-    flex items-center
-    max-w-screen-xl mx-auto justify-center m-4
-  `;
+  const Center = tw.header`
+    m-4 flex items-center justify-center flex-wrap max-w-screen-md mx-auto`;
 
   return (
     <>
         <Viheader />
         {!isLoading ? (
-            <Header className="customFont">
+            <Center>
               {auth ? (
                 <>
                   <button
@@ -185,7 +180,6 @@ const Cards = ({ initialAuth }) => {
                   </button>
                   <div
                     onChange={toggleTextSwitch}
-                    className="custom-control custom-switch"
                   >
                     <input
                       type="checkbox"
@@ -203,7 +197,7 @@ const Cards = ({ initialAuth }) => {
                   </div>
                 </>
               ) : null}
-            </Header>
+            </Center>
         ) : null}
 
         {isLoading ? <Loading /> : null}
@@ -214,11 +208,9 @@ const Cards = ({ initialAuth }) => {
               const ratio = img.width / img.height;
 
               if (ratio >= 1) {
-                return { ...img, src: black1 }
-              } else {
-                return { ...img, src: black2 }
-              }
-
+                return { ...img, src: '../static/black2.jpg' }
+              } 
+              return { ...img, src: '../static/black1.jpg' }
             })}
             renderImage={NumberedGalleryImage}
             onClick={openLightbox}

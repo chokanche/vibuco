@@ -72,11 +72,11 @@ const Index = ({ initialAuth }) => {
             title: "Powerful photos",
             description: "We give you a pool of powerfull photos that will provoke your clients’ imagination."
           },
-          { imageSrc: "../../static/camera.svg", 
+          { imageSrc: "../../static/help-circle.svg", 
             title: "Powerful questions",
             description: "We prepared a set of powerfull questions you can use in combination with photos to help your client in changing perspective and unpacking their thoughts."
           },
-          { imageSrc: "../../static/camera.svg",  
+          { imageSrc: "../../static/smile.svg",  
             title: "Intuitive",
             description: "You can use photos face up to let clients’ intuition lead a thinking process or face down to bring a surprise effect in exercise." 
           }]
@@ -89,15 +89,15 @@ const Index = ({ initialAuth }) => {
         animation = "wow slideInRight"
         cards = {[
         {
-          imageSrc: "../../static/camera.svg", 
+          imageSrc: "../../static/users.svg", 
           title: "For who?",
           description: "Coaches, trainers, facilitators, you. Those who need to deliver virtually their coaching, workshops, brainstorming sessions, team meetings, training. Those who are looking for inspiration."
         },
-        { imageSrc: "../../static/camera.svg", 
+        { imageSrc: "../../static/watch.svg", 
           title: "When?",
           description: "Initial coaching sessions, during a coaching process when you or your client feel stuck in it, when they need a new perspective, for brainstorming sessions, workshop openings or closing, as an ice-breaker, as an energizer."
         },
-        { imageSrc: "../../static/camera.svg",  
+        { imageSrc: "../../static/key.svg",  
           title: "How?",
           description: "Digital coaching tool, with carefully selected examples of coaching exercises. Available any time during your virtual or face to face session. Available in English and Serbian." 
         }

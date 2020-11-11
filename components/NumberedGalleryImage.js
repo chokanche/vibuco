@@ -1,9 +1,11 @@
 const NumberedGalleryImage = ({ photo, margin, onClick, index, key }) => {
+  console.log({...photo})
+  console.log({index})
   return (
     <>
       <div key={key} className="gallery-image">
         <div className="gallery-image__number">{index + 1}</div>
-        <img
+        <img 
           onClick={() => onClick(undefined, { index })}
           style={{ margin }}
           {...photo}
@@ -12,6 +14,7 @@ const NumberedGalleryImage = ({ photo, margin, onClick, index, key }) => {
       <style jsx>{`
         .gallery-image {
           position: relative;
+          
         }
 
         .gallery-image__number {
@@ -21,6 +24,7 @@ const NumberedGalleryImage = ({ photo, margin, onClick, index, key }) => {
           left: 15px;
           font-size: 22px;
         }
+
       `}</style>
     </>
   );

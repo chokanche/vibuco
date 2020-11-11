@@ -29,6 +29,10 @@ class Instructions extends React.Component {
           description="There are several ways to use vibuco. However, you are more than welcome to use it the way it suits your and your clients’ needs."
           imageSrc= "../static/idea.png"
         />
+        <br/>
+        <br/>
+        <br/>
+        <br/>
       </div>
       <div className="wow zoomIn" data-wow-duration="3s">
         <Center
@@ -103,9 +107,10 @@ class Instructions extends React.Component {
           Start with the question: <span className="i center">“What do you see in the photo?"</span><br/>
           You listen carefully and you write down for yourself the keywords your client is using. Then you repeat them to your client and ask which word (idea) they would like to explore more. Another option is to ask them which words they choose to use to talk more about it.
           Then repeat the same process several times helping your client spot the keywords they use when expressing their reflection. By that, you give them the power to choose in which direction they would go by choosing the word they want to explore more.
-          Idiosyncratic language and metaphors are most effective in the coaching process, and you can use vibuco to do this or similar exercises. The suggestion for this exercise was inspired by professor Tilmans work. 
-          For more you can check <span ><a className="green" href="https://www.tilman-rentel.de/">his webpage</a></span>
-        </Middle>
+          Idiosyncratic language and metaphors are most effective in the coaching process, and you can use vibuco to do this or similar exercises. 
+          The suggestion for this exercise was inspired by professor Tilmans work. 
+          For more information check out his work <a className="green" href="https://www.tilman-rentel.de/"> here</a>
+          </Middle>
         <Middle className="wow fadeIn textCenter textJustify" data-wow-duration="4s">
           <div className="textSizeLarge">We are sure you can come up with more examples when the photos and questions could be useful for you.</div>
           <br/>
@@ -113,7 +118,7 @@ class Instructions extends React.Component {
           <br/>
           <div className="textSizeLarge">We also wanted to give you more flexibility so you can use photos without questions.</div>
           <br/>
-          <div className="textSizeLarge">We would be more than happy if you would share with us your ideas on how you are using <HighlightedText>vibuco</HighlightedText> and suggestions for improvement. </div>
+          <div className="textSizeLarge">We would be more than happy if you would share with us your ideas on how you are using <HighlightedText>vibuco</HighlightedText> and suggestions for improvement. Feel free to <a className= "green" href="/contact">contact us</a>.</div>
         </Middle>
         <br/><br/><br/>
         <Footer />

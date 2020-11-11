@@ -53,7 +53,7 @@ Auth.configure({
 // Main app component
 function MyApp({ Component, pageProps }) {
   return (
-    <div className="customFont scrollhost"> 
+    <div className="customFont"> 
       <Head>
       <title>vibuco</title>
       </Head>
