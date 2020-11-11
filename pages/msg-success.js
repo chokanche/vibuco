@@ -6,6 +6,7 @@ import styled from "styled-components";
 import { css } from "styled-components/macro"; //eslint-disable-line
 import { SectionHeading, Subheading as SubheadingBase } from "../components/misc/Headings.js";
 import { Container, ContentWithPaddingXl } from "../components/misc/Layouts.js";
+import SimpleHeader from "../components/headers/headersimple.js"
 
 const Row = tw.div`flex flex-col md:flex-row justify-between items-center`;
 const Column = tw.div`w-full max-w-md mx-auto md:max-w-none md:mx-0`;
@@ -51,6 +52,8 @@ export default ({
   const [sliderRef, setSliderRef] = useState(null);
 
   return (
+    <>
+    <SimpleHeader />
     <Container>
       <ContentWithPaddingXl>
         <Row>
@@ -65,5 +68,6 @@ export default ({
         </Row>
       </ContentWithPaddingXl>
     </Container>
+    </>
   );
 };

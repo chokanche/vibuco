@@ -39,7 +39,7 @@ export default ({
   description = "",
   submitButtonText = "Send",
   formAction = "/msg-success",
-  formMethod = "get",
+  formMethod = "POST",
   formName = "contact",
   textOnLeft = true,
 }) => {
@@ -48,28 +48,28 @@ export default ({
   return (
     <>
     <SimpleHeader />
-      <Container>
-        <TwoColumn>
-          <ImageColumn>
-            <Image imageSrc="../static/mail.svg" />
-          </ImageColumn>
-          <TextColumn textOnLeft={textOnLeft}>
-            <TextContent>
-              {subheading && <Subheading>{subheading}</Subheading>}
-              <Heading>{heading}</Heading>
-              {description && <Description>{description}</Description>}
-              <Form action={formAction} method={formMethod} name = {formName} data-netlify="true">
-                <input type="hidden" name="form-name" value="contact" />
-                <Input type="email" name="email" placeholder="Your Email Address" />
-                <Input type="text" name="name" placeholder="Full Name" />
-                <Input type="text" name="subject" placeholder="Subject" />
-                <Textarea name="message" placeholder="Your Message Here" />
-                <SubmitButton type="submit">{submitButtonText}</SubmitButton>
-              </Form>
-            </TextContent>
-          </TextColumn>
-        </TwoColumn>
-      </Container>
+    <Container>
+      <TwoColumn>
+        <ImageColumn>
+          <Image imageSrc="../static/mail.svg" />
+        </ImageColumn>
+        <TextColumn textOnLeft={textOnLeft}>
+          <TextContent>
+            {subheading && <Subheading>{subheading}</Subheading>}
+            <Heading>{heading}</Heading>
+            {description && <Description>{description}</Description>}
+            <Form action={formAction} method={formMethod} name = {formName} data-netlify="true">
+              <input type="hidden" name="form-name" value="contact" />
+              <Input type="email" name="email" placeholder="Your Email Address" />
+              <Input type="text" name="name" placeholder="Full Name" />
+              <Input type="text" name="subject" placeholder="Subject" />
+              <Textarea name="message" placeholder="Your Message Here" />
+              <SubmitButton type="submit">{submitButtonText}</SubmitButton>
+            </Form>
+          </TextContent>
+        </TextColumn>
+      </TwoColumn>
+    </Container>
     </>
   );
 };
