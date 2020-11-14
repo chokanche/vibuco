@@ -1,7 +1,7 @@
 {
   "name": "vibuco",
   "version": "1.0.0",
-  "description": "Virtual business coach",
+  "description": "Virtual Business Coach",
   "main": "index.js",
   "scripts": {
     "dev": "next",
@@ -54,7 +54,6 @@
     "styled-components": "^5.2.0",
     "twin.macro": "^1.10.0",
     "use-in-view": "^1.0.15",
-    "vivid-icons": "^1.0.10",
     "wow.js": "^1.2.2"
   },
   "devDependencies": {

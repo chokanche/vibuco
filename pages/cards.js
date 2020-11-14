@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import tw from "twin.macro";
-import Layout from "../components/Layout";
 
 import Gallery from "react-photo-gallery";
 import Lightbox from "../components/Lightbox";

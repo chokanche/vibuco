@@ -5,7 +5,6 @@ import NotLoggedIn from '../components/auth/NotLoggedIn';
 const Login = () => {
   const onSubmit = (e) => {
     e.preventDefault();
-    console.log("submit!");
   };
 
   const showForm = () => (

@@ -5,9 +5,6 @@ import Router from "next/router";
 
 const NotLoggedIn = ({ children }) => {
   const auth = useAuth(null);
-
-  console.log(auth);
-
   useEffect(() => {
     if (auth) {
       Router.replace("/");

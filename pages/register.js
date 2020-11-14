@@ -5,7 +5,6 @@ import Link from 'next/link';
 const Register = () => {
   const onSubmit = e => {
     e.preventDefault();
-    console.log('submit!');
   }
 
   return (

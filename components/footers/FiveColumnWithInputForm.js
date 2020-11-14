@@ -1,9 +1,9 @@
 import React from "react";
 import tw from "twin.macro";
 import styled from "styled-components";
-import { css } from "styled-components/macro"; //eslint-disable-line
 import { PrimaryButton as PrimaryButtonBase } from "../misc/Buttons.js";
-
+import { useAuthFunctions } from "aws-cognito-next";
+import HeaderBase, { NavLinks, NavLink, NavButton, PrimaryButton, PrimaryLink } from  '../headers/light.js'
 //import LogoImage from "../../static/logo.svg";
 import FacebookIcon from "../../static/facebook-icon.svg";
 import TwitterIcon from "../../static/twitter.svg";
@@ -29,7 +29,6 @@ const SubscribeNewsletterColumn = tw(Column)`text-center lg:text-left w-full! lg
 const SubscribeNewsletterContainer = tw.div`max-w-sm mx-auto lg:mx-0 `;
 const SubscribeText = tw.p`mt-2 lg:mt-6 text-sm font-medium text-gray-600`;
 const SubscribeForm = tw.form`mt-4 lg:mt-6 text-sm sm:flex max-w-xs sm:max-w-none mx-auto sm:mx-0`;
-const Input = tw.input`bg-gray-300 px-6 py-3 rounded sm:rounded-r-none border-2 sm:border-r-0 border-gray-400 hover:border-primary-500 focus:outline-none transition duration-300 w-full`;
 const SubscribeButton = tw(PrimaryButtonBase)`mt-4 sm:mt-0 w-full sm:w-auto rounded sm:rounded-l-none px-8 py-3`;
 
 const Divider = tw.div`my-16 border-b-2 border-gray-300 w-full`;
@@ -37,7 +36,6 @@ const Divider = tw.div`my-16 border-b-2 border-gray-300 w-full`;
 const ThreeColRow = tw.div`flex flex-col md:flex-row items-center justify-between`;
 
 const LogoContainer = tw.div`flex items-center justify-center md:justify-start`;
-const LogoImg = tw.img`w-8`;
 const LogoText = tw.h5`ml-2 text-xl font-black tracking-wider text-gray-800`;
 
 const CopywrightNotice = tw.p`text-center text-sm sm:text-base mt-8 md:mt-0 font-medium text-gray-500`;
@@ -51,6 +49,7 @@ const SocialLink = styled.a`
 `;
 
 export default () => {
+  const { login, logout } =  useAuthFunctions();
   return (
     <Container>
       <Content>
@@ -73,7 +72,7 @@ export default () => {
             <ColumnHeading>Product</ColumnHeading>
             <LinkList>
               <LinkListItem>
-                <Link href="#">Get Access</Link>
+                <Link href="#!s" onClick = {login} >Get Access</Link>
               </LinkListItem>
               <LinkListItem>
                 <Link href="/about">Learn More</Link>
