@@ -55,8 +55,9 @@ function MyApp({ Component, pageProps }) {
   return (
     <div className="customFont"> 
       <Head>
-        <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
-        <title>vibuco</title>
+          <link rel="shortcut icon" href="../static/favicon.ico" type="image/x-icon" />
+          <link rel="icon" href="../static/favicon.ico" type="image/x-icon"/>
+          <title>vibuco</title>
       </Head>
       <GlobalStyles />
       <Component {...pageProps} />
