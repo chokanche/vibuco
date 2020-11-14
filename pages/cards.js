@@ -10,7 +10,6 @@ import getImageObjects from "../helpers/getImageObjects";
 import { PUBLIC_BUCKET_NAME, COMMON_BUCKET_NAME } from "../config";
 import getImageAspectRatio from "../helpers/getImageAspectRatio";
 import Loading from "../components/Loading";
-import Container from "../components/grid/Container";
 import _ from "lodash";
 import NumberedGalleryImage from "../components/NumberedGalleryImage";
 import Viheader from "../components/headers/viheader"
@@ -85,6 +84,7 @@ const Cards = ({ initialAuth }) => {
   };
 
   const fetchCommonImagesData = async () => {
+    //const imageData = await getDataFromDDBTable("vibuco-photos", auth.idToken);
     const imageData = await getDataFromDDBTable("vibuco-photos", auth.idToken);
 
     // presign our image urls for authenticated access
@@ -150,6 +150,19 @@ const Cards = ({ initialAuth }) => {
   const currentImage = images[currentImageIndex];
   const Center = tw.header`
     m-4 flex items-center justify-center flex-wrap max-w-screen-md mx-auto`;
+  
+
+  const [languageText, setLanguageText] = useState("");
+
+
+  useEffect(() => {
+    if (!isEnglish) {
+      setLanguageText("English");
+    } else {
+      setLanguageText("Srpski");
+    }
+  }, [isEnglish]);
+
 
   return (
     <>
@@ -159,13 +172,13 @@ const Cards = ({ initialAuth }) => {
               {auth ? (
                 <>
                   <button
-                    id="switchToEnglish"
+                    id="languageSwitch"
                     className={`border border-vibuco-100 rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-gray-300 focus:outline-none focus:shadow-outline mr-2 ${
                       isEnglish ? "bg-gray-600 text-gray-200" : "bg-gray-200 text-gray-700"
                     }`}
                     onClick={changeLanguage}
                   >
-                    English
+                    {languageText}
                   </button>
 
                   <button
@@ -217,15 +230,36 @@ const Cards = ({ initialAuth }) => {
         ) : null}
 
         {!isFlipped ? <Gallery photos={images} onClick={openLightbox} /> : null}
-
-        {isLightbox ? (
-          <Lightbox
+        
+        {/* For the unauthenticated TODO is to change the DDB config
+            after that there's no need to check for auth*/}
+        {
+        isLightbox ? (
+          auth ? (
+            isEnglish ? (         
+              <Lightbox
+              imgPath={currentImage.src}
+              txt={currentImage.txt.en}
+              onClose={closeLightbox}
+              showText={showText}
+              />
+          ) : 
+            <Lightbox
+            imgPath={currentImage.src}
+            txt={currentImage.txt.srb}
+            onClose={closeLightbox}
+            showText={showText}
+            /> 
+          ) : 
+            <Lightbox
             imgPath={currentImage.src}
             txt={currentImage.txt}
             onClose={closeLightbox}
             showText={showText}
-          />
-        ) : null}
+            /> 
+          ) :
+         null 
+         }
       <style jsx>
         {`
           h1 {
