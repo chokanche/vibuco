@@ -5,6 +5,7 @@ import { css } from "styled-components/macro"; //eslint-disable-line
 import { SectionHeading, Subheading as SubheadingBase } from "../components/misc/Headings.js";
 import { PrimaryButton as PrimaryButtonBase } from "../components/misc/Buttons.js";
 import SimpleHeader from "../components/headers/headersimple.js"
+import { NextSeo } from "next-seo";
 
 const Container = tw.div`relative`;
 const TwoColumn = tw.div`flex flex-col md:flex-row justify-between max-w-screen-xl mx-auto py-20 md:py-0`;
@@ -33,6 +34,11 @@ const Textarea = styled(Input).attrs({as: "textarea"})`
 
 const SubmitButton = tw(PrimaryButtonBase)`inline-block mt-8`
 
+const SEO = {
+  title: "Virtual Business Coaching - Contact us",
+}
+  
+
 export default ({
   subheading = "",
   heading = <><span tw="text-vibuco-100">Get in touch</span><wbr/> with us.</>,
@@ -47,6 +53,7 @@ export default ({
 
   return (
     <>
+    <NextSeo {...SEO} />
     <SimpleHeader />
     <Container>
       <TwoColumn>

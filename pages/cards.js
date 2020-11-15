@@ -12,7 +12,9 @@ import getImageAspectRatio from "../helpers/getImageAspectRatio";
 import Loading from "../components/Loading";
 import _ from "lodash";
 import NumberedGalleryImage from "../components/NumberedGalleryImage";
-import Viheader from "../components/headers/viheader"
+import Viheader from "../components/headers/viheader";
+import { NextSeo } from "next-seo";
+
 import "../styles/customStyles.css";
 
 const Cards = ({ initialAuth }) => {
@@ -163,9 +165,15 @@ const Cards = ({ initialAuth }) => {
     }
   }, [isEnglish]);
 
+  const SEO = {
+    title: "Virtual Business Coaching - Cards",
+    description: "Digital coaching tool, with carefully selected examples of coaching exercises. This page contains the cards carefully selected to be used as conversation starters. Unpacking your thoughts made easy with vibuco.",
+  }
+    
 
   return (
     <>
+        <NextSeo {...SEO} />
         <Viheader />
         {!isLoading ? (
             <Center>

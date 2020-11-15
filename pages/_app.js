@@ -1,7 +1,10 @@
 import "react-medium-image-zoom/dist/styles.css";
 import Amplify from "@aws-amplify/core";
 import Auth from "@aws-amplify/auth";
-import Head from 'next/head'
+import Head from "next/head";
+import { DefaultSeo } from "next-seo";
+
+import SEO from "../next-seo.config"
 
 import {
   USER_POOL_REGION,
@@ -13,6 +16,7 @@ import {
   REDIRECT_SIGN_IN,
   REDIRECT_SIGN_OUT,
 } from "../config";
+
 import { GlobalStyles } from "twin.macro";
 
 import "../styles/globalStyles.css";
@@ -54,13 +58,13 @@ Auth.configure({
 function MyApp({ Component, pageProps }) {
   return (
     <div className="customFont"> 
+      <DefaultSeo {...SEO} /> 
       <Head>
           <link rel="shortcut icon" href="../static/favicon.ico" type="image/x-icon" />
           <link rel="icon" href="../static/favicon.ico" type="image/x-icon"/>
-          <title>vibuco</title>
+          <title>Virtual Business Coaching - vibuco</title>
+          <meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
           <meta name="viewport" content="initial-scale=1.0, width=device-width" key="viewport" />
-          <meta name="description" content="A virtual coaching tool that. Motivation question. Motivation photos. Unpack your thoughts." />
-          <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
       </Head>
       <GlobalStyles />
       <Component {...pageProps} />

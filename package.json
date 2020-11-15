@@ -1,7 +1,7 @@
 {
   "name": "vibuco",
   "version": "1.0.0",
-  "description": "Virtual Business Coach",
+  "description": "Virtual Business Coaching - vibuco",
   "main": "index.js",
   "scripts": {
     "dev": "next",
@@ -35,6 +35,7 @@
     "next-compose-plugins": "^2.2.0",
     "next-images": "^1.4.0",
     "next-optimized-images": "^2.6.2",
+    "next-seo": "^4.17.0",
     "next-svgr": "0.0.2",
     "path": "^0.12.7",
     "react": "^16.13.1",

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import Router from "next/router";
 import tw from "twin.macro";
+import { NextSeo } from "next-seo";
 
 import Viheader from "../components/headers/viheader";
 import Footer from "../components/footers/FiveColumnWithInputForm.js";
@@ -20,7 +20,12 @@ const Instructions = ({ initialAuth }) => {
   const auth = useAuth(initialAuth);
   const [loggedIn, setLoggedIn] = useState(false);
 
-   
+
+  const SEO = {
+    title: "Virtual Business Coaching - Instructions",
+    description: "Digital coaching tool, with carefully selected examples of coaching exercises. Instructions to make our tool easier for you to use.",
+  }
+       
   useEffect(() => {
     if (auth) {
       setLoggedIn(true)
@@ -30,6 +35,7 @@ const Instructions = ({ initialAuth }) => {
 
     return (
       <>
+        <NextSeo {...SEO} />
         {loggedIn ? (       
           <div className="customFont">
           <Viheader />
