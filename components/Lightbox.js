@@ -45,7 +45,7 @@ const Lightbox = ({ imgPath, txt, onClose, showText }) => {
           className={`popup ${isSideBySide ? "popup-sidebyside" : ""}`}
         >
           <div className="image-container">
-            <img ref={img} src={imgPath} alt="" />
+            <img loading="lazy" ref={img} src={imgPath} alt="motivation, business coaching" />
           </div>
 
           {showText ? (

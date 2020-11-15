@@ -58,6 +58,9 @@ function MyApp({ Component, pageProps }) {
           <link rel="shortcut icon" href="../static/favicon.ico" type="image/x-icon" />
           <link rel="icon" href="../static/favicon.ico" type="image/x-icon"/>
           <title>vibuco</title>
+          <meta name="viewport" content="initial-scale=1.0, width=device-width" key="viewport" />
+          <meta name="description" content="A virtual coaching tool that. Motivation question. Motivation photos. Unpack your thoughts." />
+          <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
       </Head>
       <GlobalStyles />
       <Component {...pageProps} />
