@@ -67,7 +67,6 @@ class About extends React.Component {
               Finally, this thank you note would not be complete if I would not mention my coaching mentor, Brankica Ljamic, without whom the power of asking the right questions would never be revealed to me.</>}
             />
           </Middle>
-
         </div>
         <Footer />
       </div>

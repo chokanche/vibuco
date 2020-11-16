@@ -3,10 +3,8 @@ import React, { useState } from "react";
 import Slider from "react-slick";
 import tw from "twin.macro";
 import styled from "styled-components";
-import { css } from "styled-components/macro"; //eslint-disable-line
 import { SectionHeading, Subheading as SubheadingBase } from "../misc/Headings.js";
 import { Container, ContentWithPaddingXl } from "../misc/Layouts.js";
-import loveIllustrationImageSrc from "../../static/love.svg";
 import { ReactComponent as StarIconBase } from "../../images/star-icon.svg";
 import { ReactComponent as ArrowLeftIcon } from "../../images/arrow-left-3-icon.svg";
 import { ReactComponent as ArrowRightIcon } from "../../images/arrow-right-3-icon.svg";
@@ -107,7 +105,7 @@ export default ({
       <ContentWithPaddingXl>
         <Row>
           <ImageColumn>
-            <Image src={imageSrc} imageBorder={imageBorder} imageShadow={imageShadow} imageRounded={imageRounded} />
+            <Image alt= "Clients background photo" src={imageSrc} imageBorder={imageBorder} imageShadow={imageShadow} imageRounded={imageRounded} />
           </ImageColumn>
           <TextColumn textOnLeft={textOnLeft}>
             <Subheading>{subheading}</Subheading>

@@ -6,6 +6,7 @@ import { css } from "styled-components/macro";
 import { SectionHeading, Subheading as SubheadingBase } from "../misc/Headings";
 import { SectionDescription } from "../misc/Typography";
 import { ReactComponent as SvgDotPatternIcon } from "../../images/dot-pattern.svg";
+import { NextSeo } from "next-seo";
 
 const HeadingContainer = tw.div`text-center`;
 const Subheading = tw(SubheadingBase)`mb-4`;
@@ -108,39 +109,42 @@ export default ({
   ]
 }) => {
   return (
-    <Container>
-      <ContentWithPaddingXl>
-        <HeadingContainer>
-          {subheading && <Subheading>{subheading}</Subheading>}
-          {heading && <Heading>{heading}</Heading>}
-          {description && <Description>{description}</Description>}
-        </HeadingContainer>
-        <Posts>
-          {posts.map((post, index) => (
-            <PostContainer featured={post.featured} key={index}>
-              <Post className="group" href={post.url} componentClass='span'>
-                <PostImage imageSrc={post.postImageSrc} />
-                <PostText>
-                  <PostTitle>{post.title}</PostTitle>
-                  {post.featured && <PostDescription>{post.description}</PostDescription>}
-                  <AuthorInfo>
-                    {post.featured && <AuthorImage src={post.authorImageSrc} />}
-                    <AuthorTextInfo>
-                      <AuthorName>{post.authorName}</AuthorName>
-                        {/*
-                          This causes issues. Should not be <a></a>
-                        */}
-                      <AuthorProfile className="blog" href={post.profileLink}>{post.authorProfile}</AuthorProfile>
-                    </AuthorTextInfo>
-                  </AuthorInfo>
-                </PostText>
-              </Post>
-            </PostContainer>
-          ))}
-          <DecoratorBlob1 />
-          <DecoratorBlob2 />
-        </Posts>
-      </ContentWithPaddingXl>
-    </Container>
+    <>
+      <NextSeo />
+      <Container>
+        <ContentWithPaddingXl>
+          <HeadingContainer>
+            {subheading && <Subheading>{subheading}</Subheading>}
+            {heading && <Heading>{heading}</Heading>}
+            {description && <Description>{description}</Description>}
+          </HeadingContainer>
+          <Posts>
+            {posts.map((post, index) => (
+              <PostContainer featured={post.featured} key={index}>
+                <Post className="group" href={post.url} componentClass='span'>
+                  <PostImage imageSrc={post.postImageSrc} />
+                  <PostText>
+                    <PostTitle>{post.title}</PostTitle>
+                    {post.featured && <PostDescription>{post.description}</PostDescription>}
+                    <AuthorInfo>
+                      {post.featured && <AuthorImage alt= "Dajana Damjanovic" src={post.authorImageSrc} />}
+                      <AuthorTextInfo>
+                        <AuthorName>{post.authorName}</AuthorName>
+                          {/*
+                            This causes issues. Should not be <a></a>
+                          */}
+                        <AuthorProfile className="blog" href={post.profileLink}>{post.authorProfile}</AuthorProfile>
+                      </AuthorTextInfo>
+                    </AuthorInfo>
+                  </PostText>
+                </Post>
+              </PostContainer>
+            ))}
+            <DecoratorBlob1 />
+            <DecoratorBlob2 />
+          </Posts>
+        </ContentWithPaddingXl>
+      </Container>
+    </>
   );
 };

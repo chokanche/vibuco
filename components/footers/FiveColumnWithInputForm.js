@@ -75,7 +75,7 @@ export default () => {
                 <Link href="#!s" onClick = {login} >Get Access</Link>
               </LinkListItem>
               <LinkListItem>
-                <Link href="/about">Learn More</Link>
+                <Link href="/about">Learn more about vibuco</Link>
               </LinkListItem>
             </LinkList>
           </Column>
