@@ -228,9 +228,9 @@ const Cards = ({ initialAuth }) => {
               const ratio = img.width / img.height;
 
               if (ratio >= 1) {
-                return { ...img, src: '../static/black2.jpg' }
+                return { ...img, src: '../static/green2.jpg' }
               } 
-              return { ...img, src: '../static/black1.jpg' }
+              return { ...img, src: '../static/green1.jpg' }
             })}
             renderImage={NumberedGalleryImage}
             onClick={openLightbox}

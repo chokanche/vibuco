@@ -1,6 +1,14 @@
 import { useRouter } from "next/router";
 import Link from "next/link";
 import React, { Children } from "react";
+import tw from "twin.macro";
+
+
+export const NavLink = tw.a`
+  text-lg my-2 lg:text-sm lg:mx-6 lg:my-0
+  font-semibold tracking-wide transition duration-300
+  pb-1 border-b-2 border-transparent hover:border-green-500 hocus:text-green-500
+`;
 
 const ActiveLink = ({ children, ...props }) => {
   const router = useRouter();
@@ -20,7 +28,7 @@ const ActiveLink = ({ children, ...props }) => {
 
   delete props.activeClassName;
 
-  return <Link {...props}>{React.cloneElement(child, { className })}</Link>;
+  return <NavLink {...props}>{React.cloneElement(child, { className })}</NavLink>;
 };
 
 export default ActiveLink;

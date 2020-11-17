@@ -19,7 +19,7 @@ const NumberedGalleryImage = ({ photo, margin, onClick, index, key }) => {
           position: absolute;
           top: 15px;
           left: 15px;
-          font-size: 22px;
+          font-size: 82px;
         }
       `}</style>
     </>
