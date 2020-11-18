@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import getImageAspectRatio from "../helpers/getImageAspectRatio";
 import useViewport from "../hooks/useViewport";
+import "../styles/customStyles.css";
 
 const Lightbox = ({ imgPath, txt, onClose, showText }) => {
   const [isSideBySide, setSideBySide] = useState(false);
@@ -45,7 +46,7 @@ const Lightbox = ({ imgPath, txt, onClose, showText }) => {
           className={`popup ${isSideBySide ? "popup-sidebyside" : ""}`}
         >
           <div className="image-container">
-            <img loading="lazy" ref={img} src={imgPath} alt="motivation, business coaching" />
+            <img className="disablerightclick" loading="lazy" ref={img} src={imgPath} alt="motivation, business coaching" />
           </div>
 
           {showText ? (

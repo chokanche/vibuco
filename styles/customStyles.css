@@ -130,6 +130,9 @@
     color: '#97d8c4';
   }
 
+  .disablerightclick {
+    pointer-events: none;
+  }
 
   .intro {
     background: black;

@@ -152,10 +152,8 @@ const Cards = ({ initialAuth }) => {
   const currentImage = images[currentImageIndex];
   const Center = tw.header`
     m-4 flex items-center justify-center flex-wrap max-w-screen-md mx-auto`;
-  
 
   const [languageText, setLanguageText] = useState("");
-
 
   useEffect(() => {
     if (!isEnglish) {
@@ -170,7 +168,6 @@ const Cards = ({ initialAuth }) => {
     description: "Digital coaching tool, with carefully selected examples of coaching exercises. This page contains the cards carefully selected to be used as conversation starters. Unpacking your thoughts made easy with vibuco.",
   }
     
-
   return (
     <>
         <NextSeo {...SEO} />
@@ -237,7 +234,7 @@ const Cards = ({ initialAuth }) => {
           />
         ) : null}
 
-        {!isFlipped ? <Gallery photos={images} onClick={openLightbox} /> : null}
+        {!isFlipped ? <div onContextMenu={(e)=> e.preventDefault()} > <Gallery photos={images} onClick={openLightbox} /> </div>: null}
         
         {/* For the unauthenticated TODO is to change the DDB config
             after that there's no need to check for auth*/}
