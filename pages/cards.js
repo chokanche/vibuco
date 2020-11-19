@@ -22,16 +22,19 @@ const Cards = ({ initialAuth }) => {
   const auth = useAuth(initialAuth);
   // current image index for lightbox
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-
+  // display loader while component is still loading
   const [isLoading, setLoading] = useState(true);
 
   const [images, setImages] = useState([]);
-
   const [isFlipped, setFlipped] = useState(false);
   const [isLightbox, setLightbox] = useState(false);
 
+  // set checker if the text on the photo should be displayed on the photo
   const [checked, setChecked] = useState(true);
 
+  /**
+   * Set the selecte language from the dropdown.
+   */
   const [isEnglish, setEnglish] = useState(true);
   const [isSerbian, setSerbian] = useState(false);
   const [isHungarian, setHungarian] = useState(false);
@@ -137,8 +140,6 @@ const Cards = ({ initialAuth }) => {
 
   const flip = () => setFlipped((prevState) => !prevState);
 
-  const changeLanguage = () => setEnglish((prevState) => !prevState);
-
   // open the light box (handler comes from React-gallery) setting the current image and opening the light box
   const openLightbox = (_, { index }) => {
     setCurrentImageIndex(index);
@@ -162,6 +163,9 @@ const Cards = ({ initialAuth }) => {
     description: "Digital coaching tool, with carefully selected examples of coaching exercises. This page contains the cards carefully selected to be used as conversation starters. Unpacking your thoughts made easy with vibuco.",
   }
     
+  /**
+   * Available languages for the texts
+   */
   const options = [
     { value: 'English', label: 'English' },
     { value: 'Srpski', label: 'Srpski' },
@@ -225,7 +229,7 @@ const Cards = ({ initialAuth }) => {
                       </div>
                         <div className = "flex-item flex-last-item">
                         <label>
-                          <span>Show questions</span>
+                          <span>Show question</span>
                           <Switch
                             onChange={handleChange}
                             checked={checked}
@@ -242,21 +246,22 @@ const Cards = ({ initialAuth }) => {
         {isLoading ? <Loading /> : null}
 
         {isFlipped ? (
-          <Gallery
-            photos={images.map(img => {
-              const ratio = img.width / img.height;
-
-              if (ratio >= 1) {
-                return { ...img, src: '../static/green2.jpg' }
-              } 
-              return { ...img, src: '../static/green1.jpg' }
-            })}
-            renderImage={NumberedGalleryImage}
-            onClick={openLightbox}
-          />
+          <div className = "maingallerycontainer">
+            <Gallery
+              photos={images.map(img => {
+                const ratio = img.width / img.height;
+                if (ratio >= 1) {
+                  return { ...img, src: '../static/green2.jpg' }
+                } 
+                return { ...img, src: '../static/green1.jpg' }
+              })}
+              renderImage={NumberedGalleryImage}
+              onClick={openLightbox}
+            />
+          </div>
         ) : null}
 
-        {!isFlipped ? <div onContextMenu={(e)=> e.preventDefault()} > <Gallery photos={images} onClick={openLightbox} /> </div>: null}
+        {!isFlipped ? <div className = "maingallerycontainer" onContextMenu={(e)=> e.preventDefault()} > <Gallery photos={images} onClick={openLightbox} /> </div>: null}
         
         {/* For the unauthenticated TODO is to change the DDB config
             after that there's no need to check for auth*/}

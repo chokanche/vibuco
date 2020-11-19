@@ -88,11 +88,15 @@
     align-self: 'flex-start';
   }
 
+  .maingallerycontainer {
+    margin: 1%;
+  }
+
   .react-switch {
     vertical-align: middle;
     margin-left: 4px;
   }
-  
+
   .customFont {
     font-family: 'David Libre', serif;
   }
