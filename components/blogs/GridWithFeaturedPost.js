@@ -121,7 +121,7 @@ export default ({
           <Posts>
             {posts.map((post, index) => (
               <PostContainer featured={post.featured} key={index}>
-                <Post className="group" href={post.url} componentClass='span'>
+                <Post className="group" href={post.url} target="_blank" componentClass='span'>
                   <PostImage imageSrc={post.postImageSrc} />
                   <PostText>
                     <PostTitle>{post.title}</PostTitle>
@@ -133,7 +133,7 @@ export default ({
                           {/*
                             This causes issues. Should not be <a></a>
                           */}
-                        <AuthorProfile className="blog" href={post.profileLink}>{post.authorProfile}</AuthorProfile>
+                        <AuthorProfile className="blog" href={post.profileLink} target="_blank">{post.authorProfile}</AuthorProfile>
                       </AuthorTextInfo>
                     </AuthorInfo>
                   </PostText>

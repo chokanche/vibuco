@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import tw from "twin.macro";
-
+import Select from 'react-select'
+import Switch from "react-switch";
 import Gallery from "react-photo-gallery";
 import Lightbox from "../components/Lightbox";
 import { useAuth } from "../auth";
@@ -10,7 +10,7 @@ import getImageObjects from "../helpers/getImageObjects";
 import { PUBLIC_BUCKET_NAME, COMMON_BUCKET_NAME } from "../config";
 import getImageAspectRatio from "../helpers/getImageAspectRatio";
 import Loading from "../components/Loading";
-import _ from "lodash";
+import _, { set } from "lodash";
 import NumberedGalleryImage from "../components/NumberedGalleryImage";
 import Viheader from "../components/headers/viheader";
 import { NextSeo } from "next-seo";
@@ -25,14 +25,17 @@ const Cards = ({ initialAuth }) => {
 
   const [isLoading, setLoading] = useState(true);
 
-  const [showText, setShowText] = useState(true);
-
   const [images, setImages] = useState([]);
 
   const [isFlipped, setFlipped] = useState(false);
   const [isLightbox, setLightbox] = useState(false);
 
+  const [checked, setChecked] = useState(true);
+
   const [isEnglish, setEnglish] = useState(true);
+  const [isSerbian, setSerbian] = useState(false);
+  const [isHungarian, setHungarian] = useState(false);
+
   const hasHeightWidth = (img) => img.height && img.width;
 
   // get image widths for all the images in the imgData array that is passed in. Will return same array with added width and height attributes if not added in DB
@@ -132,10 +135,6 @@ const Cards = ({ initialAuth }) => {
     }
   }, [isFlipped]);
 
-  const toggleTextSwitch = () => {
-    setShowText((prevShowText) => !prevShowText);
-  };
-
   const flip = () => setFlipped((prevState) => !prevState);
 
   const changeLanguage = () => setEnglish((prevState) => !prevState);
@@ -150,71 +149,94 @@ const Cards = ({ initialAuth }) => {
 
   // helper var to get the current image based on the index in the images array
   const currentImage = images[currentImageIndex];
-  const Center = tw.header`
-    m-4 flex items-center justify-center flex-wrap max-w-screen-md mx-auto`;
-
-  const [languageText, setLanguageText] = useState("");
 
   useEffect(() => {
-    if (!isEnglish) {
-      setLanguageText("English");
-    } else {
-      setLanguageText("Srpski");
-    }
-  }, [isEnglish]);
+    images.map(photo => {
+      photo.loading = "lazy";
+      return photo;
+    });
+  }, [images]);
 
   const SEO = {
     title: "Virtual Business Coaching - Cards",
     description: "Digital coaching tool, with carefully selected examples of coaching exercises. This page contains the cards carefully selected to be used as conversation starters. Unpacking your thoughts made easy with vibuco.",
   }
     
+  const options = [
+    { value: 'English', label: 'English' },
+    { value: 'Srpski', label: 'Srpski' },
+    { value: 'Magyar', label: 'Magyar' }
+  ]
+
+  const [selectedOption, setSelectedOption] = useState(null);
+
+  useEffect(() => {
+    if (selectedOption != null) {
+      switch(selectedOption.value) {
+        case "Srpski":
+          setEnglish(false)
+          setSerbian(true);
+          break;
+        case 'Magyar':
+          setEnglish(false)
+          setSerbian(true);
+          break;
+        default:
+          setSerbian(false);
+          setEnglish(true)
+          break;
+      }
+    }
+  }, [selectedOption]);
+
+  const handleChange = (checked) => {
+    setChecked(checked);
+  };
+
   return (
     <>
         <NextSeo {...SEO} />
         <Viheader />
         {!isLoading ? (
-            <Center>
-              {auth ? (
-                <>
-                  <button
-                    id="languageSwitch"
-                    className={`border border-vibuco-100 rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-gray-300 focus:outline-none focus:shadow-outline mr-2 ${
-                      isEnglish ? "bg-gray-600 text-gray-200" : "bg-gray-200 text-gray-700"
-                    }`}
-                    onClick={changeLanguage}
-                  >
-                    {languageText}
-                  </button>
-
-                  <button
-                    id="flipCards"
-                    className={`border border-vibuco-100 rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-gray-300 focus:outline-none focus:shadow-outline mr-2 ${
-                      isFlipped ? "bg-gray-600 text-gray-200" : "bg-gray-200 text-gray-700"
-                    }`}
-                    onClick={flip}
-                  >
-                    Flip cards
-                  </button>
-                  <div
-                    onChange={toggleTextSwitch}
-                  >
-                    <input
-                      type="checkbox"
-                      className="custom-control-input"
-                      id="customSwitch1"
-                      checked={showText}
-                      onChange={e => {}}
-                    />
-                    <label
-                      className="custom-control-label"
-                      htmlFor="customSwitch1"
-                    >
-                      Show questions
-                    </label>
+            <div className="flex-container-parent">
+              <div className="flex-container-left">
+                <div className = "select-child">
+                  <Select 
+                    defaultValue={selectedOption}
+                    onChange={setSelectedOption}
+                    options={options}
+                    placeholder = "Select preferred language"
+                  />
                   </div>
-                </>
-              ) : null}
-            </Center>
+              </div>
+
+                {auth ? (
+                  <div className="flex-container-right">
+                      <div className = "flex-item">
+                      <button
+                        id="flipCards"
+                        className={`border border-vibuco-100 rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-gray-300 focus:outline-none focus:shadow-outline mr-2 ${
+                          isFlipped ? "bg-gray-600 text-gray-200" : "bg-gray-200 text-gray-700"
+                        }`}
+                        onClick={flip}
+                      >
+                        Flip cards
+                      </button>
+                      </div>
+                        <div className = "flex-item flex-last-item">
+                        <label>
+                          <span>Show questions</span>
+                          <Switch
+                            onChange={handleChange}
+                            checked={checked}
+                            className="react-switch"
+                            onColor = "#97d8c4"
+                          />
+                        </label>
+                        </div>
+                  </div>
+                ) : null}
+              </div>
         ) : null}
 
         {isLoading ? <Loading /> : null}
@@ -246,21 +268,29 @@ const Cards = ({ initialAuth }) => {
               imgPath={currentImage.src}
               txt={currentImage.txt.en}
               onClose={closeLightbox}
-              showText={showText}
+              showText={checked}
               />
-          ) : 
-            <Lightbox
-            imgPath={currentImage.src}
-            txt={currentImage.txt.srb}
-            onClose={closeLightbox}
-            showText={showText}
-            /> 
+          ) 
+          :  isSerbian ? (
+              <Lightbox
+              imgPath={currentImage.src}
+              txt={currentImage.txt.srb}
+              onClose={closeLightbox}
+              showText={checked}
+              /> 
+            ) : 
+              <Lightbox
+              imgPath={currentImage.src}
+              txt={currentImage.txt.en}
+              onClose={closeLightbox}
+              showText={checked}
+              /> 
           ) : 
             <Lightbox
             imgPath={currentImage.src}
             txt={currentImage.txt}
             onClose={closeLightbox}
-            showText={showText}
+            showText={checked}
             /> 
           ) :
          null 

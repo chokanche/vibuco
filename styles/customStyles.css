@@ -38,7 +38,61 @@
     justify-content: space-between;
     min-height: 10vh;
   }
+  
+  .flex-container-parent {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+  }
 
+  .flex-container-right {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    align-items: baseline;
+    margin-right: 3%;
+  }
+  
+  .flex-container-left {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content:  flex-start;
+    align-items: baseline;
+    align-content: flex-start
+  }
+
+  .flex-item {
+    text-align: center;
+    justify-content: center;
+  }
+
+  .flex-last-item {
+    margin: 0%;
+  }
+
+  .select-child {
+    align-self: flex-start;
+    width: 300px;  /* Or whatever */
+    padding: 5%;
+    margin: 0%;
+  }
+  
+  .maincontainer {
+    flex-direction: 'row';
+    flex-wrap: 'wrap';
+    justify-content: 'center';
+  }
+
+  .containeritems {
+    flex: 'flex-grow';
+    align-self: 'flex-start';
+  }
+
+  .react-switch {
+    vertical-align: middle;
+    margin-left: 4px;
+  }
+  
   .customFont {
     font-family: 'David Libre', serif;
   }
