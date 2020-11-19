@@ -202,45 +202,46 @@ const Cards = ({ initialAuth }) => {
         <NextSeo {...SEO} />
         <Viheader />
         {!isLoading ? (
-            <div className="flex-container-parent">
-              <div className="flex-container-left">
-                <div className = "select-child">
-                  <Select 
-                    defaultValue={selectedOption}
-                    onChange={setSelectedOption}
-                    options={options}
-                    placeholder = "Select preferred language"
-                  />
-                  </div>
-              </div>
-
+            <>
                 {auth ? (
-                  <div className="flex-container-right">
-                      <div className = "flex-item">
-                      <button
-                        id="flipCards"
-                        className={`border border-vibuco-100 rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-gray-300 focus:outline-none focus:shadow-outline mr-2 ${
-                          isFlipped ? "bg-gray-600 text-gray-200" : "bg-gray-200 text-gray-700"
-                        }`}
-                        onClick={flip}
-                      >
-                        Flip cards
-                      </button>
+                 <div className="flex-container-parent">
+                  <div className="flex-container-left">
+                      <div className = "select-child">
+                        <Select 
+                          defaultValue={selectedOption}
+                          onChange={setSelectedOption}
+                          options={options}
+                          placeholder = "Select preferred language"
+                        />
                       </div>
-                        <div className = "flex-item flex-last-item">
-                        <label>
-                          <span>Show question</span>
-                          <Switch
-                            onChange={handleChange}
-                            checked={checked}
-                            className="react-switch"
-                            onColor = "#97d8c4"
-                          />
-                        </label>
+                    </div>
+                    <div className="flex-container-right">
+                        <div className = "flex-item">
+                        <button
+                          id="flipCards"
+                          className={`border border-vibuco-100 rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-gray-300 focus:outline-none focus:shadow-outline mr-2 ${
+                            isFlipped ? "bg-gray-600 text-gray-200" : "bg-gray-200 text-gray-700"
+                          }`}
+                          onClick={flip}
+                        >
+                          Flip cards
+                        </button>
                         </div>
-                  </div>
+                          <div className = "flex-item flex-last-item">
+                          <label>
+                            <span>Show question</span>
+                            <Switch
+                              onChange={handleChange}
+                              checked={checked}
+                              className="react-switch"
+                              onColor = "#97d8c4"
+                            />
+                          </label>
+                          </div>
+                    </div>
+                 </div> 
                 ) : null}
-              </div>
+              </>
         ) : null}
 
         {isLoading ? <Loading /> : null}

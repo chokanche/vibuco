@@ -16,12 +16,12 @@ const Viheader = () => {
       <NavLinks key={1}>
         {!auth ? (
           <> 
-            <ActiveLink href="/">
-              <> Home </>
-            </ActiveLink>
-            <ActiveLink href="/cards">
-              <> Try it out </>
-            </ActiveLink>
+            <NavLink href="/">
+             Home 
+            </NavLink>
+            <NavLink href="/cards">
+              Try it out
+            </NavLink>
           </>
         ) : null}
         {auth ? (
