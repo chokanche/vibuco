@@ -67,44 +67,44 @@ export default ({
   posts = [
     {
       postImageSrc:
-        "https://images.unsplash.com/photo-1457369804613-52c61a468e7d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=768&q=80",
+        "https://images.unsplash.com/photo-1557318041-1ce374d55ebf?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
       authorImageSrc: "../../static/dd.jpg",
-      title: "EGO: THE DIFFERENCE BETWEEN A GOOD AND A GREAT LEADER?",
+      title: "Art of crafting powerful questions",
       description:
-        "There are many things that can help you become a good leader. And just as many that could drive you to become a great one.",
+        "Questions help us widen our horizons and achieve things we didn’t even know were possible. Even more, they can help us understand the big truths, which will help us make decisions further down the line.",
       authorName: "Dajana Damjanovic",
       authorProfile: "Associate Certified Coach (ACC)",
       profileLink : "https://www.youracclaim.com/badges/3d107ca7-df59-4b9e-81c7-ee8e687dc1f4",
-      url: "https://dajanadamjanovic.com/en/ego-the-difference-between-a-good-and-a-great-leader/",
+      url: "https://dajanadamjanovic.com/en/have-you-mastered-the-art-of-asking-yourself-questions/",
       featured: true
     },
     {
       postImageSrc:
-        "https://images.unsplash.com/photo-1494523374364-46c364c83b60?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=768&q=80",
-      title: "GRATITUDE AND LEADERSHIP",
+        "https://images.unsplash.com/photo-1545945774-73922eb27813?ixlib=rb-1.2.1&auto=format&fit=crop&w=967&q=80",
+      title: "Gratitude and leadership",
       authorName: "Dajana Damjanovic",
       url: "https://dajanadamjanovic.com/en/gratitude-and-leadership/"
     },
     {
       postImageSrc:
-        "https://images.unsplash.com/photo-1527525443983-6e60c75fff46?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=768&q=80",
-      title: "WORKING WITH REMOTE TEAMS: HOW TO MANAGE DURING DIFFICULT TIMES?",
+        "https://images.unsplash.com/photo-1457369804613-52c61a468e7d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=768&q=80",
+      title: "DIfference between a good and a great leader",
       authorName: "Dajana Damjanovic",
-      url: "https://dajanadamjanovic.com/en/working-with-remote-teams-how-to-manage-during-difficult-times/"
+      url: "https://dajanadamjanovic.com/en/ego-the-difference-between-a-good-and-a-great-leader/"
     },
     {
       postImageSrc:
-        "https://images.unsplash.com/photo-1531875909331-5c13fb705721?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=768&q=80",
-      title: "SELF-SABOTAGING HABITS: DECIDE TO PUT YOURSELF FIRST AND ACCEPT YOUR IMPERFECTIONS",
+        "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
+      title: "Questions that drive success",
       authorName: "Dajana Damjanovic",
-      url: "https://dajanadamjanovic.com/en/self-sabotaging-habits-accept-your-imperfections/ "
+      url: "https://dajanadamjanovic.com/en/questions-that-drive-success/"
     },
     {
       postImageSrc:
-        "https://images.unsplash.com/photo-1541844053589-346841d0b34c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=768&q=80",
-      title: "THE ROLE OF LEADERS IN MANAGING TEAM DYNAMICS",
+        "https://images.unsplash.com/photo-1557804506-669a67965ba0?ixlib=rb-1.2.1&auto=format&fit=crop&w=967&q=80",
+      title: "Role of leaders in managing team dynamics",
       authorName: "Dajana Damjanovic",
-      url: "https://dajanadamjanovic.com/en/the-role-of-leaders-in-managing-team-dynamics/"
+      url: " https://dajanadamjanovic.com/en/the-role-of-leaders-in-managing-team-dynamics/"
     }
   ]
 }) => {
