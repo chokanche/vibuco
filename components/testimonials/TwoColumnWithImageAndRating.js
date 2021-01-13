@@ -6,8 +6,8 @@ import styled from "styled-components";
 import { SectionHeading, Subheading as SubheadingBase } from "../misc/Headings.js";
 import { Container, ContentWithPaddingXl } from "../misc/Layouts.js";
 import { ReactComponent as StarIconBase } from "../../images/star-icon.svg";
-import { ReactComponent as ArrowLeftIcon } from "../../images/arrow-left-3-icon.svg";
-import { ReactComponent as ArrowRightIcon } from "../../images/arrow-right-3-icon.svg";
+import { ReactComponent as ArrowLeftIcon } from "../../images/vibuco-arrow-left.svg";
+import { ReactComponent as ArrowRightIcon } from "../../images/vibuco-arrow-right.svg";
 
 const Row = tw.div`flex flex-col md:flex-row justify-between items-center`;
 const Column = tw.div`w-full max-w-md mx-auto md:max-w-none md:mx-0`;
@@ -79,12 +79,12 @@ export default ({
     {
       stars: 5,
       profileImageSrc:
-        "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=3.25&w=512&h=512&q=80",
-      heading: "Amazing User Experience",
+        "../../static/brankica.jpg",
+      heading: "A path to a new perspective",
       quote:
-        "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.",
-      customerName: "Charlotte Hale",
-      customerTitle: "CEO, Delos Inc."
+        "As long as we ask ourselves the same questions, we shall get the same kind of answers. Or better said - the same kind of reasoning, explanations and stories. A route to changing perspective on challenging situation starts with new questions. Or better - question with relevant photos 😉",
+      customerName: "Brankica Ljamić PhD MCC",
+      customerTitle: "CEO, SINHRONIA"
     },
     {
       stars: 5,
