@@ -88,13 +88,12 @@ export default ({
     },
     {
       stars: 5,
-      profileImageSrc:
-        "https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.25&w=512&h=512&q=80",
-      heading: "Love the Developer Experience and Design Principles !",
+      profileImageSrc: "../../static/tamara.jpg",
+      heading: "The cards tap into my creativity.",
       quote:
-        "Sinor Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.",
-      customerName: "Adam Cuppy",
-      customerTitle: "Founder, EventsNYC"
+        "VIBUCO cards are a fun and inspiring way to get to the thoughts and ideas in my head which are waiting to be heard. The poetic striking pictures and unexpected questions help me sort out my thoughts or view a situation from a different perspective. They somehow tap into my creativity and suddenly there are so many solutions ahead of me. It is amazing how even one and the same card when applied to different situations in my life can bring insight. I just immerse myself in the picture and an AHA moment inevitably comes.",
+      customerName: "Tamara Verežan",
+      customerTitle: "French and English teacher"
     }
   ]
 }) => {
