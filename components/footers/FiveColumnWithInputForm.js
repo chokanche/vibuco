@@ -120,7 +120,7 @@ export default () => {
           <LogoContainer>
             <LogoText>Vibuco Inc.</LogoText>
           </LogoContainer>
-          <CopywrightNotice>&copy; 2020 Vibuco Inc. All Rights Reserved.</CopywrightNotice>
+          <CopywrightNotice>&copy; 2021 Vibuco Inc. All Rights Reserved.</CopywrightNotice>
           <SocialLinksContainer>
             <SocialLink href="https://facebook.com">
             <FacebookIcon />
