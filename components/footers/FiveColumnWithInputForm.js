@@ -6,8 +6,8 @@ import { useAuthFunctions } from "aws-cognito-next";
 import HeaderBase, { NavLinks, NavLink, NavButton, PrimaryButton, PrimaryLink } from  '../headers/light.js'
 //import LogoImage from "../../static/logo.svg";
 import FacebookIcon from "../../static/facebook-icon.svg";
-import TwitterIcon from "../../static/twitter.svg";
-import YoutubeIcon from "../../static/youtube-icon.svg";
+import WebsiteIcon from "../../static/web.svg";
+import LinkedinIcon from "../../static/linkedin-icon.svg";
 
 const Container = tw.div`relative bg-gray-200 text-gray-700 -mb-8 px-8`;
 
@@ -122,14 +122,14 @@ export default () => {
           </LogoContainer>
           <CopywrightNotice>&copy; 2021 Vibuco Inc. All Rights Reserved.</CopywrightNotice>
           <SocialLinksContainer>
-            <SocialLink href="https://facebook.com">
+            <SocialLink href="https://www.facebook.com/coaching4growth">
             <FacebookIcon />
             </SocialLink>
-            <SocialLink href="https://twitter.com">
-              <TwitterIcon />
+            <SocialLink href="https://dajanadamjanovic.com/en/">
+              <WebsiteIcon />
             </SocialLink>
-            <SocialLink href="https://youtube.com">
-              <YoutubeIcon />
+            <SocialLink href="https://www.linkedin.com/in/dajanadamjanovic/">
+              <LinkedinIcon />
             </SocialLink>
           </SocialLinksContainer>
         </ThreeColRow>
