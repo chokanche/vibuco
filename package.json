@@ -24,7 +24,7 @@
     "dotenv": "^8.2.0",
     "feather-icons": "^4.28.0",
     "framer-motion": "^2.7.7",
-    "gsap": "^3.5.1",
+    "gsap": "^3.6.1",
     "lodash": "^4.17.20",
     "next": "^9.5.5",
     "next-compose-plugins": "^2.2.0",
@@ -56,11 +56,12 @@
     "babel-plugin-root-import": "^6.4.1",
     "css-loader": "^4.3.0",
     "emotion-server": "^10.0.27",
-    "file-loader": "^6.1.0",
+    "file-loader": "^6.2.0",
+    "image-webpack-loader": "^7.0.1",
     "svg-url-loader": "^5.0.1",
     "tailwindcss": "^1.8.10",
     "url-loader": "^4.1.0",
-    "webpack": "^4.44.2",
-    "use-in-view": "^1.0.15"
+    "use-in-view": "^1.0.15",
+    "webpack": "^4.44.2"
   }
 }

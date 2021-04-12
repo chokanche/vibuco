@@ -124,12 +124,47 @@ const Cards = ({ initialAuth }) => {
   useEffect(() => {
     if (isLoading) {
       if (!auth) {
-        fetchPublicImagesData();
+        // for now just fetch it from static directory
+        // but keeping this implementation that is 
+        // getting the photos from public s3
+        fetchCommonImagesDataFromStatic();
+        //fetchPublicImagesData();
       } else {
         fetchCommonImagesData();
       }
     }
   }, [auth]);
+
+  
+  // instead of going to the public s3 for images
+  // just load them from local
+  // still using dynamo db to get all the metadata
+  // so both paces need to be updated when adding new photo
+  const fetchCommonImagesDataFromStatic = async () => {
+    const imageData = await getDataFromDDBTable("vibuco-photos-public");
+
+
+   const completeImageDataWithObjects = imageData.map(async (img, i) => {
+      const obj = img;
+
+      // extract name from src 
+      // use this regex .+\/(.+)$
+      var extracted_name = obj.src.match(".+\/(.+)$");
+      img.src = '../static/' + extracted_name[1];
+      if (!hasHeightWidth(img)) {
+        img.height = 1;
+        img.width = await getImageAspectRatio(img.src);
+      }
+      return img;
+    });
+
+    const data = await Promise.all(completeImageDataWithObjects);
+
+    setImages(_.shuffle(data));
+    setLoading(false);
+  }; 
+
+
 
   // shuffle images whenever we flip from backgrounds back to normal images
   useEffect(() => {
