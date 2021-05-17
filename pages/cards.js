@@ -215,14 +215,17 @@ const Cards = ({ initialAuth }) => {
         case "Srpski":
           setEnglish(false)
           setSerbian(true);
+          setHungarian(false);
           break;
         case 'Magyar':
           setEnglish(false)
-          setSerbian(true);
+          setSerbian(false);
+          setHungarian(true);
           break;
         default:
           setSerbian(false);
           setEnglish(true)
+          setHungarian(false);
           break;
       }
     }
@@ -319,7 +322,15 @@ const Cards = ({ initialAuth }) => {
               onClose={closeLightbox}
               showText={checked}
               /> 
-            ) : 
+            )           
+          :  isHungarian ? (
+            <Lightbox
+            imgPath={currentImage.src}
+            txt={currentImage.txt.hu}
+            onClose={closeLightbox}
+            showText={checked}
+            /> 
+          ) : 
               <Lightbox
               imgPath={currentImage.src}
               txt={currentImage.txt.en}
