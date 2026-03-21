@@ -1,23 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import tw from "twin.macro";
 import Landing from "../components/Landing"
 import "../styles/customStyles.css";
 import Footer from "../components/footers/FiveColumnWithInputForm";
 import Features from "../components/features/ThreeColWithSideImage.js";
 import Clients from "../components/testimonials/TwoColumnWithImageAndRating"
-import { useAuthFunctions } from "aws-cognito-next";
-import { useAuth } from "../auth";
+import { HAS_HOSTED_UI_AUTH_CONFIG } from "../config";
+import { useAuthControls } from "../auth";
 import { ReactComponent as BriefcaseIcon } from "feather-icons/dist/icons/briefcase.svg";
 import { ReactComponent as MoneyIcon } from "feather-icons/dist/icons/dollar-sign.svg";
 import { ReactComponent as HeartIcon } from "feather-icons/dist/icons/heart.svg";
 
-import FeatureStats from "../components/features/ThreeColCenteredStatsPrimaryBackground";
 import Blog from "../components/blogs/GridWithFeaturedPost";
-import Pricing from "../components/pricing/ThreePlans.js";
-import FAQ from "../components/faqs/SingleCol.js";
 import MainFeatures from "../components/features/MainFeatures.js";
 import Details from "../components/hero/Details.js";
-import Viheader from "../components/headers/viheader";
 
 const HighlightedText = tw.span`text-vibuco-300`
 
@@ -30,10 +26,9 @@ function ScrollToTopOnMount() {
   return null;
 }
 
-const Index = ({ initialAuth }) => {
-  const auth = useAuth(null);
-  const { login, logout } = useAuthFunctions();
-  // authentication object which represents logged in user
+const Index = () => {
+  const { login } = useAuthControls();
+
   return (
     <>
       <ScrollToTopOnMount />
@@ -48,8 +43,8 @@ const Index = ({ initialAuth }) => {
         }
         imageSrc = "../../static/through_the_park.svg"
         imageDecoratorBlob = {true}
-        primaryButtonUrl = {login}
-        primaryButtonText = "Get access"
+        primaryButtonUrl = {HAS_HOSTED_UI_AUTH_CONFIG ? login : "/contact"}
+        primaryButtonText = {HAS_HOSTED_UI_AUTH_CONFIG ? "Get access" : "Contact us"}
         buttonRounded = {true}
         animationHeading = "wow fadeIn"
         animationText = "wow slideInLeft"

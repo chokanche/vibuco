@@ -2,7 +2,8 @@ import React from "react";
 import tw from "twin.macro";
 import styled from "styled-components";
 import { PrimaryButton as PrimaryButtonBase } from "../misc/Buttons.js";
-import { useAuthFunctions } from "aws-cognito-next";
+import { HAS_HOSTED_UI_AUTH_CONFIG } from "../../config";
+import { useAuthControls } from "../../auth";
 import HeaderBase, { NavLinks, NavLink, NavButton, PrimaryButton, PrimaryLink } from  '../headers/light.js'
 //import LogoImage from "../../static/logo.svg";
 import FacebookIcon from "../../static/facebook-icon.svg";
@@ -49,7 +50,7 @@ const SocialLink = styled.a`
 `;
 
 export default () => {
-  const { login, logout } =  useAuthFunctions();
+  const { login } = useAuthControls();
   return (
     <Container>
       <Content>
@@ -72,7 +73,11 @@ export default () => {
             <ColumnHeading>Product</ColumnHeading>
             <LinkList>
               <LinkListItem>
-                <Link href="#!s" onClick = {login} >Get Access</Link>
+                {HAS_HOSTED_UI_AUTH_CONFIG ? (
+                  <Link href="#!s" onClick = {login} >Get Access</Link>
+                ) : (
+                  <Link href="/contact">Contact us for access</Link>
+                )}
               </LinkListItem>
               <LinkListItem>
                 <Link href="/about">Learn more about vibuco</Link>

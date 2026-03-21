@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import tw from "twin.macro";
 import "../../styles/customStyles.css";
 import HeaderBase, { NavLinks, NavLink, NavButton, PrimaryButton, PrimaryLink } from  './light.js'
-import { useAuthFunctions } from "aws-cognito-next";
-import { useAuth } from "../../auth";
+import { HAS_HOSTED_UI_AUTH_CONFIG } from "../../config";
+import { useAuth, useAuthControls } from "../../auth";
 
 import ActiveLink from "../ActiveLink";
 
@@ -11,7 +11,7 @@ const Header = tw(HeaderBase)`max-w-none`;
 
 const Viheader = () => {
     const auth = useAuth(null);
-    const { login, logout } = useAuthFunctions();
+    const { login, logout } = useAuthControls();
     const navLinks = [
       <NavLinks key={1}>
         {!auth ? (
@@ -34,7 +34,7 @@ const Viheader = () => {
         <NavLink href="/contact">Contact Us</NavLink>
       </NavLinks>,
       <NavLinks key={2}>
-        {!auth ? (
+        {!auth && HAS_HOSTED_UI_AUTH_CONFIG ? (
           <PrimaryButton onClick={login} >
           Get access
           </PrimaryButton>
