@@ -5,7 +5,8 @@ import "../styles/customStyles.css";
 import Footer from "../components/footers/FiveColumnWithInputForm";
 import Features from "../components/features/ThreeColWithSideImage.js";
 import Clients from "../components/testimonials/TwoColumnWithImageAndRating"
-import { useAuthFunctions } from "aws-cognito-next";
+import { HAS_HOSTED_UI_AUTH_CONFIG } from "../config";
+import { useAuthControls } from "../auth";
 import { ReactComponent as BriefcaseIcon } from "feather-icons/dist/icons/briefcase.svg";
 import { ReactComponent as MoneyIcon } from "feather-icons/dist/icons/dollar-sign.svg";
 import { ReactComponent as HeartIcon } from "feather-icons/dist/icons/heart.svg";
@@ -26,7 +27,7 @@ function ScrollToTopOnMount() {
 }
 
 const Index = () => {
-  const { login } = useAuthFunctions();
+  const { login } = useAuthControls();
 
   return (
     <>
@@ -42,8 +43,8 @@ const Index = () => {
         }
         imageSrc = "../../static/through_the_park.svg"
         imageDecoratorBlob = {true}
-        primaryButtonUrl = {login}
-        primaryButtonText = "Get access"
+        primaryButtonUrl = {HAS_HOSTED_UI_AUTH_CONFIG ? login : "/contact"}
+        primaryButtonText = {HAS_HOSTED_UI_AUTH_CONFIG ? "Get access" : "Contact us"}
         buttonRounded = {true}
         animationHeading = "wow fadeIn"
         animationText = "wow slideInLeft"

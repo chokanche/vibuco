@@ -1,12 +1,12 @@
 import logo from "../public/logo.png";
-import { useAuthFunctions } from "aws-cognito-next";
-import { useAuth } from "../auth";
+import { HAS_HOSTED_UI_AUTH_CONFIG } from "../config";
+import { useAuth, useAuthControls } from "../auth";
 
 import ActiveLink from "./ActiveLink";
 
 const Navbar = () => {
   const auth = useAuth(null);
-  const { login, logout } = useAuthFunctions();
+  const { login, logout } = useAuthControls();
 
   return (
     <nav className="navbar navbar-expand navbar-light bg-light">
@@ -43,7 +43,7 @@ const Navbar = () => {
               <a className="nav-link">Cards</a>
             </ActiveLink>
           </li>
-          {!auth ? (
+          {!auth && HAS_HOSTED_UI_AUTH_CONFIG ? (
             <li className="nav-item">
               <button onClick={login} className="btn btn-link nav-link">
                 Log in
@@ -51,7 +51,7 @@ const Navbar = () => {
             </li>
           ) : null}
 
-          {auth ? (
+          {auth && HAS_HOSTED_UI_AUTH_CONFIG ? (
             <li className="nav-item">
               <button onClick={logout} className="btn btn-link nav-link">
                 Log out

@@ -12,3 +12,12 @@ export const NODE_ENV = publicRuntimeConfig.NODE_ENV;
 export const IDP_DOMAIN = publicRuntimeConfig.IDP_DOMAIN;
 export const REDIRECT_SIGN_IN = publicRuntimeConfig.REDIRECT_SIGN_IN;
 export const REDIRECT_SIGN_OUT = publicRuntimeConfig.REDIRECT_SIGN_OUT;
+export const HAS_COGNITO_AUTH_CONFIG =
+  Boolean(USER_POOL_REGION) &&
+  Boolean(USER_POOL_ID) &&
+  Boolean(USER_POOL_CLIENT_ID);
+export const HAS_HOSTED_UI_AUTH_CONFIG =
+  HAS_COGNITO_AUTH_CONFIG &&
+  Boolean(IDP_DOMAIN) &&
+  Boolean(REDIRECT_SIGN_IN) &&
+  Boolean(REDIRECT_SIGN_OUT);

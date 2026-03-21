@@ -4,11 +4,11 @@
   "description": "Virtual Business Coaching - vibuco",
   "main": "index.js",
   "scripts": {
-    "dev": "node --openssl-legacy-provider ./node_modules/next/dist/bin/next",
-    "build": "node --openssl-legacy-provider ./node_modules/next/dist/bin/next build",
-    "start": "node --openssl-legacy-provider ./node_modules/next/dist/bin/next start",
+    "dev": "node scripts/run-next.js",
+    "build": "node scripts/run-next.js build",
+    "start": "node scripts/run-next.js start",
     "pems:prepare": "prepare-pems --region $USER_POOL_REGION --userPoolId $USER_POOL_ID",
-    "export": "npm run build && node --openssl-legacy-provider ./node_modules/next/dist/bin/next export"
+    "export": "npm run build && node scripts/run-next.js export"
   },
   "keywords": [],
   "author": "",
