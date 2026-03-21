@@ -1,10 +1,37 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import tw from "twin.macro";
 
-/* framer-motion and useInView here are used to animate the sections in when we reach them in the viewport
- */
 import { motion } from "framer-motion";
-import useInView from "use-in-view";
+
+function useInView(offset = 30) {
+  const ref = useRef(null);
+  const [inView, setInView] = useState(false);
+
+  useEffect(() => {
+    if (!ref.current || typeof IntersectionObserver === "undefined") {
+      setInView(true);
+      return undefined;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+          observer.disconnect();
+        }
+      },
+      {
+        rootMargin: `0px 0px -${offset}px 0px`,
+      }
+    );
+
+    observer.observe(ref.current);
+
+    return () => observer.disconnect();
+  }, [offset]);
+
+  return [ref, inView];
+}
 
 const StyledDiv = tw.div`font-display min-h-screen text-secondary-500 p-8 overflow-hidden`;
 function AnimationReveal({ disabled, children }) {
@@ -26,7 +53,7 @@ function AnimationReveal({ disabled, children }) {
 }
 
 function AnimatedSlideInComponent({ direction = "left", offset = 30, children }) {
-  const [ref, inView] = useInView(30);
+  const [ref, inView] = useInView(offset);
 
   const x = { target: "0%" };
 

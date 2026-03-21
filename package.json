@@ -4,11 +4,11 @@
   "description": "Virtual Business Coaching - vibuco",
   "main": "index.js",
   "scripts": {
-    "dev": "next",
-    "build": "next build",
-    "start": "next start",
+    "dev": "node --openssl-legacy-provider ./node_modules/next/dist/bin/next",
+    "build": "node --openssl-legacy-provider ./node_modules/next/dist/bin/next build",
+    "start": "node --openssl-legacy-provider ./node_modules/next/dist/bin/next start",
     "pems:prepare": "prepare-pems --region $USER_POOL_REGION --userPoolId $USER_POOL_ID",
-    "export": "npm run build && next export"
+    "export": "npm run build && node --openssl-legacy-provider ./node_modules/next/dist/bin/next export"
   },
   "keywords": [],
   "author": "",
@@ -25,14 +25,14 @@
     "feather-icons": "^4.28.0",
     "framer-motion": "^2.7.7",
     "gsap": "^3.6.1",
-    "lodash": "^4.17.20",
+    "lodash": "^4.17.21",
     "next": "^9.5.5",
     "next-compose-plugins": "^2.2.0",
     "next-images": "^1.4.0",
     "next-seo": "^4.17.0",
     "next-svgr": "0.0.2",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
+    "react": "^16.14.0",
+    "react-dom": "^16.14.0",
     "react-feather": "^2.0.8",
     "react-medium-image-zoom": "^4.3.0",
     "react-modal": "^3.11.2",
@@ -44,7 +44,6 @@
     "slick-carousel": "^1.8.1",
     "styled-components": "^5.2.0",
     "twin.macro": "^1.10.0",
-    "use-in-view": "^1.0.15",
     "wow.js": "^1.2.2"
   },
   "devDependencies": {
@@ -61,7 +60,6 @@
     "svg-url-loader": "^5.0.1",
     "tailwindcss": "^1.8.10",
     "url-loader": "^4.1.0",
-    "use-in-view": "^1.0.15",
     "webpack": "^4.44.2"
   }
 }

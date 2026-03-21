@@ -10,7 +10,7 @@ import getImageObjects from "../helpers/getImageObjects";
 import { PUBLIC_BUCKET_NAME, COMMON_BUCKET_NAME } from "../config";
 import getImageAspectRatio from "../helpers/getImageAspectRatio";
 import Loading from "../components/Loading";
-import _, { set } from "lodash";
+import _ from "lodash";
 import NumberedGalleryImage from "../components/NumberedGalleryImage";
 import Viheader from "../components/headers/viheader";
 import { NextSeo } from "next-seo";
@@ -46,7 +46,7 @@ const Cards = ({ initialAuth }) => {
     const promises = imgData.map(async (img) => {
       const width = hasHeightWidth(img)
         ? img.width
-        : await getImageAspectRatio(img.src).catch((err) => {
+        : await getImageAspectRatio(img.src).catch(() => {
             return 1;
           });
 
@@ -176,7 +176,7 @@ const Cards = ({ initialAuth }) => {
   const flip = () => setFlipped((prevState) => !prevState);
 
   // open the light box (handler comes from React-gallery) setting the current image and opening the light box
-  const openLightbox = (_, { index }) => {
+  const openLightbox = (_event, { index }) => {
     setCurrentImageIndex(index);
     setLightbox(true);
   };
@@ -231,10 +231,6 @@ const Cards = ({ initialAuth }) => {
     }
   }, [selectedOption]);
 
-  const handleChange = (checked) => {
-    setChecked(checked);
-  };
-
   return (
     <>
         <NextSeo {...SEO} />
@@ -269,7 +265,7 @@ const Cards = ({ initialAuth }) => {
                           <label>
                             <span>Show question</span>
                             <Switch
-                              onChange={handleChange}
+                              onChange={setChecked}
                               checked={checked}
                               className="react-switch"
                               onColor = "#97d8c4"
