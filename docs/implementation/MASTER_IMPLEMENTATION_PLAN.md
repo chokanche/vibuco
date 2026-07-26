@@ -1,6 +1,6 @@
 # Vibuco master implementation plan
 
-Status: Proposed
+Status: Approved for execution
 Planning horizon: incremental slices, not a calendar commitment
 Machine source: [implementation-work-items.yaml](../backlog/implementation-work-items.yaml)
 
@@ -96,6 +96,11 @@ A work item is ready when:
 - test fixtures/environment exist
 - no unresolved high-conflict ownership exists
 
+Read-only production diagnosis does not require deployment mutation access.
+When a task contains both diagnostic and privileged steps, it can start if the
+diagnostic acceptance criteria are executable. Missing privileged access must be
+recorded against the exact step and owner; it blocks mutation, not the whole task.
+
 ## Definition of Done
 
 A work item is done when:
@@ -165,4 +170,32 @@ No destructive database contraction, identity deletion, policy revocation, or Dy
 
 ## First executable sequence
 
-Start with `VIB-STAB-001`, then `VIB-STAB-002`, `VIB-STAB-003`, and `VIB-STAB-004`. Do not begin the visual redesign before the production topology, core-route failure, reproducible baseline, and characterization suite are owned.
+`VIB-STAB-001` is `ready` and is the only initial claimable item. Its first
+phase is public, read-only diagnosis and does not require Netlify, DNS, or AWS
+credentials.
+
+On completion:
+
+1. Mark `VIB-STAB-001` `done`.
+2. Mark `VIB-STAB-003` `ready`.
+3. Mark `VIB-STAB-002` `ready` only after the production-change owner and
+   rollback authority are confirmed; otherwise leave it `planned` and record the
+   access request.
+4. Mark `VIB-STAB-004` `ready` only after both `VIB-STAB-002` and
+   `VIB-STAB-003` are `done`.
+
+Do not begin the visual redesign before the production topology, public
+availability failure, reproducible baseline, and characterization suite are
+owned.
+
+## Execution-state ownership
+
+The agent claiming a ready item changes it to `in_progress` in the first commit.
+The completing agent changes it to `done` and promotes directly unlocked
+dependents only when every Definition of Ready condition is satisfied. A task
+blocked by external access records the exact system, requested capability, owner
+or escalation target, and unblock condition in its pull request.
+
+The validator enforces valid statuses, ready-task dependencies, unique branch
+names, and the existence of at least one `ready` or `in_progress` item while the
+backlog is unfinished.

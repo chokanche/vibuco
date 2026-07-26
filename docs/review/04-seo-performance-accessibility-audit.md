@@ -20,7 +20,7 @@
 | PERFA-003 | Protected images are fetched as full S3 objects and base64 encoded | High memory, no CDN caching | Critical | Responsive variants and signed delivery |
 | PERFA-004 | Three animation systems plus sliders/galleries | Main-thread and bundle cost | High | One small motion approach |
 | PERFA-005 | Remote and local images lack a unified optimization strategy | Layout shift and waste | High | Image contract with dimensions |
-| PERFA-006 | Production core route returns 502 | Availability dominates all speed metrics | Critical | Synthetic checks and rollback |
+| PERFA-006 | Standard production access fails; follow-up evidence bounds the immediate fault to custom-domain TLS while bypassed routes return 200 | Availability dominates all speed metrics and invalidates field-performance conclusions | Critical | TLS-aware synthetic checks, owner-approved certificate/domain repair, and rollback |
 
 ## Accessibility
 

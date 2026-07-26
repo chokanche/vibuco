@@ -18,6 +18,10 @@ The repository currently contains a legacy Next.js 9 application and an approved
 
 The historical AWS notes in `docs/authentication.md`, `docs/dynamodb.md`, and `docs/s3.md` describe the current implementation only. They are not target-state requirements.
 
+The first executable work item is `VIB-STAB-001`. It is intentionally limited to
+read-only diagnosis and production-topology documentation. Missing Netlify, DNS,
+or AWS access does not prevent that task from starting.
+
 ## Source-of-truth hierarchy
 
 When documents conflict, use this order:
@@ -55,9 +59,11 @@ Do not begin feature work from this README alone. Read [AGENTS.md](AGENTS.md), c
 Run:
 
 ```bash
-python3 scripts/validate-specs.py
+bash scripts/validate-specs.sh
 npx prisma format --schema docs/data/reference-schema.prisma
 npm run build
 ```
 
-The first command validates required files, links, IDs, work-item dependencies, OpenAPI/YAML syntax, and the Mermaid source set.
+The first command creates an isolated Python environment on first use, installs
+the pinned specification dependency, and validates required files, links, IDs,
+work-item readiness and dependencies, OpenAPI/YAML syntax, and Mermaid sources.

@@ -6,6 +6,16 @@ The repository is a JavaScript Next.js 9 Pages Router application. Twelve routes
 
 There are no API routes, server data layer, automated tests, lint command, CI workflow, lockfile, infrastructure code, migrations, feature flags, or observability integration.
 
+## Production availability evidence
+
+Standard probes returned 502 during the original audit. A read-only follow-up at
+2026-07-26T14:48Z reported that `www.vibuco.com` presented a `*.netlify.app`
+certificate. With certificate validation bypassed, Netlify returned HTTP 200 for
+`/`, `/cards`, `/about`, `/contact`, and `/login`. The immediate public failure
+is therefore bounded to the TLS/custom-domain layer. This does not prove every
+authenticated or AWS-backed card flow is healthy; provider and deployment logs
+remain required for that conclusion.
+
 ## Verified build baseline
 
 `npm install --ignore-scripts --no-package-lock` and `npm run build` succeeded on Node.js 24.14.0. The build reported:
@@ -36,6 +46,7 @@ There are no API routes, server data layer, automated tests, lint command, CI wo
 | TECH-012 | Observability | Only one `console.log`; no metrics/traces/errors | Core failures are undetectable | Critical | Structured telemetry and SLOs |
 | TECH-013 | Assets | `static`, `images`, and `public` duplicate asset strategies | 27 MB of source assets and unclear ownership | Medium | Migrate to one asset pipeline |
 | TECH-014 | Dead code | No-op login/register and unused template components remain | Attack and maintenance surface | Medium | Remove after route inventory |
+| TECH-015 | Production edge | Custom domain presents a mismatched `*.netlify.app` certificate; bypassed probes reach Netlify routes | Browsers cannot trust the site and generic 502 evidence can be misattributed to application routes | Critical | Repair domain/TLS ownership and configuration, then correlate route and dependency logs |
 
 ## Target disposition
 
