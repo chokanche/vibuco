@@ -32,7 +32,7 @@ certificate covering `www.vibuco.com`. That production change belongs to
 | Canonical host | `www.vibuco.com` | Repository metadata and production probes |
 | DNS alias | `practical-austin-91bfaf.netlify.app` | Public CNAME response |
 | DNS address response | `63.176.8.218`, `35.157.26.135` | Public A response |
-| Authoritative DNS | `ns1.domain.com`, `ns2.domain.com` | Public NS response |
+| Authoritative DNS | Delegation propagating from Domain.com to Netlify DNS | Recursive-resolver comparison |
 | Hosting | Netlify static edge | Response `Server` and request-ID headers |
 | Presented certificate | `CN=*.netlify.app` | TLS handshake |
 | Certificate issuer | DigiCert Global G2 TLS RSA SHA256 2020 CA1 | TLS handshake |
@@ -102,12 +102,13 @@ remain unverified pending `ACCESS-VIB-STAB-001-003`.
 
 ## Ownership and rollback
 
-Provider, DNS, AWS, deployment, and rollback owners are not represented in the
-repository. Exact escalation requests and unblock conditions are maintained in
+Marko is the confirmed Netlify project owner, certificate-change approver, and
+rollback authority. AWS ownership remains an open escalation. Exact access
+requests and unblock conditions are maintained in
 [production access and ownership](production-access-ownership.md).
 
-The current rollback target is also unknown. No production change should be
-approved until the previous Netlify deploy, previous DNS/custom-domain state,
-verification probes, change approver, and maximum rollback decision time are
-recorded.
-
+The last published Netlify deploy is source revision `fbaa759`. The approved
+certificate-only retry does not change that artifact or DNS. Its fallback is to
+stop retries and retain the published deploy while the custom domain remains
+unavailable. A DNS reversal remains prohibited until registrar evidence is
+captured.
