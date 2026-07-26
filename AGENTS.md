@@ -24,8 +24,9 @@ Use the hierarchy in `README.md`. Legacy code proves current behavior, but does 
 ## Work-item protocol
 
 1. Select exactly one ready item from `docs/backlog/implementation-work-items.yaml`.
-2. Verify every dependency is complete.
-3. Create the specified branch name.
+2. Verify every dependency is complete. A dependency-free item may be ready.
+3. Claim it by creating the specified branch and changing only its status from
+   `ready` to `in_progress` in the first commit.
 4. Restate scope, files, acceptance criteria, risks, and validation before editing.
 5. Keep the change within the task boundary.
 6. Update requirement mappings when behavior changes.
@@ -33,6 +34,42 @@ Use the hierarchy in `README.md`. Legacy code proves current behavior, but does 
 8. Hand off using the format below.
 
 Do not change a task to `done` until its acceptance criteria and required tests pass.
+
+`VIB-STAB-001` is the initial ready item. It may begin with public, read-only
+evidence. Missing production credentials or an unknown infrastructure owner
+blocks production mutation, not repository inspection, public diagnostics, or
+documentation of the access gap.
+
+## Backlog state transitions
+
+- `planned`: specified but not yet claimable.
+- `ready`: dependencies and known readiness gates are satisfied.
+- `in_progress`: claimed on the task's specified branch.
+- `blocked`: work started but a named external dependency prevents the next
+  acceptance step. Record the blocker and required owner in the pull request.
+- `done`: acceptance criteria and required checks pass.
+- The completing agent updates its item to `done` and promotes each directly
+  unlocked dependent item to `ready` only when its full Definition of Ready is
+  satisfied.
+- For the bootstrap sequence, completing `VIB-STAB-001` makes
+  `VIB-STAB-003` ready. Promote `VIB-STAB-002` only when the production-change
+  owner and rollback authority are confirmed.
+- Status-only edits to the backlog are part of the claimed task and do not
+  require separate high-conflict ownership.
+
+The specification validator rejects an unfinished backlog with no `ready` or
+`in_progress` item and rejects ready work whose dependencies are not done.
+
+## Production access boundary
+
+- Read-only repository inspection, public HTTP/TLS/DNS checks, and redacted
+  evidence capture are always allowed within a diagnostic work item.
+- Deployment logs, provider configuration, secrets, authenticated production
+  data, DNS mutation, certificate changes, deployments, and rollback actions
+  require the relevant owner and access.
+- Never bypass a missing permission. Document the exact blocked action, system,
+  requested role, owner or escalation target, and evidence already gathered.
+- Use `docs/operations/production-access-ownership.md` as the access checklist.
 
 ## Parallel ownership
 

@@ -6,21 +6,24 @@ items:
   - id: VIB-STAB-001
     epic: Stabilization
     title: Document production topology and reproduce core failure
-    purpose: Identify the deployment, environment, and exact cause of the production cards-route 502 before redesign work.
+    purpose: Bound the public TLS/custom-domain failure, document the production topology, and determine whether any application failure remains before redesign work.
     specification_references:
       - docs/review/03-technical-audit.md
       - docs/specs/11-migration-and-redesign-plan.md
       - docs/specs/17-observability-reliability.md
+      - docs/operations/production-access-ownership.md
     dependencies: []
     likely_files:
       - docs/operations/current-production-topology.md
+      - docs/operations/production-access-ownership.md
       - docs/runbooks/core-workspace-unavailable.md
     acceptance_criteria:
-      - Current hosting, DNS, build, runtime, Cognito, DynamoDB, S3, and rollback owners are documented.
-      - The 502 is reproduced or bounded with timestamped evidence and a stable error code.
+      - Current hosting, DNS, build, runtime, Cognito, DynamoDB, S3, and rollback access and ownership are confirmed or recorded with a named escalation request.
+      - Standard and certificate-bypassed probes bound the public failure with timestamped evidence; deployment logs are correlated when access exists.
+      - The topology and runbook clearly distinguish TLS/custom-domain, platform, route, and AWS dependency failures.
       - No production mutation is made without an approved incident change.
     testing_requirements:
-      - Capture request/response and deployment-log evidence.
+      - Capture redacted HTTP, TLS, DNS, and deployment-log evidence where access exists.
       - Verify home, cards, about, contact, and sign-in-adjacent routes.
     observability_requirements: Record the minimum signals needed to correlate the failing route.
     security_requirements: Redact tokens, cookies, account data, and signed URLs from evidence.
@@ -31,23 +34,24 @@ items:
     branch_name: agent/vib-stab-001-production-baseline
     commit_prefix: "docs(stability):"
     milestone: M0
-    status: planned
+    status: ready
 
   - id: VIB-STAB-002
     epic: Stabilization
-    title: Restore and monitor legacy card route
-    purpose: Apply the smallest safe fix for the diagnosed core-route failure and add a synthetic guard.
+    title: Restore and monitor public card availability
+    purpose: Apply the smallest safe TLS, custom-domain, platform, or route fix supported by VIB-STAB-001 evidence and add a synthetic guard.
     specification_references:
       - docs/specs/11-migration-and-redesign-plan.md
       - docs/specs/17-observability-reliability.md
       - docs/specs/21-non-functional-requirements-slos.md
     dependencies: [VIB-STAB-001]
     likely_files:
-      - pages/cards.js
-      - actions/getDataFromDDBTable.js
+      - external Netlify or DNS configuration, when owner-approved
+      - pages/cards.js, only when application evidence requires it
+      - actions/getDataFromDDBTable.js, only when dependency evidence requires it
       - docs/runbooks/core-workspace-unavailable.md
     acceptance_criteria:
-      - Existing cards behavior is restored without target redesign.
+      - Standard browser HTTPS access to the existing card behavior is restored without target redesign.
       - Synthetic load and reveal check runs on schedule.
       - Rollback is documented and verified.
     testing_requirements:

@@ -26,7 +26,7 @@ Vibuco helps a facilitator unlock reflection by combining evocative photographs 
 
 | Finding ID | Area | Current behavior and evidence | Impact | Severity | Action |
 | --- | --- | --- | --- | --- | --- |
-| PROD-001 | Reliability | Production `/cards` returned 502 on 2026-07-26 | The core product cannot be trusted | Critical | Stabilize, instrument, replace |
+| PROD-001 | Reliability | Standard production access returned 502; a 2026-07-26 follow-up found a mismatched Netlify certificate while certificate-bypassed route requests returned 200 | The public product cannot be trusted even if the application process is healthy | Critical | Repair TLS/custom-domain configuration, correlate deployment logs, add synthetic coverage |
 | PROD-002 | Positioning | Home mixes coaching-tool value with generic template claims | Visitors cannot quickly understand outcome or audience | High | Replace copy |
 | PROD-003 | Conversion | "Get access" has no pricing, entitlement, or access explanation | Creates uncertainty and abandonment | High | Define access contract |
 | PROD-004 | Trust | Legal links are anchors, copyright says 2021, generic copy remains | Product looks abandoned | High | Replace and add legal gate |

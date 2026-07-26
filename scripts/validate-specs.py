@@ -51,6 +51,9 @@ REQUIRED_FILES = [
     "docs/data/data-dictionary.md",
     "docs/backlog/implementation-work-items.yaml",
     "docs/implementation/MASTER_IMPLEMENTATION_PLAN.md",
+    "docs/operations/production-access-ownership.md",
+    "requirements-specs.txt",
+    "scripts/validate-specs.sh",
 ]
 
 REQUIRED_DIAGRAMS = [
@@ -180,11 +183,18 @@ def validate_yaml_and_work_items(result: Validation) -> None:
         return
 
     items = backlog.get("items", []) if isinstance(backlog, dict) else []
+    declared_statuses = set(backlog.get("statuses", [])) if isinstance(backlog, dict) else set()
+    expected_statuses = {"planned", "ready", "in_progress", "blocked", "done"}
+    if declared_statuses != expected_statuses:
+        result.error(
+            "Backlog statuses must be exactly: " + ", ".join(sorted(expected_statuses))
+        )
     ids = [item.get("id") for item in items if isinstance(item, dict)]
     duplicates = sorted(identifier for identifier, count in Counter(ids).items() if count > 1)
     if duplicates:
         result.error("Duplicate work-item IDs: " + ", ".join(duplicates))
     id_set = set(ids)
+    branches: list[str] = []
     for item in items:
         missing = WORK_ITEM_KEYS - set(item)
         if missing:
@@ -195,6 +205,48 @@ def validate_yaml_and_work_items(result: Validation) -> None:
         for reference in item.get("specification_references", []):
             if not (ROOT / reference).is_file():
                 result.error(f"{item.get('id')} has missing specification {reference}")
+        status = item.get("status")
+        if status not in expected_statuses:
+            result.error(f"{item.get('id')} has invalid status {status!r}")
+        branch = item.get("branch_name")
+        if branch:
+            branches.append(branch)
+        if status == "ready":
+            incomplete_dependencies = [
+                dependency
+                for dependency in item.get("dependencies", [])
+                if next(
+                    (
+                        candidate.get("status")
+                        for candidate in items
+                        if candidate.get("id") == dependency
+                    ),
+                    None,
+                )
+                != "done"
+            ]
+            if incomplete_dependencies:
+                result.error(
+                    f"{item.get('id')} is ready with incomplete dependencies: "
+                    + ", ".join(incomplete_dependencies)
+                )
+
+    duplicate_branches = sorted(
+        branch for branch, count in Counter(branches).items() if count > 1
+    )
+    if duplicate_branches:
+        result.error("Duplicate work-item branches: " + ", ".join(duplicate_branches))
+
+    unfinished = [item for item in items if item.get("status") != "done"]
+    executable = [
+        item
+        for item in unfinished
+        if item.get("status") in {"ready", "in_progress"}
+    ]
+    if unfinished and not executable:
+        result.error(
+            "Unfinished backlog has no ready or in_progress work item"
+        )
 
     visiting: set[str] = set()
     visited: set[str] = set()
@@ -219,7 +271,9 @@ def validate_yaml_and_work_items(result: Validation) -> None:
         "work-item" in error.lower() or "dependency" in error.lower()
         for error in result.errors
     ):
-        result.ok(f"work items, references, and acyclic dependencies ({len(items)})")
+        result.ok(
+            f"work items, readiness, references, and acyclic dependencies ({len(items)})"
+        )
 
     openapi_path = ROOT / "docs/api/openapi.yaml"
     try:
