@@ -34,7 +34,7 @@ items:
     branch_name: agent/vib-stab-001-production-baseline
     commit_prefix: "docs(stability):"
     milestone: M0
-    status: ready
+    status: in_progress
 
   - id: VIB-STAB-002
     epic: Stabilization
