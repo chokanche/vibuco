@@ -27,14 +27,23 @@ or documentation. It blocks the corresponding private read or mutation.
 
 | System | Current evidence | Read capability needed | Mutation capability needed | Owner or escalation target | Status |
 | --- | --- | --- | --- | --- | --- |
-| Netlify site/project | Response headers and bypassed probes indicate Netlify | Deployment history, build logs, domain status | Domain attach, certificate renewal, deploy, rollback | Product owner to identify Netlify account owner | Unconfirmed |
-| DNS for `vibuco.com` | Public DNS may be queried | Zone records and delegation confirmation | CNAME/A/ALIAS changes | Domain registrant or DNS administrator | Unconfirmed |
-| Certificate/custom domain | Mismatched `*.netlify.app` certificate reported | Certificate issuance and validation status | Re-provision certificate or domain mapping | Netlify and DNS owners jointly | Unconfirmed |
-| Source deployment mapping | GitHub repository known | Commit-to-deploy mapping | Production branch/build settings | Netlify account owner | Unconfirmed |
-| Cognito | Client configuration exists in legacy repository | Pool/client configuration and auth logs | Client/callback/policy changes | AWS account owner | Unconfirmed |
-| DynamoDB | Browser scan path exists in legacy code | Table description and redacted failure metrics | Table, index, policy, or data changes | AWS account owner | Unconfirmed |
-| S3 | Browser object path exists in legacy code | Bucket policy/CORS and redacted access metrics | Policy, CORS, lifecycle, or object changes | AWS account owner | Unconfirmed |
-| Rollback authority | No repository runbook or immutable artifact mapping | Previous deploy and configuration history | Roll back deploy/domain/configuration | Product owner to name incident change approver | Unconfirmed |
+| Netlify site/project | Response headers and bypassed probes indicate Netlify | Deployment history, build logs, domain status | Domain attach, certificate renewal, deploy, rollback | `ACCESS-VIB-STAB-001-001` | Escalation recorded |
+| DNS for `vibuco.com` | Public DNS resolves through Domain.com nameservers to a Netlify alias | Zone records and delegation confirmation | CNAME/A/ALIAS changes | `ACCESS-VIB-STAB-001-002` | Escalation recorded |
+| Certificate/custom domain | Mismatched `*.netlify.app` certificate reported | Certificate issuance and validation status | Re-provision certificate or domain mapping | `ACCESS-VIB-STAB-001-001` and `002` | Escalation recorded |
+| Source deployment mapping | GitHub repository known | Commit-to-deploy mapping | Production branch/build settings | `ACCESS-VIB-STAB-001-001` | Escalation recorded |
+| Cognito | Client configuration exists in legacy repository | Pool/client configuration and auth logs | Client/callback/policy changes | `ACCESS-VIB-STAB-001-003` | Escalation recorded |
+| DynamoDB | Browser scan path exists in legacy code | Table description and redacted failure metrics | Table, index, policy, or data changes | `ACCESS-VIB-STAB-001-003` | Escalation recorded |
+| S3 | Browser object path exists in legacy code | Bucket policy/CORS and redacted access metrics | Policy, CORS, lifecycle, or object changes | `ACCESS-VIB-STAB-001-003` | Escalation recorded |
+| Rollback authority | No repository runbook or immutable artifact mapping | Previous deploy and configuration history | Roll back deploy/domain/configuration | `ACCESS-VIB-STAB-001-004` | Escalation recorded |
+
+## Named escalation requests
+
+| Request | Escalation target | Requested capability | Unblock condition |
+| --- | --- | --- | --- |
+| `ACCESS-VIB-STAB-001-001` | Product owner to route to the Netlify account owner | Read deployment history, build logs, custom-domain state, source mapping, and previous deploy; identify the mutation owner | Account owner and read evidence are recorded |
+| `ACCESS-VIB-STAB-001-002` | Product owner to route to the domain registrant or DNS administrator | Confirm zone ownership, intended records, TTLs, and DNS rollback procedure | DNS owner and intended/previous records are recorded |
+| `ACCESS-VIB-STAB-001-003` | Product owner to route to the AWS account owner | Read-only Cognito configuration/auth failures, DynamoDB table status/failures, and S3 policy/access failures | AWS owner and redacted dependency evidence are recorded |
+| `ACCESS-VIB-STAB-001-004` | Product owner | Name the incident change approver, rollback operator, previous known-good state, and maximum decision time | Production-change gate is fully assigned |
 
 ## Safe diagnostic sequence
 
