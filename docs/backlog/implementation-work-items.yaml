@@ -97,7 +97,7 @@ items:
     branch_name: agent/vib-stab-003-reproducible-build
     commit_prefix: "build:"
     milestone: M1
-    status: ready
+    status: in_progress
 
   - id: VIB-STAB-004
     epic: Quality foundation
