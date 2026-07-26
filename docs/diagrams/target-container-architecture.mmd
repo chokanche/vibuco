@@ -1,0 +1,23 @@
+flowchart TB
+  Edge["CDN / edge protections"]
+  Web["Next.js modular monolith"]
+  Auth["Cognito OIDC"]
+  DB["Managed PostgreSQL"]
+  Media["S3 media + variants"]
+  Obs["OTel logs / metrics / traces"]
+  Email["Support email delivery"]
+
+  Edge --> Web
+  Web --> Auth
+  Web --> DB
+  Web --> Media
+  Web --> Obs
+  Web --> Email
+
+  subgraph WebParts["Application boundaries"]
+    Routes["Routes + Server Components"]
+    Services["Domain application services"]
+    Adapters["Server-only adapters"]
+    Routes --> Services
+    Services --> Adapters
+  end

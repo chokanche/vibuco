@@ -1,0 +1,16 @@
+flowchart TB
+  Draft["Edit draft card/deck"]
+  Validate["Validate locales, rights, variants"]
+  Review{"Publisher approval"}
+  Commit["Create immutable version + active pointer"]
+  Cache["Invalidate tagged caches"]
+  Observe["Observe publication health"]
+  Rollback["Restore previous active version"]
+
+  Draft --> Validate
+  Validate --> Review
+  Review -->|Approved| Commit
+  Review -->|Changes| Draft
+  Commit --> Cache
+  Cache --> Observe
+  Observe -->|Defect| Rollback

@@ -1,0 +1,15 @@
+sequenceDiagram
+  actor U as Facilitator
+  participant W as Vibuco server
+  participant C as Cognito
+  participant D as PostgreSQL
+
+  U->>W: Open protected workspace
+  W-->>U: Redirect with state, nonce, PKCE
+  U->>C: Authenticate
+  C-->>W: Authorization code
+  W->>C: Exchange code + verifier
+  C-->>W: Validated OIDC tokens
+  W->>D: Resolve account + entitlement
+  D-->>W: Active access
+  W-->>U: Secure session cookie + workspace

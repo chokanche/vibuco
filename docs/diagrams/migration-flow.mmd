@@ -1,0 +1,20 @@
+flowchart TB
+  Legacy["Legacy Next + DynamoDB/S3"]
+  Stabilize["Stabilize + characterize"]
+  Boundary["Server auth/data/media boundary"]
+  Import["Repeatable PostgreSQL import"]
+  Shadow["Shadow read + reconcile"]
+  Pilot["Flagged workspace pilot"]
+  Cutover["Target read/publication cutover"]
+  Retire["Revoke and retire legacy"]
+  Rollback["Legacy server adapter / prior artifact"]
+
+  Legacy --> Stabilize
+  Stabilize --> Boundary
+  Boundary --> Import
+  Import --> Shadow
+  Shadow --> Pilot
+  Pilot --> Cutover
+  Cutover --> Retire
+  Pilot -. failure .-> Rollback
+  Cutover -. failure .-> Rollback

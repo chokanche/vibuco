@@ -1,0 +1,14 @@
+flowchart TB
+  Request["User/admin request"]
+  App["Instrumented application"]
+  Signals["Structured logs, metrics, traces"]
+  Dashboard["Dashboards + SLOs"]
+  Alert["Burn-rate / security alert"]
+  Response["Runbook + incident response"]
+
+  Request --> App
+  App --> Signals
+  Signals --> Dashboard
+  Dashboard --> Alert
+  Alert --> Response
+  Response -->|mitigation / rollback| App

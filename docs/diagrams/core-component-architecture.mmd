@@ -1,0 +1,21 @@
+flowchart TB
+  App["App routes and UI"]
+  Identity["Identity module"]
+  Library["Library module"]
+  Session["Session module"]
+  Operations["Content operations module"]
+  Support["Support module"]
+  Platform["Platform adapters"]
+
+  App --> Identity
+  App --> Library
+  App --> Session
+  App --> Operations
+  App --> Support
+  Identity --> Platform
+  Library --> Platform
+  Session --> Library
+  Session --> Platform
+  Operations --> Library
+  Operations --> Platform
+  Support --> Platform

@@ -1,0 +1,574 @@
+openapi: 3.1.0
+info:
+  title: Vibuco HTTP API
+  version: 1.0.0
+  description: >
+    Versioned public and facilitator-facing HTTP contracts. Administrative
+    content mutations use internal typed Server Actions governed by the same
+    validation, authorization, audit, and error rules.
+  license:
+    name: Proprietary
+    url: https://www.vibuco.com/terms
+servers:
+  - url: https://www.vibuco.com/api/v1
+    description: Production
+tags:
+  - name: Decks
+    description: Published public and entitled card-deck reads.
+  - name: Sessions
+    description: Short-lived workspace sessions and privacy-safe events.
+  - name: Support
+    description: Validated public support contact.
+  - name: Health
+    description: Platform readiness checks.
+security: []
+paths:
+  /decks/sample:
+    get:
+      tags: [Decks]
+      operationId: getSampleDeck
+      summary: Get the current public sample deck
+      parameters:
+        - $ref: '#/components/parameters/Locale'
+        - $ref: '#/components/parameters/IfNoneMatch'
+        - $ref: '#/components/parameters/RequestId'
+      responses:
+        '200':
+          description: Published sample deck
+          headers:
+            ETag:
+              $ref: '#/components/headers/ETag'
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Deck'
+        '304':
+          description: Not modified
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+  /decks/current:
+    get:
+      tags: [Decks]
+      operationId: getCurrentFullDeck
+      summary: Get the current full deck for an entitled facilitator
+      security:
+        - cookieAuth: []
+      parameters:
+        - $ref: '#/components/parameters/Locale'
+        - $ref: '#/components/parameters/IfNoneMatch'
+        - $ref: '#/components/parameters/RequestId'
+      responses:
+        '200':
+          description: Published full deck
+          headers:
+            ETag:
+              $ref: '#/components/headers/ETag'
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Deck'
+        '304':
+          description: Not modified
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+  /sessions:
+    post:
+      tags: [Sessions]
+      operationId: createSession
+      summary: Create a short-lived sample or full-deck workspace session
+      parameters:
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSessionRequest'
+      responses:
+        '201':
+          description: Session created
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '422':
+          $ref: '#/components/responses/ValidationFailed'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+  /sessions/{sessionId}/events:
+    post:
+      tags: [Sessions]
+      operationId: recordSessionEvents
+      summary: Record a bounded batch of allowlisted workspace events
+      parameters:
+        - $ref: '#/components/parameters/SessionId'
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SessionEventBatch'
+      responses:
+        '202':
+          description: Event batch accepted
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventReceipt'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationFailed'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+  /contact:
+    post:
+      tags: [Support]
+      operationId: submitContact
+      summary: Submit a support contact request
+      parameters:
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContactRequest'
+      responses:
+        '202':
+          description: Contact request accepted
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContactReceipt'
+        '422':
+          $ref: '#/components/responses/ValidationFailed'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+  /health/ready:
+    get:
+      tags: [Health]
+      operationId: getReadiness
+      summary: Check whether the application can serve requests
+      parameters:
+        - $ref: '#/components/parameters/RequestId'
+      responses:
+        '200':
+          description: Ready
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Health'
+        '503':
+          description: Not ready
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Health'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+components:
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: __Host-vibuco-session
+  parameters:
+    Locale:
+      name: locale
+      in: query
+      required: false
+      schema:
+        $ref: '#/components/schemas/Locale'
+    IfNoneMatch:
+      name: If-None-Match
+      in: header
+      required: false
+      schema:
+        type: string
+        maxLength: 128
+    RequestId:
+      name: X-Request-Id
+      in: header
+      required: false
+      schema:
+        type: string
+        pattern: '^[A-Za-z0-9_-]{8,128}$'
+    IdempotencyKey:
+      name: Idempotency-Key
+      in: header
+      required: true
+      schema:
+        type: string
+        pattern: '^[A-Za-z0-9_-]{16,128}$'
+    SessionId:
+      name: sessionId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+  headers:
+    RequestId:
+      description: Correlation identifier
+      schema:
+        type: string
+    ETag:
+      description: Version-specific entity tag
+      schema:
+        type: string
+  responses:
+    Unauthenticated:
+      description: Authentication required
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    Forbidden:
+      description: Actor lacks entitlement or permission
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    NotFound:
+      description: Resource not found
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    ValidationFailed:
+      description: Request validation failed
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    RateLimited:
+      description: Too many requests
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+        Retry-After:
+          schema:
+            type: integer
+            minimum: 1
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    InternalError:
+      description: Unexpected server failure
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/RequestId'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+  schemas:
+    Locale:
+      type: string
+      enum: [en, sr-Latn, hu]
+    Deck:
+      type: object
+      additionalProperties: false
+      required: [id, slug, kind, version, locale, seedPolicy, cards]
+      properties:
+        id:
+          type: string
+          format: uuid
+        slug:
+          type: string
+        kind:
+          type: string
+          enum: [SAMPLE, FULL]
+        version:
+          type: integer
+          minimum: 1
+        locale:
+          $ref: '#/components/schemas/Locale'
+        localeFallback:
+          type: boolean
+          default: false
+        seedPolicy:
+          type: string
+          const: SESSION
+        cards:
+          type: array
+          maxItems: 100
+          items:
+            $ref: '#/components/schemas/Card'
+    Card:
+      type: object
+      additionalProperties: false
+      required: [id, position, image, prompt, themes]
+      properties:
+        id:
+          type: string
+          format: uuid
+        position:
+          type: integer
+          minimum: 1
+        image:
+          $ref: '#/components/schemas/Image'
+        prompt:
+          type: string
+          maxLength: 1000
+        themes:
+          type: array
+          maxItems: 10
+          items:
+            type: string
+            maxLength: 64
+    Image:
+      type: object
+      additionalProperties: false
+      required: [src, width, height, alt]
+      properties:
+        src:
+          type: string
+          format: uri
+        width:
+          type: integer
+          minimum: 1
+        height:
+          type: integer
+          minimum: 1
+        alt:
+          type: string
+          maxLength: 500
+        srcSet:
+          type: array
+          maxItems: 8
+          items:
+            type: object
+            additionalProperties: false
+            required: [src, width]
+            properties:
+              src:
+                type: string
+                format: uri
+              width:
+                type: integer
+                minimum: 1
+    CreateSessionRequest:
+      type: object
+      additionalProperties: false
+      required: [deckKind, locale, preset]
+      properties:
+        deckKind:
+          type: string
+          enum: [SAMPLE, FULL]
+        locale:
+          $ref: '#/components/schemas/Locale'
+        preset:
+          $ref: '#/components/schemas/Preset'
+    Preset:
+      type: string
+      enum:
+        - RESONANT_QUESTION
+        - SURPRISE_QUESTION
+        - SURPRISE_IMAGE
+        - OPEN_REFLECTION
+        - FACILITATOR_CHOICE
+    Session:
+      type: object
+      additionalProperties: false
+      required: [id, deckVersionId, locale, seed, expiresAt]
+      properties:
+        id:
+          type: string
+          format: uuid
+        deckVersionId:
+          type: string
+          format: uuid
+        locale:
+          $ref: '#/components/schemas/Locale'
+        seed:
+          type: string
+          pattern: '^[a-f0-9]{64}$'
+        expiresAt:
+          type: string
+          format: date-time
+    SessionEventBatch:
+      type: object
+      additionalProperties: false
+      required: [events]
+      properties:
+        events:
+          type: array
+          minItems: 1
+          maxItems: 20
+          items:
+            $ref: '#/components/schemas/SessionEvent'
+    SessionEvent:
+      type: object
+      additionalProperties: false
+      required: [sequence, type, occurredAt, metadata]
+      properties:
+        sequence:
+          type: integer
+          minimum: 1
+        type:
+          type: string
+          enum:
+            - SESSION_STARTED
+            - PRESET_SELECTED
+            - LOCALE_SELECTED
+            - DECK_SHUFFLED
+            - ORIENTATION_CHANGED
+            - PROMPT_VISIBILITY_CHANGED
+            - CARD_REVEALED
+            - PRESENTATION_CHANGED
+            - SESSION_COMPLETED
+            - WORKSPACE_ERROR
+        occurredAt:
+          type: string
+          format: date-time
+        metadata:
+          type: object
+          maxProperties: 4
+    EventReceipt:
+      type: object
+      additionalProperties: false
+      required: [acceptedThroughSequence]
+      properties:
+        acceptedThroughSequence:
+          type: integer
+          minimum: 1
+    ContactRequest:
+      type: object
+      additionalProperties: false
+      required: [email, name, subject, message, website]
+      properties:
+        email:
+          type: string
+          format: email
+          maxLength: 320
+        name:
+          type: string
+          minLength: 1
+          maxLength: 200
+        subject:
+          type: string
+          minLength: 1
+          maxLength: 200
+        message:
+          type: string
+          minLength: 1
+          maxLength: 5000
+        website:
+          type: string
+          maxLength: 0
+          description: Honeypot that must remain empty
+    ContactReceipt:
+      type: object
+      additionalProperties: false
+      required: [referenceId]
+      properties:
+        referenceId:
+          type: string
+          pattern: '^contact_[A-Za-z0-9_-]{12,64}$'
+    Health:
+      type: object
+      additionalProperties: false
+      required: [status, checks]
+      properties:
+        status:
+          type: string
+          enum: [ready, not_ready]
+        checks:
+          type: object
+          additionalProperties:
+            type: string
+            enum: [up, down]
+    Problem:
+      type: object
+      additionalProperties: false
+      required: [type, title, status, code, requestId]
+      properties:
+        type:
+          type: string
+          format: uri
+        title:
+          type: string
+          maxLength: 200
+        status:
+          type: integer
+          minimum: 400
+          maximum: 599
+        code:
+          type: string
+          pattern: '^[A-Z0-9_]{3,64}$'
+        requestId:
+          type: string
+        errors:
+          type: array
+          maxItems: 20
+          items:
+            type: object
+            additionalProperties: false
+            required: [field, code]
+            properties:
+              field:
+                type: string
+              code:
+                type: string

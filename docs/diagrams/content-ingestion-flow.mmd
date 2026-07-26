@@ -1,0 +1,15 @@
+flowchart TB
+  Upload["Upload to quarantine"]
+  Verify["Decode, scan, checksum"]
+  Rights["Record rights + alt text"]
+  Review{"Rights/content approved?"}
+  Variants["Generate immutable variants"]
+  Eligible["Eligible for card publication"]
+  Reject["Reject or replace"]
+
+  Upload --> Verify
+  Verify --> Rights
+  Rights --> Review
+  Review -->|Yes| Variants
+  Variants --> Eligible
+  Review -->|No| Reject
