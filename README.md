@@ -40,13 +40,21 @@ Open decisions marked `HUMAN-DECISION` require product-owner approval before imp
 
 The existing application uses Next.js 9, React 16, JavaScript, Tailwind CSS 1, styled-components, AWS Cognito, DynamoDB, and S3.
 
+Use Node.js 24.14.0 and npm 11.9.0. The repository pins both versions in
+`.nvmrc` and `package.json`. Install exactly the committed dependency graph:
+
 ```bash
-npm install
+npm ci
 npm run dev
 npm run build
 ```
 
-There is no committed lockfile. The existing build requires a modern Node.js runtime with the repository's OpenSSL compatibility wrapper. Authentication and protected content require the environment variables documented in [authentication.md](docs/authentication.md). A build without those variables is supported for repository inspection, but authenticated flows will be unavailable.
+`npm ci` fails when `package.json` and `package-lock.json` drift. The existing
+build uses the repository's OpenSSL compatibility wrapper. Authentication and
+protected content require the environment variables documented in
+[authentication.md](docs/authentication.md). A build without those variables is
+supported for repository inspection, but authenticated flows will be
+unavailable.
 
 ## Target implementation
 
