@@ -1,0 +1,16 @@
+flowchart TB
+  Discover["Understand Vibuco"]
+  Sample["Try ten-card sample"]
+  Access{"Needs full deck?"}
+  SignIn["Sign in"]
+  Workspace["Choose preset and locale"]
+  Reveal["Reveal card and prompt"]
+  Complete["End session"]
+
+  Discover --> Sample
+  Sample --> Access
+  Access -->|No| Reveal
+  Access -->|Yes| SignIn
+  SignIn --> Workspace
+  Workspace --> Reveal
+  Reveal --> Complete

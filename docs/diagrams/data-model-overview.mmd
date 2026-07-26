@@ -1,0 +1,11 @@
+erDiagram
+  USER_ACCOUNT ||--o{ ENTITLEMENT : has
+  USER_ACCOUNT ||--o{ ROLE_ASSIGNMENT : has
+  USER_ACCOUNT o|--o{ WORKSPACE_SESSION : starts
+  DECK ||--o{ DECK_VERSION : versions
+  DECK_VERSION ||--o{ DECK_VERSION_CARD : contains
+  CARD ||--o{ DECK_VERSION_CARD : included
+  CARD ||--o{ CARD_TRANSLATION : translated
+  ASSET ||--o{ CARD : displayed_by
+  WORKSPACE_SESSION ||--o{ SESSION_EVENT : records
+  USER_ACCOUNT o|--o{ AUDIT_EVENT : acts

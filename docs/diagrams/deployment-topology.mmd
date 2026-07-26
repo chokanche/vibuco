@@ -1,0 +1,21 @@
+flowchart TB
+  DNS["DNS"]
+  Edge["CDN, TLS, rate protection"]
+  Runtime["Managed Node.js runtime"]
+  DB["Managed PostgreSQL"]
+  Object["S3 originals + variants"]
+  Cognito["Cognito"]
+  Ops["Secrets + telemetry"]
+
+  DNS --> Edge
+  Edge --> Runtime
+  Runtime --> DB
+  Runtime --> Object
+  Runtime --> Cognito
+  Runtime --> Ops
+
+  subgraph Isolation["Per-environment isolation"]
+    Preview["Preview synthetic data"]
+    Staging["Staging synthetic data"]
+    Production["Production real data"]
+  end

@@ -1,0 +1,355 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum AccountStatus {
+  ACTIVE
+  SUSPENDED
+  DELETED
+}
+
+enum Role {
+  EDITOR
+  PUBLISHER
+  ADMIN
+}
+
+enum EntitlementStatus {
+  PENDING
+  ACTIVE
+  SUSPENDED
+  EXPIRED
+  REVOKED
+}
+
+enum ContentStatus {
+  DRAFT
+  IN_REVIEW
+  APPROVED
+  PUBLISHED
+  ARCHIVED
+}
+
+enum TranslationStatus {
+  DRAFT
+  IN_REVIEW
+  APPROVED
+  SUPERSEDED
+}
+
+enum RightsStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  EXPIRED
+}
+
+enum DeckVersionStatus {
+  DRAFT
+  VALIDATING
+  PUBLISHED
+  SUPERSEDED
+  WITHDRAWN
+}
+
+enum DeckKind {
+  SAMPLE
+  FULL
+}
+
+enum SessionStatus {
+  ACTIVE
+  COMPLETED
+  EXPIRED
+}
+
+enum SessionEventType {
+  SESSION_STARTED
+  PRESET_SELECTED
+  LOCALE_SELECTED
+  DECK_SHUFFLED
+  ORIENTATION_CHANGED
+  PROMPT_VISIBILITY_CHANGED
+  CARD_REVEALED
+  PRESENTATION_CHANGED
+  SESSION_COMPLETED
+  WORKSPACE_ERROR
+}
+
+enum ContactStatus {
+  NEW
+  IN_PROGRESS
+  RESOLVED
+}
+
+model UserAccount {
+  id              String             @id @default(uuid()) @db.Uuid
+  cognitoSubject  String             @unique @map("cognito_subject")
+  status          AccountStatus      @default(ACTIVE)
+  preferredLocale String             @default("en") @map("preferred_locale") @db.VarChar(16)
+  createdAt       DateTime           @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime           @updatedAt @map("updated_at") @db.Timestamptz(6)
+  deletedAt       DateTime?          @map("deleted_at") @db.Timestamptz(6)
+  roles           RoleAssignment[]
+  entitlements    Entitlement[]
+  sessions        WorkspaceSession[]
+  revisions       ContentRevision[]  @relation("RevisionActor")
+  auditEvents     AuditEvent[]       @relation("AuditActor")
+
+  @@map("user_accounts")
+}
+
+model RoleAssignment {
+  id        String      @id @default(uuid()) @db.Uuid
+  accountId String      @map("account_id") @db.Uuid
+  role      Role
+  createdAt DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
+  revokedAt DateTime?   @map("revoked_at") @db.Timestamptz(6)
+  account   UserAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  @@unique([accountId, role])
+  @@index([role, revokedAt])
+  @@map("role_assignments")
+}
+
+model Entitlement {
+  id         String            @id @default(uuid()) @db.Uuid
+  accountId  String            @map("account_id") @db.Uuid
+  status     EntitlementStatus @default(PENDING)
+  source     String            @db.VarChar(64)
+  validFrom  DateTime          @default(now()) @map("valid_from") @db.Timestamptz(6)
+  validUntil DateTime?         @map("valid_until") @db.Timestamptz(6)
+  createdAt  DateTime          @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt  DateTime          @updatedAt @map("updated_at") @db.Timestamptz(6)
+  account    UserAccount       @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  @@index([accountId, status, validUntil])
+  @@map("entitlements")
+}
+
+model Asset {
+  id                      String       @id @default(uuid()) @db.Uuid
+  objectKey               String       @unique @map("object_key") @db.VarChar(512)
+  sha256                  String       @unique @db.Char(64)
+  mediaType               String       @map("media_type") @db.VarChar(128)
+  width                   Int
+  height                  Int
+  byteSize                Int          @map("byte_size")
+  sourceType              String       @map("source_type") @db.VarChar(64)
+  sourceUrl               String?      @map("source_url") @db.VarChar(2048)
+  creatorName             String?      @map("creator_name") @db.VarChar(255)
+  licenseName             String?      @map("license_name") @db.VarChar(255)
+  rightsEvidenceObjectKey String?      @map("rights_evidence_object_key") @db.VarChar(512)
+  rightsStatus            RightsStatus @default(PENDING) @map("rights_status")
+  rightsExpiresAt         DateTime?    @map("rights_expires_at") @db.Timestamptz(6)
+  approvedAt              DateTime?    @map("approved_at") @db.Timestamptz(6)
+  createdAt               DateTime     @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt               DateTime     @updatedAt @map("updated_at") @db.Timestamptz(6)
+  cards                   Card[]
+
+  @@index([rightsStatus, rightsExpiresAt])
+  @@map("assets")
+}
+
+model Card {
+  id             String            @id @default(uuid()) @db.Uuid
+  slug           String            @unique @db.VarChar(128)
+  status         ContentStatus     @default(DRAFT)
+  displayAssetId String            @map("display_asset_id") @db.Uuid
+  createdAt      DateTime          @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime          @updatedAt @map("updated_at") @db.Timestamptz(6)
+  archivedAt     DateTime?         @map("archived_at") @db.Timestamptz(6)
+  displayAsset   Asset             @relation(fields: [displayAssetId], references: [id], onDelete: Restrict)
+  translations   CardTranslation[]
+  themes         CardTheme[]
+  deckEntries    DeckVersionCard[]
+
+  @@index([status])
+  @@map("cards")
+}
+
+model CardTranslation {
+  id          String            @id @default(uuid()) @db.Uuid
+  cardId      String            @map("card_id") @db.Uuid
+  locale      String            @db.VarChar(16)
+  revision    Int
+  prompt      String            @db.VarChar(1000)
+  altText     String            @map("alt_text") @db.VarChar(500)
+  status      TranslationStatus @default(DRAFT)
+  reviewerRef String?           @map("reviewer_ref") @db.VarChar(128)
+  approvedAt  DateTime?         @map("approved_at") @db.Timestamptz(6)
+  createdAt   DateTime          @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime          @updatedAt @map("updated_at") @db.Timestamptz(6)
+  card        Card              @relation(fields: [cardId], references: [id], onDelete: Cascade)
+
+  @@unique([cardId, locale, revision])
+  @@index([cardId, locale, status])
+  @@map("card_translations")
+}
+
+model Theme {
+  id        String      @id @default(uuid()) @db.Uuid
+  slug      String      @unique @db.VarChar(64)
+  label     String      @db.VarChar(128)
+  createdAt DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
+  cards     CardTheme[]
+
+  @@map("themes")
+}
+
+model CardTheme {
+  cardId  String @map("card_id") @db.Uuid
+  themeId String @map("theme_id") @db.Uuid
+  card    Card   @relation(fields: [cardId], references: [id], onDelete: Cascade)
+  theme   Theme  @relation(fields: [themeId], references: [id], onDelete: Cascade)
+
+  @@id([cardId, themeId])
+  @@index([themeId])
+  @@map("card_themes")
+}
+
+model Deck {
+  id              String        @id @default(uuid()) @db.Uuid
+  slug            String        @unique @db.VarChar(128)
+  name            String        @db.VarChar(255)
+  kind            DeckKind
+  activeVersionId String?       @unique @map("active_version_id") @db.Uuid
+  createdAt       DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime      @updatedAt @map("updated_at") @db.Timestamptz(6)
+  versions        DeckVersion[] @relation("DeckVersions")
+  activeVersion   DeckVersion?  @relation("ActiveDeckVersion", fields: [activeVersionId], references: [id], onDelete: SetNull)
+
+  @@index([kind])
+  @@map("decks")
+}
+
+model DeckVersion {
+  id              String             @id @default(uuid()) @db.Uuid
+  deckId          String             @map("deck_id") @db.Uuid
+  version         Int
+  status          DeckVersionStatus  @default(DRAFT)
+  requiredLocales String[]           @map("required_locales")
+  publishedAt     DateTime?          @map("published_at") @db.Timestamptz(6)
+  createdAt       DateTime           @default(now()) @map("created_at") @db.Timestamptz(6)
+  deck            Deck               @relation("DeckVersions", fields: [deckId], references: [id], onDelete: Restrict)
+  activeFor       Deck?              @relation("ActiveDeckVersion")
+  cards           DeckVersionCard[]
+  sessions        WorkspaceSession[]
+
+  @@unique([deckId, version])
+  @@index([deckId, status, publishedAt])
+  @@map("deck_versions")
+}
+
+model DeckVersionCard {
+  deckVersionId String      @map("deck_version_id") @db.Uuid
+  cardId        String      @map("card_id") @db.Uuid
+  position      Int
+  deckVersion   DeckVersion @relation(fields: [deckVersionId], references: [id], onDelete: Cascade)
+  card          Card        @relation(fields: [cardId], references: [id], onDelete: Restrict)
+
+  @@id([deckVersionId, cardId])
+  @@unique([deckVersionId, position])
+  @@index([cardId])
+  @@map("deck_version_cards")
+}
+
+model WorkspaceSession {
+  id            String         @id @default(uuid()) @db.Uuid
+  accountId     String?        @map("account_id") @db.Uuid
+  deckVersionId String         @map("deck_version_id") @db.Uuid
+  locale        String         @db.VarChar(16)
+  seed          String         @db.Char(64)
+  status        SessionStatus  @default(ACTIVE)
+  startedAt     DateTime       @default(now()) @map("started_at") @db.Timestamptz(6)
+  completedAt   DateTime?      @map("completed_at") @db.Timestamptz(6)
+  expiresAt     DateTime       @map("expires_at") @db.Timestamptz(6)
+  account       UserAccount?   @relation(fields: [accountId], references: [id], onDelete: SetNull)
+  deckVersion   DeckVersion    @relation(fields: [deckVersionId], references: [id], onDelete: Restrict)
+  events        SessionEvent[]
+
+  @@index([accountId, startedAt])
+  @@index([expiresAt])
+  @@map("workspace_sessions")
+}
+
+model SessionEvent {
+  id         String           @id @default(uuid()) @db.Uuid
+  sessionId  String           @map("session_id") @db.Uuid
+  sequence   Int
+  type       SessionEventType
+  metadata   Json
+  occurredAt DateTime         @map("occurred_at") @db.Timestamptz(6)
+  createdAt  DateTime         @default(now()) @map("created_at") @db.Timestamptz(6)
+  session    WorkspaceSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@unique([sessionId, sequence])
+  @@index([type, occurredAt])
+  @@map("session_events")
+}
+
+model ContentRevision {
+  id         String       @id @default(uuid()) @db.Uuid
+  targetType String       @map("target_type") @db.VarChar(64)
+  targetId   String       @map("target_id") @db.Uuid
+  revision   Int
+  snapshot   Json
+  actorId    String?      @map("actor_id") @db.Uuid
+  createdAt  DateTime     @default(now()) @map("created_at") @db.Timestamptz(6)
+  actor      UserAccount? @relation("RevisionActor", fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@unique([targetType, targetId, revision])
+  @@index([actorId, createdAt])
+  @@map("content_revisions")
+}
+
+model AuditEvent {
+  id         String       @id @default(uuid()) @db.Uuid
+  actorId    String?      @map("actor_id") @db.Uuid
+  action     String       @db.VarChar(128)
+  targetType String       @map("target_type") @db.VarChar(64)
+  targetId   String?      @map("target_id") @db.Uuid
+  summary    Json
+  requestId  String       @map("request_id") @db.VarChar(128)
+  createdAt  DateTime     @default(now()) @map("created_at") @db.Timestamptz(6)
+  actor      UserAccount? @relation("AuditActor", fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@index([targetType, targetId, createdAt])
+  @@index([actorId, createdAt])
+  @@map("audit_events")
+}
+
+model ContactSubmission {
+  id         String        @id @default(uuid()) @db.Uuid
+  email      String        @db.VarChar(320)
+  name       String        @db.VarChar(200)
+  subject    String        @db.VarChar(200)
+  message    String        @db.VarChar(5000)
+  status     ContactStatus @default(NEW)
+  requestId  String        @map("request_id") @db.VarChar(128)
+  createdAt  DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  resolvedAt DateTime?     @map("resolved_at") @db.Timestamptz(6)
+  deleteAt   DateTime      @map("delete_at") @db.Timestamptz(6)
+
+  @@index([status, createdAt])
+  @@index([deleteAt])
+  @@map("contact_submissions")
+}
+
+model MigrationRecord {
+  id           String   @id @default(uuid()) @db.Uuid
+  sourceSystem String   @map("source_system") @db.VarChar(64)
+  sourceKey    String   @map("source_key") @db.VarChar(512)
+  sourceSha256 String   @map("source_sha256") @db.Char(64)
+  targetType   String   @map("target_type") @db.VarChar(64)
+  targetId     String   @map("target_id") @db.Uuid
+  importedAt   DateTime @default(now()) @map("imported_at") @db.Timestamptz(6)
+
+  @@unique([sourceSystem, sourceKey, sourceSha256])
+  @@index([targetType, targetId])
+  @@map("migration_records")
+}

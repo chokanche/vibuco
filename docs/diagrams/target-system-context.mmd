@@ -1,0 +1,15 @@
+flowchart TB
+  Visitor["Visitor"]
+  Facilitator["Entitled facilitator"]
+  Operator["Editor / publisher / admin"]
+  Vibuco["Vibuco web application"]
+  Identity["Cognito identity"]
+  Data["PostgreSQL + S3/CDN"]
+  Telemetry["Telemetry + alerting"]
+
+  Visitor --> Vibuco
+  Facilitator --> Vibuco
+  Operator --> Vibuco
+  Vibuco --> Identity
+  Vibuco --> Data
+  Vibuco --> Telemetry

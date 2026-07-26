@@ -1,0 +1,1113 @@
+version: 1
+project: vibuco
+source_of_truth: docs/implementation/MASTER_IMPLEMENTATION_PLAN.md
+statuses: [planned, ready, in_progress, blocked, done]
+items:
+  - id: VIB-STAB-001
+    epic: Stabilization
+    title: Document production topology and reproduce core failure
+    purpose: Identify the deployment, environment, and exact cause of the production cards-route 502 before redesign work.
+    specification_references:
+      - docs/review/03-technical-audit.md
+      - docs/specs/11-migration-and-redesign-plan.md
+      - docs/specs/17-observability-reliability.md
+    dependencies: []
+    likely_files:
+      - docs/operations/current-production-topology.md
+      - docs/runbooks/core-workspace-unavailable.md
+    acceptance_criteria:
+      - Current hosting, DNS, build, runtime, Cognito, DynamoDB, S3, and rollback owners are documented.
+      - The 502 is reproduced or bounded with timestamped evidence and a stable error code.
+      - No production mutation is made without an approved incident change.
+    testing_requirements:
+      - Capture request/response and deployment-log evidence.
+      - Verify home, cards, about, contact, and sign-in-adjacent routes.
+    observability_requirements: Record the minimum signals needed to correlate the failing route.
+    security_requirements: Redact tokens, cookies, account data, and signed URLs from evidence.
+    accessibility_requirements: N/A for diagnosis; verify the user-facing failure remains understandable.
+    complexity: M
+    estimated_effort: 1-2 days
+    suggested_owner: Reliability agent
+    branch_name: agent/vib-stab-001-production-baseline
+    commit_prefix: "docs(stability):"
+    milestone: M0
+    status: planned
+
+  - id: VIB-STAB-002
+    epic: Stabilization
+    title: Restore and monitor legacy card route
+    purpose: Apply the smallest safe fix for the diagnosed core-route failure and add a synthetic guard.
+    specification_references:
+      - docs/specs/11-migration-and-redesign-plan.md
+      - docs/specs/17-observability-reliability.md
+      - docs/specs/21-non-functional-requirements-slos.md
+    dependencies: [VIB-STAB-001]
+    likely_files:
+      - pages/cards.js
+      - actions/getDataFromDDBTable.js
+      - docs/runbooks/core-workspace-unavailable.md
+    acceptance_criteria:
+      - Existing cards behavior is restored without target redesign.
+      - Synthetic load and reveal check runs on schedule.
+      - Rollback is documented and verified.
+    testing_requirements:
+      - Legacy smoke test for anonymous and authenticated paths.
+      - Fault test for missing AWS configuration and dependency timeout.
+    observability_requirements: Emit route success, failure, duration, and synthetic status.
+    security_requirements: Do not widen IAM or expose new client configuration.
+    accessibility_requirements: Error and retry state are keyboard reachable.
+    complexity: M
+    estimated_effort: 1-2 days
+    suggested_owner: Reliability agent
+    branch_name: agent/vib-stab-002-restore-cards
+    commit_prefix: "fix(stability):"
+    milestone: M0
+    status: planned
+
+  - id: VIB-STAB-003
+    epic: Build foundation
+    title: Pin runtime, package manager, and lockfile
+    purpose: Make dependency installation and production builds reproducible.
+    specification_references:
+      - docs/specs/18-delivery-cicd-environments.md
+      - docs/review/03-technical-audit.md
+    dependencies: [VIB-STAB-001]
+    likely_files:
+      - package.json
+      - package-lock.json
+      - .nvmrc
+      - README.md
+    acceptance_criteria:
+      - Node.js 24 LTS and package manager version are pinned.
+      - Clean install and build pass twice from a fresh clone.
+      - Lockfile drift fails CI.
+    testing_requirements:
+      - Run clean install and npm build on CI image.
+      - Record current deprecated dependency inventory.
+    observability_requirements: Build duration and failure category are retained in CI.
+    security_requirements: Run secret, dependency, and license scans on the pinned graph.
+    accessibility_requirements: N/A.
+    complexity: M
+    estimated_effort: 1 day
+    suggested_owner: Build agent
+    branch_name: agent/vib-stab-003-reproducible-build
+    commit_prefix: "build:"
+    milestone: M1
+    status: planned
+
+  - id: VIB-STAB-004
+    epic: Quality foundation
+    title: Add legacy characterization suite
+    purpose: Capture valuable current card, locale, and route behavior before replacement.
+    specification_references:
+      - docs/specs/10-testing-quality-observability.md
+      - docs/specs/11-migration-and-redesign-plan.md
+      - docs/specs/12-acceptance-test-matrix.md
+    dependencies: [VIB-STAB-002, VIB-STAB-003]
+    likely_files:
+      - tests/legacy
+      - playwright.config.ts
+      - package.json
+    acceptance_criteria:
+      - Anonymous/full deck, flip, prompt, locale, shuffle, and route behavior are covered.
+      - Known defects are labelled and not frozen as target requirements.
+      - Tests pass in CI against synthetic fixtures.
+    testing_requirements:
+      - Unit tests for helpers and E2E characterization for critical flows.
+      - Include EN, Serbian, and Hungarian fixtures.
+    observability_requirements: Test output identifies route and state without printing content secrets.
+    security_requirements: Fixtures contain no production tokens or contact data.
+    accessibility_requirements: Record current blockers separately from preserved behavior.
+    complexity: L
+    estimated_effort: 2 days
+    suggested_owner: Quality agent
+    branch_name: agent/vib-stab-004-characterization
+    commit_prefix: "test(legacy):"
+    milestone: M1
+    status: planned
+
+  - id: VIB-PLAT-001
+    epic: Platform
+    title: Introduce TypeScript App Router shell
+    purpose: Establish the target route structure beside legacy Pages Router without changing production routes.
+    specification_references:
+      - docs/specs/05-system-architecture.md
+      - docs/specs/11-migration-and-redesign-plan.md
+      - docs/specs/13-architecture-decisions.md
+    dependencies: [VIB-STAB-003, VIB-STAB-004]
+    likely_files:
+      - src/app/layout.tsx
+      - src/app/not-found.tsx
+      - tsconfig.json
+      - next.config.ts
+    acceptance_criteria:
+      - Strict TypeScript App Router shell builds beside legacy pages.
+      - Server Components are the default and no target route is publicly enabled.
+      - Module path and server-only boundary checks exist.
+    testing_requirements:
+      - Build, type check, route smoke, and server/client bundle scan.
+    observability_requirements: Root request correlation hook is ready for telemetry adapter.
+    security_requirements: Target config validates server/public environment separation.
+    accessibility_requirements: Shell includes skip link, landmarks, language, and focus target.
+    complexity: L
+    estimated_effort: 2 days
+    suggested_owner: Platform agent
+    branch_name: agent/vib-plat-001-app-router-shell
+    commit_prefix: "feat(platform):"
+    milestone: M2
+    status: planned
+
+  - id: VIB-PLAT-002
+    epic: Platform
+    title: Add validated environment configuration
+    purpose: Replace scattered public runtime configuration with typed server/public schemas.
+    specification_references:
+      - docs/specs/05-system-architecture.md
+      - docs/specs/09-trust-security-privacy.md
+      - docs/specs/18-delivery-cicd-environments.md
+    dependencies: [VIB-PLAT-001]
+    likely_files:
+      - src/platform/config/server.ts
+      - src/platform/config/public.ts
+      - .env.example
+    acceptance_criteria:
+      - Missing/invalid values fail with safe actionable startup errors.
+      - Public bundle contains only allowlisted values.
+      - Local, preview, staging, and production schemas are documented.
+    testing_requirements:
+      - Unit matrix for missing, malformed, and environment-specific values.
+      - Client bundle snapshot.
+    observability_requirements: Startup config failures emit codes, never values.
+    security_requirements: Secret values never serialize or enter error messages.
+    accessibility_requirements: N/A.
+    complexity: M
+    estimated_effort: 1 day
+    suggested_owner: Platform agent
+    branch_name: agent/vib-plat-002-config-boundary
+    commit_prefix: "feat(config):"
+    milestone: M2
+    status: planned
+
+  - id: VIB-PLAT-003
+    epic: Observability
+    title: Implement telemetry foundation
+    purpose: Add request IDs, structured logs, traces, RED metrics, and redaction before target flows.
+    specification_references:
+      - docs/specs/17-observability-reliability.md
+      - docs/specs/21-non-functional-requirements-slos.md
+      - docs/specs/09-trust-security-privacy.md
+    dependencies: [VIB-PLAT-001, VIB-PLAT-002]
+    likely_files:
+      - src/platform/telemetry
+      - src/instrumentation.ts
+      - docs/runbooks
+    acceptance_criteria:
+      - Request ID propagates through one target route and response.
+      - Structured schema and redaction tests pass.
+      - Telemetry outage does not fail the route and increments loss signal.
+    testing_requirements:
+      - Integration, redaction, and dependency-failure tests.
+    observability_requirements: Implements OBS-001 through OBS-007 foundation.
+    security_requirements: Use explicit field allowlists and bounded labels.
+    accessibility_requirements: User errors expose a readable reference ID.
+    complexity: L
+    estimated_effort: 2 days
+    suggested_owner: Reliability agent
+    branch_name: agent/vib-plat-003-telemetry
+    commit_prefix: "feat(observability):"
+    milestone: M2
+    status: planned
+
+  - id: VIB-PLAT-004
+    epic: Platform
+    title: Implement server-evaluated feature flags
+    purpose: Provide safe cohort rollout and rollback for migration-sensitive paths.
+    specification_references:
+      - docs/specs/01-functional-requirements.md
+      - docs/specs/11-migration-and-redesign-plan.md
+      - docs/specs/18-delivery-cicd-environments.md
+    dependencies: [VIB-PLAT-002, VIB-PLAT-003]
+    likely_files:
+      - src/platform/flags
+      - docs/operations/feature-flags.md
+    acceptance_criteria:
+      - Flags have safe defaults, owner, expiry, and audit.
+      - Anonymous, account-cohort, and global evaluation are deterministic.
+      - Dependency failure returns legacy/off state.
+    testing_requirements:
+      - Unit and integration matrix for flag evaluation and failure.
+    observability_requirements: Flag changes annotate dashboards without high-cardinality labels.
+    security_requirements: Client input cannot self-enroll into a protected cohort.
+    accessibility_requirements: Flagged UI paths meet the same state/focus behavior.
+    complexity: M
+    estimated_effort: 1 day
+    suggested_owner: Platform agent
+    branch_name: agent/vib-plat-004-feature-flags
+    commit_prefix: "feat(flags):"
+    milestone: M2
+    status: planned
+
+  - id: VIB-UI-001
+    epic: Design system
+    title: Implement tokens and accessible primitives
+    purpose: Create the approved visual foundation and remove new work from legacy styling systems.
+    specification_references:
+      - docs/specs/15-design-system-interaction.md
+      - docs/specs/03-ux-ui-content.md
+    dependencies: [VIB-PLAT-001]
+    likely_files:
+      - src/styles/tokens.css
+      - src/components/ui
+      - src/app/globals.css
+    acceptance_criteria:
+      - Tokens, button, link, field, alert, dialog base, and skip link are implemented.
+      - Stories/tests cover states, 320 px, 200% zoom, and long locales.
+      - No new styled-components, twin.macro, GSAP, WOW, or carousel dependency.
+    testing_requirements:
+      - Unit, visual regression, axe, keyboard, and contrast checks.
+    observability_requirements: N/A beyond error-boundary compatibility.
+    security_requirements: Components render text safely and do not allow raw HTML.
+    accessibility_requirements: WCAG 2.2 AA component gate.
+    complexity: L
+    estimated_effort: 2 days
+    suggested_owner: UI agent
+    branch_name: agent/vib-ui-001-design-primitives
+    commit_prefix: "feat(ui):"
+    milestone: M2
+    status: planned
+
+  - id: VIB-UI-002
+    epic: Public experience
+    title: Build public navigation and page shell
+    purpose: Deliver stable responsive public header, footer, metadata slots, and common states.
+    specification_references:
+      - docs/specs/02-information-architecture.md
+      - docs/specs/03-ux-ui-content.md
+      - docs/specs/15-design-system-interaction.md
+    dependencies: [VIB-UI-001]
+    likely_files:
+      - src/components/public
+      - src/app/(public)/layout.tsx
+    acceptance_criteria:
+      - Public navigation matches route catalogue at mobile and desktop.
+      - Footer has no newsletter or placeholder links.
+      - Loading, error, not-found, and unavailable shells exist.
+    testing_requirements:
+      - Responsive E2E, keyboard, axe, and visual tests.
+    observability_requirements: Route-level error boundary emits safe code/reference.
+    security_requirements: External links use safe attributes and routes expose no protected data.
+    accessibility_requirements: Landmarks, skip link, menu focus, 44 px targets.
+    complexity: M
+    estimated_effort: 1-2 days
+    suggested_owner: UI agent
+    branch_name: agent/vib-ui-002-public-shell
+    commit_prefix: "feat(public):"
+    milestone: M2
+    status: planned
+
+  - id: VIB-UI-003
+    epic: Public experience
+    title: Build home, method, and about pages
+    purpose: Replace template-heavy marketing with the approved product story and proof.
+    specification_references:
+      - docs/specs/00-product-charter.md
+      - docs/specs/02-information-architecture.md
+      - docs/specs/14-product-requirements-document.md
+    dependencies: [VIB-UI-002]
+    likely_files:
+      - src/app/(public)/page.tsx
+      - src/app/(public)/method/page.tsx
+      - src/app/(public)/about/page.tsx
+    acceptance_criteria:
+      - Pages follow page contracts and contain approved non-generic copy.
+      - Testimonials appear once and include verified consent/role placeholders.
+      - No interaction-delaying motion exists.
+    testing_requirements:
+      - Content, responsive, metadata, link, visual, and axe tests.
+    observability_requirements: Public route RED metrics and sample CTA event only.
+    security_requirements: No unreviewed remote embeds or arbitrary HTML.
+    accessibility_requirements: Heading order, alt decisions, reflow, reduced motion.
+    complexity: M
+    estimated_effort: 2 days
+    suggested_owner: Product UI agent
+    branch_name: agent/vib-ui-003-public-content
+    commit_prefix: "feat(marketing):"
+    milestone: M2
+    status: planned
+
+  - id: VIB-UI-004
+    epic: Public experience
+    title: Build contact and legal routes
+    purpose: Replace fragile form handling and placeholder trust links with complete routes and states.
+    specification_references:
+      - docs/specs/01-functional-requirements.md
+      - docs/specs/09-trust-security-privacy.md
+      - docs/specs/02-information-architecture.md
+    dependencies: [VIB-UI-002, VIB-PLAT-003]
+    likely_files:
+      - src/app/(public)/contact
+      - src/app/(public)/privacy/page.tsx
+      - src/app/(public)/terms/page.tsx
+      - src/app/(public)/accessibility/page.tsx
+      - src/modules/support
+    acceptance_criteria:
+      - Contact API/UI validate, rate-limit, preserve input, and return reference ID.
+      - Privacy, terms, and accessibility pages exist with approval markers.
+      - Placeholder legal links are absent.
+    testing_requirements:
+      - Contract, form E2E, spam/rate-limit, keyboard, and axe tests.
+    observability_requirements: Accepted/rejected/error counters without contact content.
+    security_requirements: Honeypot, bounded fields, CSRF/origin, encrypted restricted storage.
+    accessibility_requirements: Persistent labels, error summary, live success, focus management.
+    complexity: L
+    estimated_effort: 2 days
+    suggested_owner: Full-stack UI agent
+    branch_name: agent/vib-ui-004-contact-legal
+    commit_prefix: "feat(trust):"
+    milestone: M2
+    status: planned
+
+  - id: VIB-AUTH-001
+    epic: Identity
+    title: Implement Cognito code flow and server session
+    purpose: Replace implicit browser auth with authorization-code PKCE and secure cookies.
+    specification_references:
+      - docs/specs/09-trust-security-privacy.md
+      - docs/specs/05-system-architecture.md
+      - docs/diagrams/authentication-authorization-flow.mmd
+    dependencies: [VIB-PLAT-002, VIB-PLAT-003, VIB-PLAT-004]
+    likely_files:
+      - src/platform/auth
+      - src/app/auth/callback/route.ts
+      - src/middleware.ts
+    acceptance_criteria:
+      - State, nonce, PKCE, issuer, audience, and exact redirect validation pass.
+      - Secure host cookie is rotated and time-bounded.
+      - Flagged accounts can roll back to legacy auth.
+    testing_requirements:
+      - Auth integration, tamper, replay, expiry, sign-out, and rollback tests.
+    observability_requirements: Auth stage/outcome metrics and safe error codes.
+    security_requirements: Implements SEC-001, SEC-002, SEC-006.
+    accessibility_requirements: Auth progress/error states announce and preserve safe return path.
+    complexity: L
+    estimated_effort: 2 days
+    suggested_owner: Identity agent
+    branch_name: agent/vib-auth-001-code-flow
+    commit_prefix: "feat(auth):"
+    milestone: M3
+    status: planned
+
+  - id: VIB-AUTH-002
+    epic: Identity
+    title: Implement accounts, roles, and entitlements
+    purpose: Make workspace and admin authorization explicit and server-owned.
+    specification_references:
+      - docs/specs/01-functional-requirements.md
+      - docs/specs/04-domain-data-model.md
+      - docs/specs/16-admin-content-operations.md
+    dependencies: [VIB-AUTH-001, VIB-DATA-001]
+    likely_files:
+      - src/modules/identity
+      - src/platform/auth/authorize.ts
+    acceptance_criteria:
+      - Cognito subject maps to account without storing email.
+      - Active entitlement and role rules match specifications.
+      - Protected operations deny by default and do not disclose restricted targets.
+    testing_requirements:
+      - Domain unit tests and full negative authorization matrix.
+    observability_requirements: Bounded authorization outcome metrics; audit admin grants/revokes.
+    security_requirements: Server-only role/entitlement lookup and least privilege.
+    accessibility_requirements: Permission states explain safe support/account next step.
+    complexity: L
+    estimated_effort: 2 days
+    suggested_owner: Identity agent
+    branch_name: agent/vib-auth-002-entitlements
+    commit_prefix: "feat(identity):"
+    milestone: M3
+    status: planned
+
+  - id: VIB-DATA-001
+    epic: Data
+    title: Provision canonical schema and migration pipeline
+    purpose: Establish managed PostgreSQL and the reviewed Prisma model with safe migration delivery.
+    specification_references:
+      - docs/specs/04-domain-data-model.md
+      - docs/data/reference-schema.prisma
+      - docs/specs/18-delivery-cicd-environments.md
+    dependencies: [VIB-PLAT-002, VIB-STAB-003]
+    likely_files:
+      - prisma/schema.prisma
+      - prisma/migrations
+      - src/platform/db
+    acceptance_criteria:
+      - Approved provider environment exists outside production first.
+      - Prisma schema, constraints, indexes, and first migration validate.
+      - Migration CI and backup/rollback steps exist.
+    testing_requirements:
+      - Schema validation, migration up/down compatibility, constraint tests.
+    observability_requirements: Connection, query, migration duration/failure signals.
+    security_requirements: TLS, least-privilege roles, encrypted storage, secret manager.
+    accessibility_requirements: N/A.
+    complexity: L
+    estimated_effort: 2 days
+    suggested_owner: Data agent
+    branch_name: agent/vib-data-001-canonical-schema
+    commit_prefix: "feat(data):"
+    milestone: M3
+    status: planned
+
+  - id: VIB-DATA-002
+    epic: Data
+    title: Implement library repositories and DTO mapping
+    purpose: Enforce domain constraints and return authorized deck DTOs without leaking storage models.
+    specification_references:
+      - docs/specs/04-domain-data-model.md
+      - docs/specs/06-api-contracts.md
+      - docs/api/openapi.yaml
+    dependencies: [VIB-DATA-001]
+    likely_files:
+      - src/modules/library/domain
+      - src/modules/library/application
+      - src/modules/library/infrastructure
+    acceptance_criteria:
+      - Sample/current deck queries are bounded and indexed.
+      - Published-version, locale, and rights invariants are enforced.
+      - DTOs match OpenAPI and expose no object keys.
+    testing_requirements:
+      - Domain, repository integration, query-plan, and contract tests.
+    observability_requirements: Deck read rate/error/duration with bounded deck kind/version labels.
+    security_requirements: Authorization precedes full-deck access; no raw record return.
+    accessibility_requirements: DTO includes approved alt text and locale.
+    complexity: L
+    estimated_effort: 2 days
+    suggested_owner: Data agent
+    branch_name: agent/vib-data-002-library-repositories
+    commit_prefix: "feat(library):"
+    milestone: M3
+    status: planned
+
+  - id: VIB-DATA-003
+    epic: Data migration
+    title: Build legacy export and normalization tool
+    purpose: Export DynamoDB/S3/static content into a deterministic source manifest without modifying production.
+    specification_references:
+      - docs/specs/19-content-ingestion-and-automation.md
+      - docs/specs/11-migration-and-redesign-plan.md
+      - docs/data/data-dictionary.md
+    dependencies: [VIB-STAB-001, VIB-DATA-001]
+    likely_files:
+      - scripts/migration/export-legacy.ts
+      - scripts/migration/types.ts
+      - docs/migration/source-inventory.md
+    acceptance_criteria:
+      - Both tables, referenced S3 objects, translations, dimensions, and static mappings export.
+      - Output is deterministic, checksummed, redacted, and read-only.
+      - Missing, duplicate, or malformed records appear in an exception report.
+    testing_requirements:
+      - Fixture unit/integration tests and repeated-output checksum test.
+    observability_requirements: Batch counts/duration/results without prompt text or signed URLs.
+    security_requirements: Read-only least-privilege credentials and encrypted artifacts.
+    accessibility_requirements: N/A.
+    complexity: L
+    estimated_effort: 2 days
+    suggested_owner: Migration agent
+    branch_name: agent/vib-data-003-legacy-export
+    commit_prefix: "feat(migration):"
+    milestone: M4
+    status: planned
+
+  - id: VIB-DATA-004
+    epic: Data migration
+    title: Implement idempotent import and reconciliation
+    purpose: Create draft canonical content and prove source/target equivalence before publication.
+    specification_references:
+      - docs/specs/19-content-ingestion-and-automation.md
+      - docs/specs/11-migration-and-redesign-plan.md
+      - docs/specs/12-acceptance-test-matrix.md
+    dependencies: [VIB-DATA-002, VIB-DATA-003]
+    likely_files:
+      - scripts/migration/import-content.ts
+      - scripts/migration/reconcile.ts
+      - docs/migration/reconciliation-report.md
+    acceptance_criteria:
+      - Repeated import creates no duplicates.
+      - Counts, checksums, translations, dimensions, and membership reconcile.
+      - Every exception is resolved or explicitly approved; content stays draft.
+    testing_requirements:
+      - Idempotency, partial failure/resume, corruption, and reconciliation tests.
+    observability_requirements: Mismatch and batch-result metrics with source keys hashed where needed.
+    security_requirements: Migration artifacts and rights evidence are access-controlled.
+    accessibility_requirements: Imported alt text remains draft until reviewed.
+    complexity: L
+    estimated_effort: 2 days
+    suggested_owner: Migration agent
+    branch_name: agent/vib-data-004-import-reconcile
+    commit_prefix: "feat(migration):"
+    milestone: M4
+    status: planned
+
+  - id: VIB-DATA-005
+    epic: Data migration
+    title: Add shadow-read comparison and cutover flag
+    purpose: Compare normalized legacy and target deck results before serving PostgreSQL data.
+    specification_references:
+      - docs/specs/11-migration-and-redesign-plan.md
+      - docs/specs/17-observability-reliability.md
+    dependencies: [VIB-DATA-004, VIB-PLAT-004]
+    likely_files:
+      - src/modules/library/infrastructure/shadow-reader.ts
+      - src/platform/flags
+      - docs/dashboards/migration.md
+    acceptance_criteria:
+      - Comparison ignores URLs/order but checks identity, locale, membership, and checksum.
+      - Mismatches are observable and never change the served legacy response.
+      - Read-path flag returns immediately to server-side legacy adapter.
+    testing_requirements:
+      - Match/mismatch, timeout, flag, and rollback integration tests.
+    observability_requirements: Comparison rate/mismatch/latency differential dashboard.
+    security_requirements: Shadow path uses server credentials and does not double-log data.
+    accessibility_requirements: N/A.
+    complexity: M
+    estimated_effort: 1-2 days
+    suggested_owner: Migration agent
+    branch_name: agent/vib-data-005-shadow-read
+    commit_prefix: "feat(migration):"
+    milestone: M4
+    status: planned
+
+  - id: VIB-MEDIA-001
+    epic: Media
+    title: Implement server media delivery
+    purpose: Replace browser S3 object access/base64 with scoped, responsive, cacheable media DTOs.
+    specification_references:
+      - docs/specs/05-system-architecture.md
+      - docs/specs/09-trust-security-privacy.md
+      - docs/specs/21-non-functional-requirements-slos.md
+    dependencies: [VIB-PLAT-002, VIB-PLAT-003]
+    likely_files:
+      - src/platform/media/delivery.ts
+      - src/modules/library/application/media-dto.ts
+    acceptance_criteria:
+      - Public sample and protected full paths are policy-separated.
+      - DTOs include versioned src/srcset, dimensions, and approved alt text.
+      - Client bundle/network contains no AWS credential or getObject operation.
+    testing_requirements:
+      - Access, expiry, caching, responsive selection, and leak tests.
+    observability_requirements: Media grant/delivery errors and latency; never log signed URL.
+    security_requirements: Short-lived scoped grants, referrer control, server-only SDK.
+    accessibility_requirements: Correct dimensions and alt contract.
+    complexity: L
+    estimated_effort: 2 days
+    suggested_owner: Media agent
+    branch_name: agent/vib-media-001-server-delivery
+    commit_prefix: "feat(media):"
+    milestone: M3
+    status: planned
+
+  - id: VIB-MEDIA-002
+    epic: Media
+    title: Implement quarantine and variant pipeline
+    purpose: Make ongoing image ingestion rights-aware, validated, and publication-safe.
+    specification_references:
+      - docs/specs/19-content-ingestion-and-automation.md
+      - docs/specs/16-admin-content-operations.md
+      - docs/specs/09-trust-security-privacy.md
+    dependencies: [VIB-DATA-002, VIB-MEDIA-001]
+    likely_files:
+      - src/platform/media/upload.ts
+      - src/platform/media/process.ts
+      - src/modules/content-operations/assets
+    acceptance_criteria:
+      - Single-use constrained grants upload only to quarantine.
+      - Decode/type/size/checksum/metadata checks and responsive variants complete.
+      - Asset is ineligible until rights and alt decisions are approved.
+    testing_requirements:
+      - Polyglot, oversized, corrupt, grant replay, variant, and orphan cleanup tests.
+    observability_requirements: Upload/process outcomes and orphan/quarantine age.
+    security_requirements: Re-encode, metadata strip, short TTL, private rights evidence.
+    accessibility_requirements: Alt-text decision is publication-blocking.
+    complexity: L
+    estimated_effort: 2 days
+    suggested_owner: Media agent
+    branch_name: agent/vib-media-002-ingestion
+    commit_prefix: "feat(media):"
+    milestone: M4
+    status: planned
+
+  - id: VIB-WS-001
+    epic: Workspace
+    title: Implement workspace state machine and seeded shuffle
+    purpose: Create a pure, tested domain for presets, controls, reveal, reset, and deterministic order.
+    specification_references:
+      - docs/specs/01-functional-requirements.md
+      - docs/specs/03-ux-ui-content.md
+      - docs/specs/07-search-and-ranking.md
+    dependencies: [VIB-STAB-004]
+    likely_files:
+      - src/modules/session/domain/workspace-state.ts
+      - src/modules/session/domain/shuffle.ts
+    acceptance_criteria:
+      - Five presets map exactly to specified states.
+      - Orientation and prompt visibility remain independent.
+      - Shuffle is immutable, deterministic, and statistically unbiased.
+    testing_requirements:
+      - State-transition, property, seed-repeatability, and reset tests.
+    observability_requirements: Domain emits typed event intents, not logs.
+    security_requirements: Seed is opaque and metadata schemas are bounded.
+    accessibility_requirements: State exposes announced labels for controls/cards.
+    complexity: M
+    estimated_effort: 1-2 days
+    suggested_owner: Workspace agent
+    branch_name: agent/vib-ws-001-state-machine
+    commit_prefix: "feat(workspace):"
+    milestone: M3
+    status: planned
+
+  - id: VIB-WS-002
+    epic: Workspace
+    title: Build sample workspace route
+    purpose: Deliver the public ten-card guided sample on target components and contracts.
+    specification_references:
+      - docs/specs/02-information-architecture.md
+      - docs/specs/03-ux-ui-content.md
+      - docs/api/openapi.yaml
+    dependencies: [VIB-UI-001, VIB-WS-001, VIB-MEDIA-001, VIB-DATA-002]
+    likely_files:
+      - src/app/(public)/sample/page.tsx
+      - src/components/workspace
+      - src/app/api/v1/decks/sample/route.ts
+    acceptance_criteria:
+      - Exactly configured sample deck loads without account.
+      - Guided preset, toolbar, grid, shuffle, reveal, and reset work.
+      - No durable profile or client content is created.
+    testing_requirements:
+      - Contract, E2E, responsive, visual, performance, and axe tests.
+    observability_requirements: Sample start/reveal/error allowlisted events and RED route metrics.
+    security_requirements: Public DTO excludes protected content/storage keys.
+    accessibility_requirements: Keyboard-complete grid/controls and live announcements.
+    complexity: L
+    estimated_effort: 2 days
+    suggested_owner: Workspace UI agent
+    branch_name: agent/vib-ws-002-sample
+    commit_prefix: "feat(sample):"
+    milestone: M2
+    status: planned
+
+  - id: VIB-WS-003
+    epic: Workspace
+    title: Build focused-card dialog and presentation mode
+    purpose: Provide an accessible, calm card reveal for individual and screen-shared use.
+    specification_references:
+      - docs/specs/15-design-system-interaction.md
+      - docs/specs/03-ux-ui-content.md
+    dependencies: [VIB-WS-002]
+    likely_files:
+      - src/components/workspace/focused-card-dialog.tsx
+      - src/components/workspace/presentation-mode.tsx
+    acceptance_criteria:
+      - Dialog traps/restores focus, closes visibly/Escape, and labels content.
+      - Portrait/landscape and prompt shown/hidden layouts match contracts.
+      - Presentation mode minimizes chrome without browser fullscreen.
+    testing_requirements:
+      - Keyboard, screen-reader, orientation, visual, touch, and reduced-motion tests.
+    observability_requirements: Reveal/presentation event intents only.
+    security_requirements: Protected media URL is not copied into logs or markup outside current view.
+    accessibility_requirements: Implements UX-005 through UX-010.
+    complexity: M
+    estimated_effort: 1-2 days
+    suggested_owner: Workspace UI agent
+    branch_name: agent/vib-ws-003-focused-card
+    commit_prefix: "feat(workspace):"
+    milestone: M3
+    status: planned
+
+  - id: VIB-WS-004
+    epic: Workspace
+    title: Build entitled workspace and playbook
+    purpose: Join auth, entitlement, full deck, locales, presets, recovery states, and facilitator instructions.
+    specification_references:
+      - docs/specs/01-functional-requirements.md
+      - docs/specs/02-information-architecture.md
+      - docs/specs/03-ux-ui-content.md
+    dependencies: [VIB-AUTH-002, VIB-WS-003, VIB-DATA-002]
+    likely_files:
+      - src/app/(product)/workspace/page.tsx
+      - src/app/(product)/workspace/playbook/page.tsx
+      - src/components/workspace/session-toolbar.tsx
+    acceptance_criteria:
+      - Entitled users load full deck; others receive safe access state.
+      - EN, Serbian, Hungarian and all presets work without reload.
+      - Loading, empty, stale, offline, error, and permission states match spec.
+    testing_requirements:
+      - Auth/E2E, locale, state, offline/fault, responsive, axe, and performance tests.
+    observability_requirements: Workspace load, first reveal, completion, and stable error signals.
+    security_requirements: No client AWS calls; entitlement checked on server.
+    accessibility_requirements: Full WCAG workspace matrix including 200% zoom.
+    complexity: L
+    estimated_effort: 2 days
+    suggested_owner: Workspace agent
+    branch_name: agent/vib-ws-004-full-workspace
+    commit_prefix: "feat(workspace):"
+    milestone: M3
+    status: planned
+
+  - id: VIB-WS-005
+    epic: Workspace
+    title: Implement session API and privacy-safe events
+    purpose: Create short-lived sessions and accepted event batches without coaching content.
+    specification_references:
+      - docs/specs/06-api-contracts.md
+      - docs/api/openapi.yaml
+      - docs/specs/08-seo-content-analytics.md
+    dependencies: [VIB-DATA-002, VIB-WS-001, VIB-PLAT-003]
+    likely_files:
+      - src/modules/session
+      - src/app/api/v1/sessions/route.ts
+      - src/app/api/v1/sessions/[sessionId]/events/route.ts
+    acceptance_criteria:
+      - Create/event endpoints match OpenAPI and idempotency rules.
+      - Event allowlist rejects free text, unknown keys, invalid card, and sequence gaps.
+      - Expired sessions and retention cleanup work.
+    testing_requirements:
+      - Contract, domain, auth, rate, idempotency, privacy, and retention tests.
+    observability_requirements: Session rates/outcomes and telemetry-dropped counter.
+    security_requirements: Bounded batch, session ownership/capability, no PII.
+    accessibility_requirements: Client failure buffering never interrupts focused interaction.
+    complexity: L
+    estimated_effort: 2 days
+    suggested_owner: Session backend agent
+    branch_name: agent/vib-ws-005-session-events
+    commit_prefix: "feat(session):"
+    milestone: M3
+    status: planned
+
+  - id: VIB-ADMIN-001
+    epic: Content administration
+    title: Build card, translation, and rights editor
+    purpose: Let authorized editors prepare publishable cards without direct AWS or database access.
+    specification_references:
+      - docs/specs/16-admin-content-operations.md
+      - docs/specs/04-domain-data-model.md
+      - docs/specs/19-content-ingestion-and-automation.md
+    dependencies: [VIB-AUTH-002, VIB-DATA-002, VIB-MEDIA-002, VIB-UI-001]
+    likely_files:
+      - src/app/(admin)/admin/cards
+      - src/modules/content-operations/cards
+    acceptance_criteria:
+      - Draft, translation, theme, asset, preview, submit, and validation flows work.
+      - Required rights/locale/alt fields block approval.
+      - Draft preview is noindex/no-store and visibly marked.
+    testing_requirements:
+      - Domain/integration/admin E2E, permission, form, upload, visual, and axe tests.
+    observability_requirements: Draft/validation/approval outcome metrics and audit events.
+    security_requirements: Role/resource authorization and private evidence access audit.
+    accessibility_requirements: Error summary, keyboard workflow, status not color-only.
+    complexity: L
+    estimated_effort: 2 days
+    suggested_owner: Admin agent
+    branch_name: agent/vib-admin-001-card-editor
+    commit_prefix: "feat(admin):"
+    milestone: M4
+    status: planned
+
+  - id: VIB-ADMIN-002
+    epic: Content administration
+    title: Build immutable deck publication and rollback
+    purpose: Validate, publish, cache-invalidate, and restore deck versions atomically.
+    specification_references:
+      - docs/specs/16-admin-content-operations.md
+      - docs/specs/04-domain-data-model.md
+      - docs/diagrams/admin-publication-flow.mmd
+    dependencies: [VIB-ADMIN-001, VIB-DATA-004]
+    likely_files:
+      - src/app/(admin)/admin/decks
+      - src/modules/content-operations/publication
+    acceptance_criteria:
+      - Membership/order editor validates duplicate and position constraints.
+      - Publication is atomic and immutable; cache invalidates after commit.
+      - Rollback restores prior valid version within five minutes.
+    testing_requirements:
+      - Transaction, concurrency, cache-failure, publish, rollback, and E2E tests.
+    observability_requirements: Publication/rollback duration/outcome and deploy-style annotation.
+    security_requirements: Publisher role, re-auth/confirmation, immutable audit.
+    accessibility_requirements: Consequence dialog, progress, errors, and focus pass.
+    complexity: L
+    estimated_effort: 2 days
+    suggested_owner: Admin backend agent
+    branch_name: agent/vib-admin-002-publication
+    commit_prefix: "feat(publication):"
+    milestone: M4
+    status: planned
+
+  - id: VIB-ADMIN-003
+    epic: Content administration
+    title: Build access and audit administration
+    purpose: Manage roles/entitlements and inspect immutable administrative history.
+    specification_references:
+      - docs/specs/16-admin-content-operations.md
+      - docs/specs/09-trust-security-privacy.md
+    dependencies: [VIB-AUTH-002, VIB-ADMIN-001]
+    likely_files:
+      - src/app/(admin)/admin/access
+      - src/app/(admin)/admin/audit
+      - src/modules/identity/admin
+    acceptance_criteria:
+      - Admin can grant/revoke bounded roles and entitlements.
+      - Self-lockout and last-admin removal are prevented.
+      - Audit filters return redacted immutable records.
+    testing_requirements:
+      - Authorization, invariant, audit, pagination, and admin E2E tests.
+    observability_requirements: Grant/revoke/view-sensitive-evidence audit and security alert hooks.
+    security_requirements: Admin-only, re-auth critical changes, no account enumeration.
+    accessibility_requirements: Table/list keyboard navigation and action confirmation.
+    complexity: M
+    estimated_effort: 1-2 days
+    suggested_owner: Identity admin agent
+    branch_name: agent/vib-admin-003-access-audit
+    commit_prefix: "feat(admin):"
+    milestone: M4
+    status: planned
+
+  - id: VIB-SEO-001
+    epic: SEO
+    title: Implement metadata, structured data, sitemap, and redirects
+    purpose: Establish canonical crawl behavior and preserve legacy URL equity.
+    specification_references:
+      - docs/specs/08-seo-content-analytics.md
+      - docs/specs/02-information-architecture.md
+    dependencies: [VIB-UI-003, VIB-UI-004, VIB-WS-002]
+    likely_files:
+      - src/app/robots.ts
+      - src/app/sitemap.ts
+      - src/platform/seo
+      - next.config.ts
+    acceptance_criteria:
+      - All routes meet metadata/index policy.
+      - Organization/WebApplication JSON-LD validates.
+      - Legacy redirects are one hop and placeholder links are absent.
+    testing_requirements:
+      - Metadata, schema, sitemap, robots, canonical, and redirect crawler.
+    observability_requirements: Indexable-route 404/5xx and CWV reporting.
+    security_requirements: Protected/draft routes noindex and never appear in sitemap.
+    accessibility_requirements: Exactly one H1 and meaningful link text on public pages.
+    complexity: M
+    estimated_effort: 1-2 days
+    suggested_owner: SEO agent
+    branch_name: agent/vib-seo-001-technical-seo
+    commit_prefix: "feat(seo):"
+    milestone: M2
+    status: planned
+
+  - id: VIB-SEO-002
+    epic: Analytics
+    title: Implement product event contract and reporting
+    purpose: Measure sample, auth, workspace, and publication outcomes without coaching content.
+    specification_references:
+      - docs/specs/08-seo-content-analytics.md
+      - docs/specs/09-trust-security-privacy.md
+      - docs/specs/17-observability-reliability.md
+    dependencies: [VIB-PLAT-003, VIB-WS-005]
+    likely_files:
+      - src/platform/analytics
+      - docs/dashboards/product-health.md
+    acceptance_criteria:
+      - Event schemas are versioned and allowlisted.
+      - Prohibited values/properties fail tests and are not persisted.
+      - North-star and supporting metric queries are documented.
+    testing_requirements:
+      - Schema, redaction, loss/failure, aggregation, and report tests.
+    observability_requirements: Product/operational telemetry remain separated; dropped events counted.
+    security_requirements: No session replay, fingerprinting, PII, prompt text, or free text.
+    accessibility_requirements: Analytics scripts do not delay or alter interaction.
+    complexity: M
+    estimated_effort: 1-2 days
+    suggested_owner: Analytics agent
+    branch_name: agent/vib-seo-002-product-analytics
+    commit_prefix: "feat(analytics):"
+    milestone: M3
+    status: planned
+
+  - id: VIB-QUAL-001
+    epic: Quality
+    title: Establish target E2E, accessibility, and visual suite
+    purpose: Gate every critical public, workspace, auth, and admin journey.
+    specification_references:
+      - docs/specs/10-testing-quality-observability.md
+      - docs/specs/12-acceptance-test-matrix.md
+      - docs/specs/03-ux-ui-content.md
+    dependencies: [VIB-UI-004, VIB-WS-004, VIB-ADMIN-002]
+    likely_files:
+      - tests/e2e
+      - tests/accessibility
+      - tests/visual
+      - playwright.config.ts
+    acceptance_criteria:
+      - AT-001 through AT-026 critical journeys are automated where feasible.
+      - Manual keyboard/screen-reader/zoom matrix has evidence and owners.
+      - Critical-path tests cannot be quarantined.
+    testing_requirements:
+      - Cross-browser E2E, axe, visual, reduced-motion, keyboard, 200% zoom.
+    observability_requirements: Failed tests retain request IDs and sanitized traces/screenshots.
+    security_requirements: Test artifacts contain no tokens, contact messages, or signed URLs.
+    accessibility_requirements: Owns WCAG 2.2 AA launch report.
+    complexity: L
+    estimated_effort: 2 days
+    suggested_owner: Quality agent
+    branch_name: agent/vib-qual-001-e2e-a11y
+    commit_prefix: "test(e2e):"
+    milestone: M4
+    status: planned
+
+  - id: VIB-QUAL-002
+    epic: Quality
+    title: Enforce performance and security gates
+    purpose: Make bundle, latency, headers, dependency, and common attack checks blocking.
+    specification_references:
+      - docs/specs/09-trust-security-privacy.md
+      - docs/specs/21-non-functional-requirements-slos.md
+      - docs/specs/18-delivery-cicd-environments.md
+    dependencies: [VIB-QUAL-001, VIB-SEO-001]
+    likely_files:
+      - .github/workflows/ci.yml
+      - scripts/check-bundles.ts
+      - tests/security
+      - tests/performance
+    acceptance_criteria:
+      - NFR bundle and API budgets fail CI when exceeded.
+      - Header, secret, dependency, license, static analysis, and client-AWS scans block defined severity.
+      - Performance/security results attach to release evidence.
+    testing_requirements:
+      - Mobile lab, load, header, XSS, CSRF, IDOR, rate, and bundle tests.
+    observability_requirements: CI trend retains performance and scan summaries.
+    security_requirements: Implements SEC-005 through SEC-012 gates.
+    accessibility_requirements: Performance tooling preserves reduced-motion/accessibility test settings.
+    complexity: L
+    estimated_effort: 2 days
+    suggested_owner: Security quality agent
+    branch_name: agent/vib-qual-002-perf-security-gates
+    commit_prefix: "ci(quality):"
+    milestone: M4
+    status: planned
+
+  - id: VIB-REL-001
+    epic: Release
+    title: Create isolated staging and deployment pipeline
+    purpose: Promote one immutable artifact through staging with isolated data, identity, media, secrets, and telemetry.
+    specification_references:
+      - docs/specs/18-delivery-cicd-environments.md
+      - docs/specs/21-non-functional-requirements-slos.md
+      - docs/diagrams/deployment-topology.mmd
+    dependencies: [VIB-QUAL-002, VIB-PLAT-004, VIB-DATA-005]
+    likely_files:
+      - .github/workflows/deploy.yml
+      - infrastructure
+      - docs/operations/environments.md
+    acceptance_criteria:
+      - Approved provider staging is isolated and reproducible.
+      - Build-once artifact provenance and migration pre-deploy job work.
+      - Staging synthetics, smoke, and rollback pass.
+    testing_requirements:
+      - Environment isolation, promotion, migration, secret rotation, and rollback tests.
+    observability_requirements: Deploy/migration markers and staging dashboards.
+    security_requirements: Workload identity, least privilege, no production data in staging.
+    accessibility_requirements: Preview/staging support complete accessibility review.
+    complexity: L
+    estimated_effort: 2 days
+    suggested_owner: Release agent
+    branch_name: agent/vib-rel-001-staging-pipeline
+    commit_prefix: "ci(release):"
+    milestone: M5
+    status: planned
+
+  - id: VIB-REL-002
+    epic: Release
+    title: Configure dashboards, alerts, synthetics, and runbooks
+    purpose: Make target journeys operable before any production pilot.
+    specification_references:
+      - docs/specs/17-observability-reliability.md
+      - docs/specs/21-non-functional-requirements-slos.md
+      - docs/diagrams/incident-response.mmd
+    dependencies: [VIB-REL-001, VIB-SEO-002]
+    likely_files:
+      - docs/dashboards
+      - docs/runbooks
+      - infrastructure/observability
+    acceptance_criteria:
+      - Required dashboards and five synthetic journeys are live.
+      - Fast/slow burn and security alerts link to owned runbooks.
+      - Alert and incident game day verifies page, mitigation, and recovery.
+    testing_requirements:
+      - Synthetic failure, telemetry outage, burn, and runbook game day.
+    observability_requirements: Implements OBS-008 through OBS-015.
+    security_requirements: Production telemetry access is least privilege and audited.
+    accessibility_requirements: Public status/error communications are accessible.
+    complexity: L
+    estimated_effort: 2 days
+    suggested_owner: Reliability agent
+    branch_name: agent/vib-rel-002-operability
+    commit_prefix: "feat(reliability):"
+    milestone: M5
+    status: planned
+
+  - id: VIB-REL-003
+    epic: Release
+    title: Run pilot, production cutover, and validation
+    purpose: Progressively enable target auth, workspace, and canonical content with guarded rollback.
+    specification_references:
+      - docs/specs/11-migration-and-redesign-plan.md
+      - docs/implementation/MASTER_IMPLEMENTATION_PLAN.md
+      - docs/specs/12-acceptance-test-matrix.md
+    dependencies: [VIB-REL-002, VIB-ADMIN-003]
+    likely_files:
+      - docs/releases/v1-cutover-plan.md
+      - docs/releases/v1-validation-report.md
+    acceptance_criteria:
+      - Human decisions, rights/legal, acceptance, recovery, and launch gates are approved.
+      - Internal then entitled cohort shows no guardrail regression.
+      - Production canary promotes or rolls back based on documented thresholds.
+    testing_requirements:
+      - Full AT-001 through AT-034, migration rehearsal, auth/content/app rollback.
+    observability_requirements: Live cohort comparison, SLO burn, product and dependency dashboards.
+    security_requirements: Final client credential scan and incident readiness approval.
+    accessibility_requirements: Final WCAG report has no critical/high blocker.
+    complexity: L
+    estimated_effort: 2 days
+    suggested_owner: Release lead
+    branch_name: agent/vib-rel-003-production-cutover
+    commit_prefix: "chore(release):"
+    milestone: M5
+    status: planned
+
+  - id: VIB-REL-004
+    epic: Decommission
+    title: Remove legacy routes, client AWS access, and retired data paths
+    purpose: Eliminate obsolete attack/maintenance surface after rollback expiry.
+    specification_references:
+      - docs/specs/11-migration-and-redesign-plan.md
+      - docs/specs/18-delivery-cicd-environments.md
+      - docs/review/05-risk-and-debt-register.md
+    dependencies: [VIB-REL-003]
+    likely_files:
+      - pages
+      - components
+      - actions
+      - helpers
+      - next.config.ts
+      - package.json
+      - docs/operations/decommission-report.md
+    acceptance_criteria:
+      - Rollback window expired and residual traffic/dependency scan is empty.
+      - Legacy Pages routes, SDK v2, build plugins, styling/motion systems, and duplicated assets are removed.
+      - Browser IAM/policies and DynamoDB paths are revoked/retired after approved archive.
+    testing_requirements:
+      - Full regression, redirects, bundle, policy-denial, recovery, and AT-035.
+    observability_requirements: Confirm zero legacy traffic/errors before and after removal.
+    security_requirements: Remove stale secrets/roles/policies and retain audit evidence.
+    accessibility_requirements: Target routes remain complete after legacy CSS/component removal.
+    complexity: L
+    estimated_effort: 2 days
+    suggested_owner: Platform cleanup agent
+    branch_name: agent/vib-rel-004-decommission
+    commit_prefix: "refactor(legacy):"
+    milestone: M6
+    status: planned

@@ -1,0 +1,16 @@
+flowchart TB
+  Detect["Detect / report"]
+  Triage["Assess severity and impact"]
+  Contain["Contain and preserve evidence"]
+  Recover["Mitigate or roll back"]
+  Verify["Verify user and data health"]
+  Communicate["Communicate status"]
+  Learn["Post-incident actions"]
+
+  Detect --> Triage
+  Triage --> Contain
+  Contain --> Recover
+  Recover --> Verify
+  Triage --> Communicate
+  Verify --> Communicate
+  Communicate --> Learn

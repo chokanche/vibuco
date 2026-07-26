@@ -1,0 +1,18 @@
+sequenceDiagram
+  actor F as Facilitator
+  participant W as Next.js web
+  participant A as Auth service
+  participant L as Library service
+  participant D as PostgreSQL
+  participant M as Media signer
+
+  F->>W: GET /workspace
+  W->>A: Validate server session
+  A-->>W: Account + active entitlement
+  W->>L: Get current full deck(locale)
+  L->>D: Read active immutable version
+  D-->>L: Cards + approved translation
+  L->>M: Create scoped media DTOs
+  M-->>L: Versioned media URLs
+  L-->>W: Deck DTO + ETag
+  W-->>F: Server shell + workspace island

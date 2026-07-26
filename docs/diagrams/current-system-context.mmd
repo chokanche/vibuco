@@ -1,0 +1,14 @@
+flowchart TB
+  Visitor["Visitor / facilitator browser"]
+  Next["Next.js 9 static pages"]
+  Cognito["Amazon Cognito + identity pool"]
+  DDB["DynamoDB tables"]
+  S3["S3 buckets + checked-in images"]
+
+  Visitor -->|loads JS| Next
+  Visitor -->|implicit auth + federated credentials| Cognito
+  Visitor -->|table Scan via AWS SDK v2| DDB
+  Visitor -->|getObject / public image| S3
+
+  classDef risk fill:#FDECEC,stroke:#A83232,color:#17332D
+  class Cognito,DDB,S3 risk
