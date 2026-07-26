@@ -95,3 +95,16 @@ markers returned no matches. Public keys and public runtime identifiers are not
 classified as credentials, but the target migration must still remove
 client-visible AWS configuration.
 
+## Reproducibility verification
+
+Two separate local clones of commit `4bd8cd2` were verified in parallel with the
+pinned runtime:
+
+| Run | `npm ci` | `npm run build` | Lockfile drift |
+| --- | --- | --- | --- |
+| 1 | Passed in 31.89 seconds | Passed in 8.66 seconds | None |
+| 2 | Passed in 32.38 seconds | Passed in 8.87 seconds | None |
+
+Both builds generated the same twelve-route legacy production baseline and the
+same reported route bundle sizes. GitHub Actions retains step duration and
+failure classification for subsequent pull-request and `master` runs.
