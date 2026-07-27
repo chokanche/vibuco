@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Select from 'react-select'
 import Switch from "react-switch";
 import Gallery from "react-photo-gallery";
@@ -24,6 +24,11 @@ const Cards = ({ initialAuth }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   // display loader while component is still loading
   const [isLoading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
+  const [loadAttempt, setLoadAttempt] = useState(0);
+  const correlationId = useRef(
+    `cards-${Date.now()}-${Math.random().toString(36).slice(2)}`
+  );
 
   const [images, setImages] = useState([]);
   const [isFlipped, setFlipped] = useState(false);
@@ -80,7 +85,6 @@ const Cards = ({ initialAuth }) => {
     const imagesWithWidth = await getImageWidths(imageDataWithSources);
     // shuffle images
     setImages(_.shuffle(imagesWithWidth));
-    setLoading(false);
   };
 
    // encode file.Body response into a base64 string
@@ -117,23 +121,49 @@ const Cards = ({ initialAuth }) => {
     const data = await Promise.all(completeImageDataWithObjects);
 
     setImages(_.shuffle(data));
-    setLoading(false);
   }; 
 
   // Fetch the right data based on authentication (will happen on page load)
   useEffect(() => {
-    if (isLoading) {
-      if (!auth) {
-        // for now just fetch it from static directory
-        // but keeping this implementation that is 
-        // getting the photos from public s3
-        fetchCommonImagesDataFromStatic();
-        //fetchPublicImagesData();
-      } else {
-        fetchCommonImagesData();
-      }
-    }
-  }, [auth]);
+    const startedAt = Date.now();
+    setLoading(true);
+    setLoadError(false);
+
+    const request = !auth
+      ? fetchCommonImagesDataFromStatic()
+      : fetchCommonImagesData();
+
+    request
+      .then(() => {
+        setLoading(false);
+        console.info(
+          JSON.stringify({
+            event: "cards_route_load",
+            request_id: correlationId.current,
+            trace_id: correlationId.current,
+            route: "/cards",
+            outcome: "success",
+            duration_ms: Date.now() - startedAt,
+            actor_classification: auth ? "authenticated" : "anonymous",
+          })
+        );
+      })
+      .catch(() => {
+        setLoading(false);
+        setLoadError(true);
+        console.error(
+          JSON.stringify({
+            event: "cards_route_load",
+            request_id: correlationId.current,
+            trace_id: correlationId.current,
+            route: "/cards",
+            outcome: "dependency_failure",
+            duration_ms: Date.now() - startedAt,
+            actor_classification: auth ? "authenticated" : "anonymous",
+          })
+        );
+      });
+  }, [auth, loadAttempt]);
 
   
   // instead of going to the public s3 for images
@@ -161,8 +191,9 @@ const Cards = ({ initialAuth }) => {
     const data = await Promise.all(completeImageDataWithObjects);
 
     setImages(_.shuffle(data));
-    setLoading(false);
   }; 
+
+  const retryLoad = () => setLoadAttempt((attempt) => attempt + 1);
 
 
 
@@ -280,7 +311,26 @@ const Cards = ({ initialAuth }) => {
 
         {isLoading ? <Loading /> : null}
 
-        {isFlipped ? (
+        {loadError ? (
+          <section
+            role="alert"
+            aria-labelledby="cards-load-error-title"
+            style={{ maxWidth: "36rem", margin: "4rem auto", textAlign: "center" }}
+          >
+            <h1 id="cards-load-error-title">Cards are temporarily unavailable</h1>
+            <p>Please try again. If the problem continues, come back later.</p>
+            <p>Reference: {correlationId.current}</p>
+            <button
+              type="button"
+              onClick={retryLoad}
+              className="border border-vibuco-100 rounded-md px-4 py-2 focus:shadow-outline"
+            >
+              Retry loading cards
+            </button>
+          </section>
+        ) : null}
+
+        {!loadError && isFlipped ? (
           <div className = "maingallerycontainer">
             <Gallery
               photos={images.map(img => {
@@ -296,7 +346,7 @@ const Cards = ({ initialAuth }) => {
           </div>
         ) : null}
 
-        {!isFlipped ? <div className = "maingallerycontainer" onContextMenu={(e)=> e.preventDefault()} > <Gallery photos={images} onClick={openLightbox} /> </div>: null}
+        {!loadError && !isFlipped ? <div className = "maingallerycontainer" onContextMenu={(e)=> e.preventDefault()} > <Gallery photos={images} onClick={openLightbox} /> </div>: null}
         
         {/* For the unauthenticated TODO is to change the DDB config
             after that there's no need to check for auth*/}

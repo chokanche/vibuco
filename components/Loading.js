@@ -22,7 +22,12 @@ const Loading = () => {
     );
   }, []);
     return (
-    <div style={{display: 'flex',  justifyContent:'center', alignItems:'center', height: '100vh'}}>
+    <div
+      role="status"
+      aria-live="polite"
+      aria-label="Loading cards"
+      style={{display: 'flex',  justifyContent:'center', alignItems:'center', height: '100vh'}}
+    >
         <svg viewBox="0 0 150 33.2" width="180" height="150">
           <circle ref={blue} cx="16.1" cy="16.6" r="16.1" fill="#faf3dd" />
           <circle ref={red} cx="55.2" cy="16.6" r="16.1" fill="#ffa69e" />
