@@ -1,8 +1,10 @@
+const { getCardNumber } = require("../lib/legacyCardsBehavior");
+
 const NumberedGalleryImage = ({ photo, margin, onClick, index, key }) => {
   return (
     <>
       <div key={key} className="gallery-image">
-        <div className="gallery-image__number">{index + 1}</div>
+        <div className="gallery-image__number">{getCardNumber(index)}</div>
         <img
           onClick={() => onClick(undefined, { index })}
           style={{ margin, height: photo.height }}

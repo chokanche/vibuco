@@ -13,6 +13,8 @@
     "build": "node scripts/run-next.js build",
     "start": "node scripts/run-next.js start",
     "test:stability": "node --test tests/stability/*.test.js",
+    "test:legacy:unit": "node --test tests/legacy/*.test.js",
+    "test:legacy:e2e": "playwright test",
     "synthetic:cards": "node scripts/synthetic-cards.mjs",
     "pems:prepare": "prepare-pems --region $USER_POOL_REGION --userPoolId $USER_POOL_ID",
     "export": "npm run build && node scripts/run-next.js export"

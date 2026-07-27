@@ -14,6 +14,12 @@ import _ from "lodash";
 import NumberedGalleryImage from "../components/NumberedGalleryImage";
 import Viheader from "../components/headers/viheader";
 import { NextSeo } from "next-seo";
+const {
+  getCardBackSource,
+  getDeckTableName,
+  getPromptForLocale,
+  shuffleWith,
+} = require("../lib/legacyCardsBehavior");
 
 import "../styles/customStyles.css";
 
@@ -74,7 +80,7 @@ const Cards = ({ initialAuth }) => {
   };
 
   const fetchPublicImagesData = async () => {
-    const imageData = await getDataFromDDBTable("vibuco-photos-public");
+    const imageData = await getDataFromDDBTable(getDeckTableName(false));
 
     // convert all s3 urls to https urls
     const imageDataWithSources = convertSourcesToHttps(
@@ -84,7 +90,7 @@ const Cards = ({ initialAuth }) => {
 
     const imagesWithWidth = await getImageWidths(imageDataWithSources);
     // shuffle images
-    setImages(_.shuffle(imagesWithWidth));
+    setImages(shuffleWith(imagesWithWidth, _.shuffle));
   };
 
    // encode file.Body response into a base64 string
@@ -97,7 +103,10 @@ const Cards = ({ initialAuth }) => {
 
   const fetchCommonImagesData = async () => {
     //const imageData = await getDataFromDDBTable("vibuco-photos", auth.idToken);
-    const imageData = await getDataFromDDBTable("vibuco-photos", auth.idToken);
+    const imageData = await getDataFromDDBTable(
+      getDeckTableName(true),
+      auth.idToken
+    );
 
     // presign our image urls for authenticated access
     const imageObjects = await getImageObjects(
@@ -120,7 +129,7 @@ const Cards = ({ initialAuth }) => {
 
     const data = await Promise.all(completeImageDataWithObjects);
 
-    setImages(_.shuffle(data));
+    setImages(shuffleWith(data, _.shuffle));
   }; 
 
   // Fetch the right data based on authentication (will happen on page load)
@@ -171,7 +180,7 @@ const Cards = ({ initialAuth }) => {
   // still using dynamo db to get all the metadata
   // so both paces need to be updated when adding new photo
   const fetchCommonImagesDataFromStatic = async () => {
-    const imageData = await getDataFromDDBTable("vibuco-photos-public");
+    const imageData = await getDataFromDDBTable(getDeckTableName(false));
 
 
    const completeImageDataWithObjects = imageData.map(async (img, i) => {
@@ -190,7 +199,7 @@ const Cards = ({ initialAuth }) => {
 
     const data = await Promise.all(completeImageDataWithObjects);
 
-    setImages(_.shuffle(data));
+    setImages(shuffleWith(data, _.shuffle));
   }; 
 
   const retryLoad = () => setLoadAttempt((attempt) => attempt + 1);
@@ -200,7 +209,7 @@ const Cards = ({ initialAuth }) => {
   // shuffle images whenever we flip from backgrounds back to normal images
   useEffect(() => {
     if (!isFlipped) {
-      setImages((prevImgs) => _.shuffle(prevImgs));
+      setImages((prevImgs) => shuffleWith(prevImgs, _.shuffle));
     }
   }, [isFlipped]);
 
@@ -216,6 +225,7 @@ const Cards = ({ initialAuth }) => {
 
   // helper var to get the current image based on the index in the images array
   const currentImage = images[currentImageIndex];
+  const selectedLocale = isSerbian ? "srb" : isHungarian ? "hu" : "en";
 
   useEffect(() => {
     images.map(photo => {
@@ -334,11 +344,7 @@ const Cards = ({ initialAuth }) => {
           <div className = "maingallerycontainer">
             <Gallery
               photos={images.map(img => {
-                const ratio = img.width / img.height;
-                if (ratio >= 1) {
-                  return { ...img, src: '../static/green2.jpg' }
-                } 
-                return { ...img, src: '../static/green1.jpg' }
+                return { ...img, src: getCardBackSource(img) }
               })}
               renderImage={NumberedGalleryImage}
               onClick={openLightbox}
@@ -352,45 +358,17 @@ const Cards = ({ initialAuth }) => {
             after that there's no need to check for auth*/}
         {
         isLightbox ? (
-          auth ? (
-            isEnglish ? (         
-              <Lightbox
-              imgPath={currentImage.src}
-              txt={currentImage.txt.en}
-              onClose={closeLightbox}
-              showText={checked}
-              />
-          ) 
-          :  isSerbian ? (
-              <Lightbox
-              imgPath={currentImage.src}
-              txt={currentImage.txt.srb}
-              onClose={closeLightbox}
-              showText={checked}
-              /> 
-            )           
-          :  isHungarian ? (
-            <Lightbox
+          <Lightbox
             imgPath={currentImage.src}
-            txt={currentImage.txt.hu}
+            txt={getPromptForLocale(
+              currentImage.txt,
+              Boolean(auth),
+              selectedLocale
+            )}
             onClose={closeLightbox}
             showText={checked}
-            /> 
-          ) : 
-              <Lightbox
-              imgPath={currentImage.src}
-              txt={currentImage.txt.en}
-              onClose={closeLightbox}
-              showText={checked}
-              /> 
-          ) : 
-            <Lightbox
-            imgPath={currentImage.src}
-            txt={currentImage.txt}
-            onClose={closeLightbox}
-            showText={checked}
-            /> 
-          ) :
+          />
+        ) :
          null 
          }
       <style jsx>

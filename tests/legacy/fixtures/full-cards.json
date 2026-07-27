@@ -1,0 +1,42 @@
+[
+  {
+    "id": "full-card-a",
+    "txt": {
+      "en": "synthetic-en-a",
+      "srb": "synthetic-srb-a",
+      "hu": "synthetic-hu-a"
+    },
+    "width": 4,
+    "height": 3
+  },
+  {
+    "id": "full-card-b",
+    "txt": {
+      "en": "synthetic-en-b",
+      "srb": "synthetic-srb-b",
+      "hu": "synthetic-hu-b"
+    },
+    "width": 3,
+    "height": 4
+  },
+  {
+    "id": "full-card-c",
+    "txt": {
+      "en": "synthetic-en-c",
+      "srb": "synthetic-srb-c",
+      "hu": "synthetic-hu-c"
+    },
+    "width": 1,
+    "height": 1
+  },
+  {
+    "id": "full-card-d",
+    "txt": {
+      "en": "synthetic-en-d",
+      "srb": "synthetic-srb-d",
+      "hu": "synthetic-hu-d"
+    },
+    "width": 16,
+    "height": 9
+  }
+]

@@ -128,7 +128,7 @@ items:
     branch_name: agent/vib-stab-004-characterization
     commit_prefix: "test(legacy):"
     milestone: M1
-    status: in_progress
+    status: done
 
   - id: VIB-PLAT-001
     epic: Platform
@@ -159,7 +159,7 @@ items:
     branch_name: agent/vib-plat-001-app-router-shell
     commit_prefix: "feat(platform):"
     milestone: M2
-    status: planned
+    status: ready
 
   - id: VIB-PLAT-002
     epic: Platform
