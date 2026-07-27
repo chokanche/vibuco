@@ -128,7 +128,7 @@ items:
     branch_name: agent/vib-stab-004-characterization
     commit_prefix: "test(legacy):"
     milestone: M1
-    status: ready
+    status: in_progress
 
   - id: VIB-PLAT-001
     epic: Platform
