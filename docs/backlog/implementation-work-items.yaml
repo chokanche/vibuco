@@ -34,7 +34,7 @@ items:
     branch_name: agent/vib-stab-001-production-baseline
     commit_prefix: "docs(stability):"
     milestone: M0
-    status: ready
+    status: done
 
   - id: VIB-STAB-002
     epic: Stabilization
@@ -97,7 +97,7 @@ items:
     branch_name: agent/vib-stab-003-reproducible-build
     commit_prefix: "build:"
     milestone: M1
-    status: planned
+    status: ready
 
   - id: VIB-STAB-004
     epic: Quality foundation
