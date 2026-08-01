@@ -4,7 +4,7 @@ import Auth from "@aws-amplify/auth";
 import Head from "next/head";
 import { DefaultSeo } from "next-seo";
 
-import SEO from "../next-seo.config"
+import SEO from "../../next-seo.config"
 
 import {
   USER_POOL_REGION,
@@ -15,12 +15,12 @@ import {
   IDP_DOMAIN,
   REDIRECT_SIGN_IN,
   REDIRECT_SIGN_OUT,
-} from "../config";
+} from "../../config";
 
 import { GlobalStyles } from "twin.macro";
 
-import "../styles/globalStyles.css";
-import "../styles/customStyles.css";
+import "../../styles/globalStyles.css";
+import "../../styles/customStyles.css";
 
 // Configure Amplify with everything it needs to handle authentication
 const amplifyAuthConfig = {

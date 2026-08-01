@@ -1,6 +1,6 @@
-import Layout from "../components/Layout";
+import Layout from "../../components/Layout";
 import Link from 'next/link';
-import NotLoggedIn from '../components/auth/NotLoggedIn';
+import NotLoggedIn from '../../components/auth/NotLoggedIn';
 
 const Login = () => {
   const onSubmit = (e) => {

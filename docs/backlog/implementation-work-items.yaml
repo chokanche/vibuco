@@ -159,7 +159,7 @@ items:
     branch_name: agent/vib-plat-001-app-router-shell
     commit_prefix: "feat(platform):"
     milestone: M2
-    status: in_progress
+    status: done
 
   - id: VIB-PLAT-002
     epic: Platform
@@ -190,7 +190,7 @@ items:
     branch_name: agent/vib-plat-002-config-boundary
     commit_prefix: "feat(config):"
     milestone: M2
-    status: planned
+    status: ready
 
   - id: VIB-PLAT-003
     epic: Observability

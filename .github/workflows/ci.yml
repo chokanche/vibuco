@@ -46,8 +46,23 @@ jobs:
       - name: Run legacy characterization journeys
         run: npm run test:legacy:e2e
 
+      - name: Type-check target shell
+        run: npm run typecheck
+
+      - name: Test target environment boundary
+        run: npm run test:platform
+
+      - name: Check target module boundaries
+        run: npm run check:boundaries
+
+      - name: Check target route and bundle boundaries
+        run: npm run check:app-shell
+
       - name: Build legacy application
         run: npm run build
+
+      - name: Smoke-test built route manifests
+        run: npm run check:routes
 
       - name: Reject lockfile drift
         run: git diff --exit-code -- package-lock.json

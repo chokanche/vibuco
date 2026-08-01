@@ -2,13 +2,13 @@ import React, { useState, useEffect } from "react";
 import tw from "twin.macro";
 import { NextSeo } from "next-seo";
 
-import Viheader from "../components/headers/viheader";
-import Footer from "../components/footers/FiveColumnWithInputForm.js";
-import MainFeature1 from "../components/features/TwoCol.js";
-import Center from "../components/features/OneCol.js";
-import "../styles/customStyles.css";
-import { useAuth } from "../auth";
-import NotFound from "../pages/msg-notfound";
+import Viheader from "../../components/headers/viheader";
+import Footer from "../../components/footers/FiveColumnWithInputForm.js";
+import MainFeature1 from "../../components/features/TwoCol.js";
+import Center from "../../components/features/OneCol.js";
+import "../../styles/customStyles.css";
+import { useAuth } from "../../auth";
+import NotFound from "./msg-notfound";
 const isServer = typeof window === 'undefined'
 const WOW = !isServer ? require('wow.js') : null
 
