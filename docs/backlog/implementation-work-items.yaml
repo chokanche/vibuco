@@ -220,7 +220,7 @@ items:
     branch_name: agent/vib-plat-003-telemetry
     commit_prefix: "feat(observability):"
     milestone: M2
-    status: ready
+    status: in_progress
 
   - id: VIB-PLAT-004
     epic: Platform
