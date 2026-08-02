@@ -32,12 +32,12 @@ for (const filePath of await sourceFiles(sourceRoot)) {
     violations.push(`${relativePath}: client module imports a server boundary`);
   }
 
-  if (
-    /src[\\/]platform[\\/](?:config[\\/]server|telemetry[\\/]request-context)\.ts$/.test(
+  const requiresServerOnly =
+    /src[\\/]platform[\\/](?:config[\\/]server|telemetry[\\/](?:foundation|request-context|request-instrumentation))\.ts$/.test(
       filePath
-    ) &&
-    !/import\s+["']server-only["'];/.test(source)
-  ) {
+    ) || /src[\\/]instrumentation\.ts$/.test(filePath);
+
+  if (requiresServerOnly && !/import\s+["']server-only["'];/.test(source)) {
     violations.push(`${relativePath}: privileged platform module lacks server-only`);
   }
 }
