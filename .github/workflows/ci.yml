@@ -34,6 +34,9 @@ jobs:
       - name: Validate specifications
         run: bash scripts/validate-specs.sh
 
+      - name: Run stabilization fault tests
+        run: npm run test:stability
+
       - name: Build legacy application
         run: npm run build
 
