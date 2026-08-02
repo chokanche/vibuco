@@ -68,7 +68,7 @@ test("delegates shuffle and preserves the input card membership", () => {
 
 test("keeps the current public route files available without target redirects", () => {
   for (const route of ["index", "cards", "about", "contact", "login"]) {
-    const routePath = path.resolve(__dirname, `../../pages/${route}.js`);
+    const routePath = path.resolve(__dirname, `../../src/pages/${route}.js`);
     assert.equal(fs.existsSync(routePath), true, `${route}.js should exist`);
   }
 });

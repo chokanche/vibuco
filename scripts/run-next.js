@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 const { spawnSync } = require("child_process");
+const fs = require("fs");
 const path = require("path");
 
 const nextPackageJson = require.resolve("next/package.json");
@@ -24,6 +25,25 @@ const result = spawnSync(process.execPath, [nextBin, ...nextArgs], {
 
 if (result.error) {
   throw result.error;
+}
+
+if (result.signal) {
+  console.error(`Next.js exited from signal ${result.signal}.`);
+  process.exit(1);
+}
+
+if (result.status === null) {
+  console.error("Next.js exited without a status code.");
+  process.exit(1);
+}
+
+if (
+  nextArgs[0] === "build" &&
+  result.status === 0 &&
+  !fs.existsSync(path.resolve(".next", "BUILD_ID"))
+) {
+  console.error("Next.js exited without producing a complete build artifact.");
+  process.exit(1);
 }
 
 process.exit(result.status ?? 0);

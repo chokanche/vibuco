@@ -1,9 +1,9 @@
 import React from "react";
 import tw from "twin.macro";
-import Viheader from "../components/headers/viheader";
-import Footer from "../components/footers/FiveColumnWithInputForm.js";
-import MainFeature1 from "../components/features/TwoColWithButton.js";
-import ThankYou from "../components/misc/ThankYou.js";
+import Viheader from "../../components/headers/viheader";
+import Footer from "../../components/footers/FiveColumnWithInputForm.js";
+import MainFeature1 from "../../components/features/TwoColWithButton.js";
+import ThankYou from "../../components/misc/ThankYou.js";
 import { NextSeo } from "next-seo"
 
 const isServer = typeof window === 'undefined'

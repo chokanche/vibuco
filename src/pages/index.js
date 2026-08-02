@@ -1,19 +1,19 @@
 import React, { useEffect } from "react";
 import tw from "twin.macro";
-import Landing from "../components/Landing"
-import "../styles/customStyles.css";
-import Footer from "../components/footers/FiveColumnWithInputForm";
-import Features from "../components/features/ThreeColWithSideImage.js";
-import Clients from "../components/testimonials/TwoColumnWithImageAndRating"
-import { HAS_HOSTED_UI_AUTH_CONFIG } from "../config";
-import { useAuthControls } from "../auth";
+import Landing from "../../components/Landing"
+import "../../styles/customStyles.css";
+import Footer from "../../components/footers/FiveColumnWithInputForm";
+import Features from "../../components/features/ThreeColWithSideImage.js";
+import Clients from "../../components/testimonials/TwoColumnWithImageAndRating"
+import { HAS_HOSTED_UI_AUTH_CONFIG } from "../../config";
+import { useAuthControls } from "../../auth";
 import { ReactComponent as BriefcaseIcon } from "feather-icons/dist/icons/briefcase.svg";
 import { ReactComponent as MoneyIcon } from "feather-icons/dist/icons/dollar-sign.svg";
 import { ReactComponent as HeartIcon } from "feather-icons/dist/icons/heart.svg";
 
-import Blog from "../components/blogs/GridWithFeaturedPost";
-import MainFeatures from "../components/features/MainFeatures.js";
-import Details from "../components/hero/Details.js";
+import Blog from "../../components/blogs/GridWithFeaturedPost";
+import MainFeatures from "../../components/features/MainFeatures.js";
+import Details from "../../components/hero/Details.js";
 
 const HighlightedText = tw.span`text-vibuco-300`
 

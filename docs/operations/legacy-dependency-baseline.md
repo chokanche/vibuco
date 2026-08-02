@@ -108,3 +108,22 @@ pinned runtime:
 Both builds generated the same twelve-route legacy production baseline and the
 same reported route bundle sizes. GitHub Actions retains step duration and
 failure classification for subsequent pull-request and `master` runs.
+
+## VIB-PLAT-001 framework migration delta
+
+The 2026-07-27 App Router shell migration changed the locked graph to Next.js
+16.2.12, React 18.3.1, TypeScript 5.9.3, and 1,409 audited packages. The install
+reported 98 known vulnerabilities:
+
+| Severity | Count |
+| --- | ---: |
+| Critical | 14 |
+| High | 48 |
+| Moderate | 27 |
+| Low | 9 |
+| Total | 98 |
+
+This reduces the total count from the initial baseline but does not accept the
+remaining findings. No automatic audit fix was run. The legacy AWS SDK,
+styling, Babel, SVG, and other transitive chains remain migration debt; the
+target shell does not import them.

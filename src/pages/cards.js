@@ -2,26 +2,26 @@ import React, { useEffect, useRef, useState } from "react";
 import Select from 'react-select'
 import Switch from "react-switch";
 import Gallery from "react-photo-gallery";
-import Lightbox from "../components/Lightbox";
-import { useAuth } from "../auth";
-import getDataFromDDBTable from "../actions/getDataFromDDBTable";
-import s3UrlToHttps from "../helpers/s3UrlToHttps";
-import getImageObjects from "../helpers/getImageObjects";
-import { PUBLIC_BUCKET_NAME, COMMON_BUCKET_NAME } from "../config";
-import getImageAspectRatio from "../helpers/getImageAspectRatio";
-import Loading from "../components/Loading";
+import Lightbox from "../../components/Lightbox";
+import { useAuth } from "../../auth";
+import getDataFromDDBTable from "../../actions/getDataFromDDBTable";
+import s3UrlToHttps from "../../helpers/s3UrlToHttps";
+import getImageObjects from "../../helpers/getImageObjects";
+import { PUBLIC_BUCKET_NAME, COMMON_BUCKET_NAME } from "../../config";
+import getImageAspectRatio from "../../helpers/getImageAspectRatio";
+import Loading from "../../components/Loading";
 import _ from "lodash";
-import NumberedGalleryImage from "../components/NumberedGalleryImage";
-import Viheader from "../components/headers/viheader";
+import NumberedGalleryImage from "../../components/NumberedGalleryImage";
+import Viheader from "../../components/headers/viheader";
 import { NextSeo } from "next-seo";
 const {
   getCardBackSource,
   getDeckTableName,
   getPromptForLocale,
   shuffleWith,
-} = require("../lib/legacyCardsBehavior");
+} = require("../../lib/legacyCardsBehavior");
 
-import "../styles/customStyles.css";
+import "../../styles/customStyles.css";
 
 const Cards = ({ initialAuth }) => {
   // authentication object which represents logged in user
