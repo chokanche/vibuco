@@ -5,7 +5,7 @@ import { assertEnvironmentBoundary } from "../../src/platform/config/environment
 test("allows public values that are not privileged credentials", () => {
   assert.doesNotThrow(() =>
     assertEnvironmentBoundary({
-      NEXT_PUBLIC_SITE_NAME: "synthetic-site",
+      NEXT_PUBLIC_SITE_URL: "https://synthetic.example",
     })
   );
 });

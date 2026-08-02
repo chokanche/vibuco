@@ -190,7 +190,7 @@ items:
     branch_name: agent/vib-plat-002-config-boundary
     commit_prefix: "feat(config):"
     milestone: M2
-    status: ready
+    status: done
 
   - id: VIB-PLAT-003
     epic: Observability
@@ -220,7 +220,7 @@ items:
     branch_name: agent/vib-plat-003-telemetry
     commit_prefix: "feat(observability):"
     milestone: M2
-    status: planned
+    status: ready
 
   - id: VIB-PLAT-004
     epic: Platform
