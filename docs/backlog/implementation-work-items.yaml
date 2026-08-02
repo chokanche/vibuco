@@ -66,7 +66,7 @@ items:
     branch_name: agent/vib-stab-002-restore-cards
     commit_prefix: "fix(stability):"
     milestone: M0
-    status: planned
+    status: ready
 
   - id: VIB-STAB-003
     epic: Build foundation
@@ -97,7 +97,7 @@ items:
     branch_name: agent/vib-stab-003-reproducible-build
     commit_prefix: "build:"
     milestone: M1
-    status: ready
+    status: done
 
   - id: VIB-STAB-004
     epic: Quality foundation

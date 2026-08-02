@@ -2,6 +2,11 @@
   "name": "vibuco",
   "version": "1.0.0",
   "description": "Virtual Business Coaching - vibuco",
+  "packageManager": "npm@11.9.0",
+  "engines": {
+    "node": "24.14.0",
+    "npm": "11.9.0"
+  },
   "main": "index.js",
   "scripts": {
     "dev": "node scripts/run-next.js",
