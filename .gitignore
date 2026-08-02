@@ -7,3 +7,5 @@ yarn.lock
 .env.dev
 out/
 .venv-specs/
+test-results/
+playwright-report/

@@ -37,6 +37,15 @@ jobs:
       - name: Run stabilization fault tests
         run: npm run test:stability
 
+      - name: Run legacy characterization unit tests
+        run: npm run test:legacy:unit
+
+      - name: Install characterization browser
+        run: npx playwright install --with-deps chromium
+
+      - name: Run legacy characterization journeys
+        run: npm run test:legacy:e2e
+
       - name: Build legacy application
         run: npm run build
 
