@@ -190,7 +190,7 @@ items:
     branch_name: agent/vib-plat-002-config-boundary
     commit_prefix: "feat(config):"
     milestone: M2
-    status: ready
+    status: in_progress
 
   - id: VIB-PLAT-003
     epic: Observability
