@@ -249,7 +249,7 @@ items:
     branch_name: agent/vib-plat-004-feature-flags
     commit_prefix: "feat(flags):"
     milestone: M2
-    status: ready
+    status: done
 
   - id: VIB-UI-001
     epic: Design system
@@ -399,7 +399,7 @@ items:
     branch_name: agent/vib-auth-001-code-flow
     commit_prefix: "feat(auth):"
     milestone: M3
-    status: planned
+    status: ready
 
   - id: VIB-AUTH-002
     epic: Identity
