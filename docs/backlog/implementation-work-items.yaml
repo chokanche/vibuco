@@ -399,7 +399,7 @@ items:
     branch_name: agent/vib-auth-001-code-flow
     commit_prefix: "feat(auth):"
     milestone: M3
-    status: in_progress
+    status: done
 
   - id: VIB-AUTH-002
     epic: Identity

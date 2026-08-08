@@ -19,7 +19,6 @@ const nextConfig: NextConfig = {
   experimental: {
     cpus: 1,
   },
-  output: "export",
   transpilePackages: ["styled-components"],
   webpack(config) {
     config.resolve.alias = {
