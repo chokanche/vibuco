@@ -26,7 +26,7 @@ test("request instrumentation propagates correlation and tolerates telemetry out
     const response = await instrumentRequest(
       new Request("https://vibuco.example/api/health", { headers: { "x-request-id": "request-123" } }),
       { route: "/api/health", actorClass: "anonymous" }, telemetry,
-      async () => new Response("ok", { status: 200 })
+      async () => new Response("ok", { status: 400, headers: { "x-vibuco-error-code": "AUTH_STATE_INVALID" } })
     );
     await new Promise((resolve) => setImmediate(resolve));
     const failing = createTelemetry({ export: async () => { throw new Error("unavailable"); } });
@@ -36,7 +36,7 @@ test("request instrumentation propagates correlation and tolerates telemetry out
       async () => new Response("ok")
     );
     await new Promise((resolve) => setImmediate(resolve));
-    console.log(JSON.stringify({ requestId: response.headers.get("x-request-id"), traceId: response.headers.get("x-trace-id"), signalRequestId: signals[0].requestId, recovered: recovered.status, dropped: failing.droppedCount() }));
+    console.log(JSON.stringify({ requestId: response.headers.get("x-request-id"), traceId: response.headers.get("x-trace-id"), internal: response.headers.get("x-vibuco-error-code"), signalRequestId: signals[0].requestId, errorCode: signals[0].errorCode, recovered: recovered.status, dropped: failing.droppedCount() }));
   `;
   const child = spawnSync(
     process.execPath,
@@ -47,7 +47,9 @@ test("request instrumentation propagates correlation and tolerates telemetry out
   const result = JSON.parse(child.stdout);
   assert.equal(result.requestId, "request-123");
   assert.equal(result.traceId, "request-123");
+  assert.equal(result.internal, null);
   assert.equal(result.signalRequestId, "request-123");
+  assert.equal(result.errorCode, "AUTH_STATE_INVALID");
   assert.equal(result.recovered, 200);
   assert.equal(result.dropped, 1);
 });

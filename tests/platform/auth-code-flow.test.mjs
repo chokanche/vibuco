@@ -23,9 +23,11 @@ test("auth code flow validates PKCE, state, nonce, session rotation, expiry, and
     auth.validateIdentity(identity, config, transaction, 1002);
     const session = auth.sealSession(identity.subject, "synthetic-session-key-with-32-characters", 1000);
     const opened = auth.openSession(session, "synthetic-session-key-with-32-characters", 1001);
+    const pilotGrant = auth.sealAuthPilotGrant(identity.subject, "synthetic-session-key-with-32-characters", 1000);
+    const pilot = auth.openAuthPilotGrant(pilotGrant, "synthetic-session-key-with-32-characters", 1001);
     const capture = (run) => { try { run(); return null; } catch (error) { return error.code; } };
     console.log(JSON.stringify({
-      url:start.url, returnTo:transaction.returnTo, code, opened,
+      url:start.url, returnTo:transaction.returnTo, code, opened, pilot,
       tampered:capture(() => auth.openAuthTransaction(cookie + "x", "synthetic-session-key-with-32-characters", 1001)),
       replay:capture(() => auth.openAuthTransaction(cookie, "synthetic-session-key-with-32-characters", 700000)),
       state:capture(() => auth.validateCallback(transaction, { state:"wrong", code:"synthetic-code-123", error:null })),
@@ -44,6 +46,7 @@ test("auth code flow validates PKCE, state, nonce, session rotation, expiry, and
   assert.equal(result.returnTo, "/workspace?deck=full");
   assert.equal(result.code, "synthetic-code-123");
   assert.equal(result.opened.subject, "cognito-subject");
+  assert.equal(result.pilot.subject, "cognito-subject");
   assert.equal(result.tampered, "AUTH_TRANSACTION_INVALID");
   assert.equal(result.replay, "AUTH_TRANSACTION_EXPIRED");
   assert.equal(result.state, "AUTH_STATE_INVALID");

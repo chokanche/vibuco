@@ -29,6 +29,11 @@ flag is configured with an Identity owner, purpose, expiry, and a false safe
 default. Turn its global value off to return the pilot cohort to the legacy
 flow immediately; preserve the Cognito user pool and do not mutate its users.
 
+An account-scoped pilot is bootstrapped with a short-lived, signed
+`__Host-vibuco-auth-pilot` grant issued by a server-side admin/entitlement
+operation. The sign-in route accepts no subject or cohort identifier from a
+request parameter, so callers cannot select their own rollout cohort.
+
 ## Signals and failure behavior
 
 Route completion telemetry carries only the request/trace IDs, route, outcome,
@@ -36,6 +41,11 @@ and stable auth error code. Callback failures clear the transaction cookie,
 redirect to the sign-in error state, and never disclose token, state, or
 identity details. Sign-out validates Origin when present, clears the local
 session, and redirects to the public confirmation state.
+
+Callback exchanges are limited to five attempts per signed transaction per
+minute and Cognito token/JWKS calls have a five-second timeout. The in-memory
+limiter is intentionally fail-closed per application instance; deployers must
+provide an equivalent shared limiter before horizontally scaling this route.
 
 ## Rollback
 

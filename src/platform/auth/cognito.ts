@@ -2,6 +2,12 @@ import "server-only";
 import { createPublicKey, verify } from "node:crypto";
 import type { OidcConfiguration, TokenExchange, VerifiedIdentity } from "./code-flow";
 
+const EXTERNAL_REQUEST_TIMEOUT_MS = 5_000;
+
+function externalRequest(url: string, init: RequestInit = {}): Promise<Response> {
+  return fetch(url, { ...init, signal: AbortSignal.timeout(EXTERNAL_REQUEST_TIMEOUT_MS) });
+}
+
 type JsonWebKey = Readonly<{ kty: string; kid?: string; use?: string; alg?: string; n?: string; e?: string }>;
 type JwtHeader = Readonly<{ alg: string; kid?: string }>;
 type JwtPayload = Readonly<{ sub?: string; iss?: string; aud?: string | string[]; nonce?: string; exp?: number }>;
@@ -21,7 +27,7 @@ export function createCognitoTokenExchange(configuration: OidcConfiguration): To
       code_verifier: codeVerifier,
       redirect_uri: redirectUri,
     });
-    const response = await fetch(configuration.tokenEndpoint, {
+    const response = await externalRequest(configuration.tokenEndpoint, {
       method: "POST",
       headers: { "content-type": "application/x-www-form-urlencoded", accept: "application/json" },
       body,
@@ -41,7 +47,7 @@ export async function verifyCognitoIdToken(token: string, configuration: OidcCon
   const header = decodeSegment<JwtHeader>(encodedHeader);
   const payload = decodeSegment<JwtPayload>(encodedPayload);
   if (header.alg !== "RS256" || !header.kid) throw new Error("unsupported JWT");
-  const jwksResponse = await fetch(`${configuration.issuer}/.well-known/jwks.json`, { cache: "no-store" });
+  const jwksResponse = await externalRequest(`${configuration.issuer}/.well-known/jwks.json`, { cache: "no-store" });
   if (!jwksResponse.ok) throw new Error("JWKS unavailable");
   const jwks = (await jwksResponse.json()) as { keys?: JsonWebKey[] };
   const key = jwks.keys?.find((candidate) => candidate.kid === header.kid && candidate.kty === "RSA" && candidate.use === "sig");

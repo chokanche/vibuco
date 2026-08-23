@@ -10,6 +10,7 @@ import {
 
 export const AUTH_TRANSACTION_COOKIE = "__Host-vibuco-auth";
 export const SESSION_COOKIE = "__Host-vibuco-session";
+export const AUTH_PILOT_COOKIE = "__Host-vibuco-auth-pilot";
 const AUTH_TRANSACTION_TTL_SECONDS = 10 * 60;
 const SESSION_TTL_SECONDS = 8 * 60 * 60;
 
@@ -60,6 +61,11 @@ export type VerifiedIdentity = Readonly<{
 export type Session = Readonly<{
   subject: string;
   issuedAt: number;
+  expiresAt: number;
+}>;
+
+export type AuthPilotGrant = Readonly<{
+  subject: string;
   expiresAt: number;
 }>;
 
@@ -162,6 +168,21 @@ export function openAuthTransaction(value: string, secret: string, now = Date.no
   }
   if (transaction.expiresAt <= now) throw new AuthError("AUTH_TRANSACTION_EXPIRED");
   return Object.freeze({ ...transaction, returnTo: safeReturnPath(transaction.returnTo) });
+}
+
+/** Server-issued bootstrap grant for an explicitly selected pilot subject. */
+export function sealAuthPilotGrant(subject: string, secret: string, now = Date.now()): string {
+  if (!subject || subject.length > 256) throw new AuthError("AUTH_TOKEN_INVALID");
+  return signed(base64Url(JSON.stringify({ subject, expiresAt: now + AUTH_TRANSACTION_TTL_SECONDS * 1000 })), secret);
+}
+
+export function openAuthPilotGrant(value: string, secret: string, now = Date.now()): AuthPilotGrant {
+  const payload = verified(value, secret, "AUTH_TRANSACTION_INVALID");
+  const grant = parseJson<AuthPilotGrant>(fromBase64Url(payload).toString("utf8"), "AUTH_TRANSACTION_INVALID");
+  if (!grant.subject || !Number.isFinite(grant.expiresAt) || grant.expiresAt <= now) {
+    throw new AuthError("AUTH_TRANSACTION_EXPIRED");
+  }
+  return Object.freeze(grant);
 }
 
 export function validateCallback(
