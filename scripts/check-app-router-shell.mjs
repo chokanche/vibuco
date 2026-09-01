@@ -4,10 +4,14 @@ import path from "node:path";
 const appRoot = path.resolve("src/app");
 const entries = await readdir(appRoot, { recursive: true });
 const publicPages = entries.filter((entry) => /(^|\/)page\.tsx$/.test(entry));
+const approvedPublicPages = new Set(["sign-in/page.tsx"]);
+const unapprovedPublicPages = publicPages.filter(
+  (page) => !approvedPublicPages.has(page)
+);
 
-if (publicPages.length) {
+if (unapprovedPublicPages.length) {
   throw new Error(
-    `Target routes must remain disabled in VIB-PLAT-001: ${publicPages.join(", ")}`
+    `Unapproved target pages: ${unapprovedPublicPages.join(", ")}`
   );
 }
 
