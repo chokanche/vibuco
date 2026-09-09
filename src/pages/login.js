@@ -1,38 +1,23 @@
 import Layout from "../../components/Layout";
 import Link from 'next/link';
 import NotLoggedIn from '../../components/auth/NotLoggedIn';
+import { useAuthControls } from '../../auth';
 
 const Login = () => {
-  const onSubmit = (e) => {
-    e.preventDefault();
+  const { login } = useAuthControls();
+  const onSubmit = () => {
+    // This remains the functional rollback entry for the existing hosted UI.
+    // Its configured callback owns the legacy post-login destination.
+    login();
   };
 
   const showForm = () => (
-    <form onSubmit={onSubmit}>
-      <div className="form-group">
-        <label htmlFor="email">Email address</label>
-        <input
-          type="email"
-          className="form-control"
-          id="email"
-          aria-describedby="emailHelp"
-          placeholder="Enter email"
-        />
-      </div>
-
-      <div className="form-group">
-        <label htmlFor="password">Password</label>
-        <input
-          type="password"
-          className="form-control"
-          id="password"
-          placeholder="Password"
-        />
-      </div>
-      <button type="submit" className="btn btn-primary">
+    <div>
+      <p>Continue to the secure sign-in service.</p>
+      <button type="button" onClick={onSubmit} className="btn btn-primary">
         Log in
       </button>
-    </form>
+    </div>
   )
 
   return (

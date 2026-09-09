@@ -17,13 +17,26 @@ for (const route of ["/", "/cards", "/about", "/contact", "/login"]) {
   }
 }
 
+const approvedTargetRoutes = new Set([
+  "/_not-found/page",
+  "/auth/callback/route",
+  "/auth/sign-in/route",
+  "/auth/sign-out/route",
+  "/sign-in/page",
+]);
 const enabledTargetRoutes = Object.keys(appManifest);
-if (enabledTargetRoutes.length) {
+const unapprovedTargetRoutes = enabledTargetRoutes.filter(
+  (route) => !approvedTargetRoutes.has(route)
+);
+const missingTargetRoutes = [...approvedTargetRoutes].filter(
+  (route) => !enabledTargetRoutes.includes(route)
+);
+if (unapprovedTargetRoutes.length || missingTargetRoutes.length) {
   throw new Error(
-    `VIB-PLAT-001 must not emit target routes: ${enabledTargetRoutes.join(", ")}`
+    `Unexpected target route manifest. Unapproved: ${unapprovedTargetRoutes.join(", ") || "none"}; missing: ${missingTargetRoutes.join(", ") || "none"}`
   );
 }
 
 console.log(
-  "Built route smoke passes; legacy routes remain and target routes are disabled."
+  "Built route smoke passes; legacy routes and approved Auth 001 routes are present."
 );

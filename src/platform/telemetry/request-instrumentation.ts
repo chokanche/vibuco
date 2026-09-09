@@ -12,6 +12,7 @@ function responseWithCorrelationHeaders(
   context: RequestContext
 ): Response {
   const headers = new Headers(response.headers);
+  headers.delete("x-vibuco-error-code");
   headers.set("x-request-id", context.requestId);
   headers.set("x-trace-id", context.traceId);
   return new Response(response.body, { headers, status: response.status, statusText: response.statusText });
@@ -30,6 +31,7 @@ export async function instrumentRequest(
 
   try {
     response = await handler(context);
+    errorCode = response.headers.get("x-vibuco-error-code") ?? undefined;
   } catch {
     errorCode = "INTERNAL_ERROR";
     response = new Response(null, { status: 500 });
