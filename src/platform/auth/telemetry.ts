@@ -1,5 +1,8 @@
 import "server-only";
-import { getServerConfig } from "@/platform/config/server";
+import {
+  DEPLOYMENT_ENVIRONMENTS,
+  type DeploymentEnvironment,
+} from "@/platform/config/server";
 import { createTelemetry, type TelemetryExporter } from "@/platform/telemetry/foundation";
 import { instrumentRequest } from "@/platform/telemetry/request-instrumentation";
 
@@ -9,6 +12,13 @@ const exporter: TelemetryExporter = {
   },
 };
 
+function deploymentEnvironmentForTelemetry(): DeploymentEnvironment {
+  const value = process.env.VIBUCO_ENV;
+  return DEPLOYMENT_ENVIRONMENTS.includes(value as DeploymentEnvironment)
+    ? (value as DeploymentEnvironment)
+    : "local";
+}
+
 export function instrumentAuthRequest(
   request: Request,
   route: string,
@@ -17,7 +27,7 @@ export function instrumentAuthRequest(
   return instrumentRequest(
     request,
     { route, actorClass: "anonymous" },
-    createTelemetry(exporter, getServerConfig().deploymentEnvironment),
+    createTelemetry(exporter, deploymentEnvironmentForTelemetry()),
     handler
   );
 }

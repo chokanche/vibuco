@@ -7,8 +7,13 @@ import { parseTargetAuthFlag, resolveAuthMode } from "@/platform/auth/rollout";
 import { instrumentAuthRequest } from "@/platform/auth/telemetry";
 
 export async function GET(request: Request): Promise<Response> {
-  const config = getServerConfig();
   return instrumentAuthRequest(request, "/auth/sign-in", async () => {
+    const targetAuthFlag = parseTargetAuthFlag(process.env.AUTH_TARGET_FLAG);
+    if (!targetAuthFlag) {
+      const returnTo = safeReturnPath(new URL(request.url).searchParams.get("returnTo"));
+      return NextResponse.redirect(new URL(`/login?returnTo=${encodeURIComponent(returnTo)}`, request.url));
+    }
+    const config = getServerConfig();
     if (!config.sessionKey) return NextResponse.json({ code: "AUTH_UNAVAILABLE" }, { status: 503, headers: { "x-vibuco-error-code": "AUTH_UNAVAILABLE" } });
     try {
     const returnTo = safeReturnPath(new URL(request.url).searchParams.get("returnTo"));
@@ -29,7 +34,7 @@ export async function GET(request: Request): Promise<Response> {
         // Invalid bootstrap grants cannot influence a rollout decision.
       }
     }
-    const evaluator = createFlagEvaluator({ get: async (key) => key === "target_auth" ? parseTargetAuthFlag(process.env.AUTH_TARGET_FLAG) : undefined });
+    const evaluator = createFlagEvaluator({ get: async (key) => key === "target_auth" ? targetAuthFlag : undefined });
     if ((await resolveAuthMode(evaluator, actorId)) === "legacy") {
       return NextResponse.redirect(new URL(`/login?returnTo=${encodeURIComponent(returnTo)}`, request.url));
     }
