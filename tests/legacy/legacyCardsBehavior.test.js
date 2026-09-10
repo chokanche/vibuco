@@ -72,3 +72,20 @@ test("keeps the current public route files available without target redirects", 
     assert.equal(fs.existsSync(routePath), true, `${route}.js should exist`);
   }
 });
+
+test("keeps the contact form compatible with the managed Next.js runtime", () => {
+  const contactPage = fs.readFileSync(
+    path.resolve(__dirname, "../../src/pages/contact.js"),
+    "utf8"
+  );
+  const formManifest = fs.readFileSync(
+    path.resolve(__dirname, "../../public/__forms.html"),
+    "utf8"
+  );
+
+  assert.match(contactPage, /formAction = "\/__forms\.html"/);
+  assert.match(formManifest, /<form name="contact" data-netlify="true" hidden>/);
+  for (const field of ["form-name", "email", "name", "subject", "message"]) {
+    assert.match(formManifest, new RegExp(`name="${field}"`));
+  }
+});

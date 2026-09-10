@@ -44,7 +44,7 @@ export default ({
   heading = <><span tw="text-vibuco-100">Get in touch</span><wbr/> with us.</>,
   description = "",
   submitButtonText = "Send",
-  formAction = "/msg-success",
+  formAction = "/__forms.html",
   formMethod = "POST",
   formName = "contact",
   textOnLeft = true,

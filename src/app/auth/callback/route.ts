@@ -14,10 +14,15 @@ function failureResponse(request: Request, code: string, status = 302): NextResp
 }
 
 export async function GET(request: NextRequest): Promise<Response> {
-  const config = getServerConfig();
   const transactionCookie = request.cookies.get(AUTH_TRANSACTION_COOKIE)?.value;
   return instrumentAuthRequest(request, "/auth/callback", async () => {
-    if (!config.sessionKey || !transactionCookie) {
+    if (!transactionCookie) {
+      const response = failureResponse(request, "AUTH_TRANSACTION_INVALID");
+      response.headers.set("x-vibuco-error-code", "AUTH_TRANSACTION_INVALID");
+      return response;
+    }
+    const config = getServerConfig();
+    if (!config.sessionKey) {
       const response = failureResponse(request, "AUTH_TRANSACTION_INVALID");
       response.headers.set("x-vibuco-error-code", "AUTH_TRANSACTION_INVALID");
       return response;
