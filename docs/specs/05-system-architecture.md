@@ -101,7 +101,7 @@ Local, preview, staging, and production are isolated. Production data and identi
 
 ## Deployment
 
-Build once, promote the same immutable artifact. Database migrations run as an explicit pre-deploy job with compatibility checks. The application uses expand/migrate/contract schema changes. Traffic shifts through health-checked canary or provider equivalent. Provider selection is `HUMAN-DECISION-002`; the application must remain standard Node.js and PostgreSQL to avoid lock-in.
+Build once, promote the same immutable artifact. Database migrations run as an explicit pre-deploy job with compatibility checks. The application uses expand/migrate/contract schema changes. Traffic shifts through health-checked canary or provider equivalent. `HUMAN-DECISION-002` approved Netlify as the managed Next.js/Node runtime on 2026-09-10; database-provider selection remains separately approval-gated. The application must remain standard Node.js and PostgreSQL to avoid lock-in.
 
 ## Architecture diagrams
 

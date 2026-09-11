@@ -98,15 +98,17 @@ Reversal difficulty: low.
 
 ## ADR-009: Provider-neutral application with managed runtime
 
-Status: Proposed, `HUMAN-DECISION-002`.
+Status: Accepted. `HUMAN-DECISION-002` approved on 2026-09-10.
 
-Context: current hosting is undocumented and target needs Node, Postgres, S3/CDN, secrets, canary, and telemetry.
-Decision: use a managed Node.js hosting provider selected by cost/security review; keep application contracts provider-neutral.
+Context: the target needs a managed Node.js runtime that supports Next.js server routes, middleware, deploy previews, headers, redirects, and telemetry. Netlify preview evidence demonstrated those capabilities using its managed Next.js Runtime. PostgreSQL provider selection is a separate approval gate.
+Decision: use the existing Netlify project as Vibuco's managed Next.js/Node runtime. Keep application contracts provider-neutral, validate staging before production activation, and do not treat this decision as approval of a database provider.
 Alternatives: Vercel, Netlify, AWS managed hosting, self-managed containers.
-Rationale: avoids an unsupported assumption in the specification.
-Trade-off: exact infrastructure tasks wait for approval.
-Migration: deploy staging before DNS cutover.
+Rationale: Netlify satisfies the required runtime behavior without adding a hosting vendor or forcing an application migration.
+Trade-off: Netlify-specific deployment configuration is permitted at the hosting boundary, while application and domain contracts must remain portable. Database selection, production activation, and any cost-cap change retain their own approval requirements.
+Migration: validate the same immutable artifact in staging before production activation. Do not change DNS as part of the runtime selection.
 Reversal difficulty: medium.
+Owner: Marko.
+Approval date: 2026-09-10.
 
 ## ADR-010: Privacy-safe first-party analytics events
 
