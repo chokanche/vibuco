@@ -26,7 +26,8 @@ Reversal difficulty: high after most routes migrate.
 
 ## ADR-003: PostgreSQL and Prisma as canonical target
 
-Status: Accepted subject to provider approval.
+Status: Accepted target technology; provider selection remains open under
+`HUMAN-DECISION-006`.
 
 Context: publication, translations, rights, entitlements, immutable versions, and audits require relationships and constraints.
 Decision: managed PostgreSQL with Prisma schema/migrations.
@@ -120,6 +121,25 @@ Alternatives: no analytics; broad third-party session replay.
 Rationale: enough product evidence without replay/privacy cost.
 Trade-off: less granular behavior analysis.
 Migration: start after event privacy tests.
+Reversal difficulty: low.
+
+## ADR-011: Provider-neutral operational telemetry export
+
+Status: Proposed, `HUMAN-DECISION-007`.
+
+Context: the provider-neutral telemetry contract is implemented, but no
+operational exporter or telemetry backend has been approved.
+Decision: select an operational telemetry adapter only after security, privacy,
+data-location, and cost review; keep the typed application signal independent
+from the selected backend.
+Alternatives: hosting-native telemetry; a managed standards-based backend; no
+external exporter until staging requires one.
+Rationale: preserves the tested application boundary without treating the
+hosting-runtime approval as permission to add another processor or vendor.
+Trade-off: dashboards, alerts, and production telemetry validation remain
+blocked until the adapter is approved.
+Migration: validate the adapter with synthetic staging signals before any
+production activation.
 Reversal difficulty: low.
 
 ## Decision protocol

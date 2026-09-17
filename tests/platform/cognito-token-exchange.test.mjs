@@ -29,8 +29,9 @@ test("Cognito code exchange validates a signed ID token before returning identit
     };
     const config = { authorizationEndpoint:"https://issuer.example/oauth2/authorize", tokenEndpoint:"https://issuer.example/oauth2/token", clientId:"synthetic-client", issuer:"https://issuer.example", redirectUri:"https://app.example/auth/callback" };
     const result = await createCognitoTokenExchange(config)({ code:"synthetic-code-123", codeVerifier:"verifier", redirectUri:config.redirectUri });
+    const redirectMismatch = await createCognitoTokenExchange(config)({ code:"synthetic-code-123", codeVerifier:"verifier", redirectUri:"https://attacker.example/auth/callback" }).then(() => null, (error) => error.message);
     const body = new URLSearchParams(tokenRequest.body);
-    console.log(JSON.stringify({ result, grantType:body.get("grant_type"), verifier:body.get("code_verifier"), redirectUri:body.get("redirect_uri"), requestSignals }));
+    console.log(JSON.stringify({ result, grantType:body.get("grant_type"), verifier:body.get("code_verifier"), redirectUri:body.get("redirect_uri"), redirectMismatch, requestSignals }));
   `;
   const child = spawnSync(process.execPath, ["--conditions=react-server", "--input-type=module", "--eval", source], { encoding: "utf8" });
   assert.equal(child.status, 0, child.stderr);
@@ -40,5 +41,6 @@ test("Cognito code exchange validates a signed ID token before returning identit
   assert.equal(result.grantType, "authorization_code");
   assert.equal(result.verifier, "verifier");
   assert.equal(result.redirectUri, "https://app.example/auth/callback");
+  assert.equal(result.redirectMismatch, "redirect URI mismatch");
   assert.deepEqual(result.requestSignals, [true, true]);
 });

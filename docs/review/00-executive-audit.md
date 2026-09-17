@@ -45,10 +45,13 @@ Stabilize production first, establish quality gates and contracts, build the new
 ## Human approvals required
 
 - `HUMAN-DECISION-001`: confirm whether full-deck access is invite-only, paid, or free.
-- `HUMAN-DECISION-002`: Netlify was approved as the managed Next.js/Node runtime on 2026-09-10. Managed PostgreSQL selection remains a separate approval gate.
+- `HUMAN-DECISION-002`: Netlify was approved as the managed Next.js/Node runtime on 2026-09-10.
 - `HUMAN-DECISION-003`: approve an asset-rights inventory and replacement plan before publication.
 - `HUMAN-DECISION-004`: confirm the legal entity, controller contact, and final policy text.
 - `HUMAN-DECISION-005`: confirm whether Hungarian remains launch-critical and fund professional language review.
+- `HUMAN-DECISION-006`: approve the managed PostgreSQL provider, region, and non-production environment budget.
+- `HUMAN-DECISION-007`: approve the operational telemetry exporter and backend after security, privacy, data-location, and cost review.
+- `HUMAN-DECISION-008`: approve the monthly operating-cost cap and anomaly-alert threshold.
 
 ## Audit evidence
 

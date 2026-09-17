@@ -23,7 +23,7 @@
 | NFR-017 | Browser support | Latest two stable Chrome, Safari, Firefox, Edge; current iOS/Android browser | Cross-browser E2E |
 | NFR-018 | Data integrity | Foreign keys/checks/unique constraints plus daily backup validation | DB test |
 | NFR-019 | Security patching | Critical actionable dependency issue <= 48 h; high <= 14 days | Security SLA |
-| NFR-020 | Cost control | Monthly forecast and anomaly alert; cap approved under HUMAN-DECISION-002 | FinOps review |
+| NFR-020 | Cost control | Monthly forecast and anomaly alert; cap approved under HUMAN-DECISION-008 | FinOps review |
 
 ## Service-level indicators
 
