@@ -22,6 +22,7 @@ test("auth code flow validates PKCE, state, nonce, session rotation, expiry, and
     const identity = { subject:"cognito-subject", issuer:config.issuer, audience:config.clientId, nonce:transaction.nonce, expiresAt:2000 };
     auth.validateIdentity(identity, config, transaction, 1002);
     const session = auth.sealSession(identity.subject, "synthetic-session-key-with-32-characters", 1000);
+    const rotatedSession = auth.sealSession(identity.subject, "synthetic-session-key-with-32-characters", 1000);
     const opened = auth.openSession(session, "synthetic-session-key-with-32-characters", 1001);
     const pilotGrant = auth.sealAuthPilotGrant(identity.subject, "synthetic-session-key-with-32-characters", 1000);
     const pilot = auth.openAuthPilotGrant(pilotGrant, "synthetic-session-key-with-32-characters", 1001);
@@ -32,8 +33,14 @@ test("auth code flow validates PKCE, state, nonce, session rotation, expiry, and
       replay:capture(() => auth.openAuthTransaction(cookie, "synthetic-session-key-with-32-characters", 700000)),
       state:capture(() => auth.validateCallback(transaction, { state:"wrong", code:"synthetic-code-123", error:null })),
       nonce:capture(() => auth.validateIdentity({ ...identity, nonce:"wrong" }, config, transaction, 1002)),
+      issuer:capture(() => auth.validateIdentity({ ...identity, issuer:"https://wrong.example" }, config, transaction, 1002)),
+      audience:capture(() => auth.validateIdentity({ ...identity, audience:"wrong-client" }, config, transaction, 1002)),
       expiredSession:capture(() => auth.openSession(session, "synthetic-session-key-with-32-characters", 30000000)),
-      unsafePath:capture(() => auth.safeReturnPath("https://attacker.example"))
+      unsafePath:capture(() => auth.safeReturnPath("https://attacker.example")),
+      sessionRotated:session !== rotatedSession,
+      cookieOptions:auth.authCookieOptions,
+      authTransactionMaxAge:auth.authTransactionMaxAge,
+      sessionMaxAge:auth.sessionMaxAge
     }));
   `;
   const child = spawnSync(process.execPath, ["--conditions=react-server", "--input-type=module", "--eval", source], { encoding: "utf8" });
@@ -51,15 +58,34 @@ test("auth code flow validates PKCE, state, nonce, session rotation, expiry, and
   assert.equal(result.replay, "AUTH_TRANSACTION_EXPIRED");
   assert.equal(result.state, "AUTH_STATE_INVALID");
   assert.equal(result.nonce, "AUTH_TOKEN_INVALID");
+  assert.equal(result.issuer, "AUTH_TOKEN_INVALID");
+  assert.equal(result.audience, "AUTH_TOKEN_INVALID");
   assert.equal(result.expiredSession, "AUTH_SESSION_EXPIRED");
   assert.equal(result.unsafePath, "AUTH_INVALID_RETURN_PATH");
+  assert.equal(result.sessionRotated, true);
+  assert.deepEqual(result.cookieOptions, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "lax",
+    path: "/",
+  });
+  assert.equal(result.authTransactionMaxAge, 600);
+  assert.equal(result.sessionMaxAge, 28_800);
 });
 
 test("auth rollout defaults to legacy and permits an explicitly flagged cohort", () => {
   const rolloutUrl = new URL("../../src/platform/auth/rollout.ts", import.meta.url).href;
   const flagsUrl = new URL("../../src/platform/flags/evaluator.ts", import.meta.url).href;
-  const source = `import { registerHooks } from "node:module"; registerHooks({resolve(s,c,n){if(s.startsWith(".")&&c.parentURL?.endsWith(".ts"))return {shortCircuit:true,url:new URL(s+".ts",c.parentURL).href};return n(s,c)}}); const {createFlagEvaluator}=await import(${JSON.stringify(flagsUrl)}); const {resolveAuthMode}=await import(${JSON.stringify(rolloutUrl)}); const off=createFlagEvaluator({get:async()=>undefined}); const cohort=createFlagEvaluator({get:async()=>({key:"target_auth",owner:"identity",purpose:"pilot",expiresAt:"2099-01-01T00:00:00Z",defaultValue:false,actorIds:["subject-1"]})}); console.log(JSON.stringify({off:await resolveAuthMode(off),cohort:await resolveAuthMode(cohort,"subject-1"),other:await resolveAuthMode(cohort,"other")}));`;
+  const source = `import { registerHooks } from "node:module"; registerHooks({resolve(s,c,n){if(s.startsWith(".")&&c.parentURL?.endsWith(".ts"))return {shortCircuit:true,url:new URL(s+".ts",c.parentURL).href};return n(s,c)}}); const {createFlagEvaluator}=await import(${JSON.stringify(flagsUrl)}); const {parseTargetAuthFlag,resolveAuthMode,targetAuthFlagCanEnable}=await import(${JSON.stringify(rolloutUrl)}); const definition={key:"target_auth",owner:"identity",purpose:"pilot",expiresAt:"2099-01-01T00:00:00Z",defaultValue:false,actorIds:["subject-1"]}; const off=createFlagEvaluator({get:async()=>undefined}); const cohort=createFlagEvaluator({get:async()=>definition}); const disabled={...definition,globalValue:false}; const expired={...definition,expiresAt:"2020-01-01T00:00:00Z"}; console.log(JSON.stringify({off:await resolveAuthMode(off),cohort:await resolveAuthMode(cohort,"subject-1"),other:await resolveAuthMode(cohort,"other"),cohortCanEnable:targetAuthFlagCanEnable(definition,1000),disabledCanEnable:targetAuthFlagCanEnable(disabled,1000),expiredCanEnable:targetAuthFlagCanEnable(expired,Date.parse("2021-01-01T00:00:00Z")),malformedIsUndefined:parseTargetAuthFlag(JSON.stringify({key:"target_auth"}))===undefined}));`;
   const child = spawnSync(process.execPath, ["--conditions=react-server", "--input-type=module", "--eval", source], { encoding: "utf8" });
   assert.equal(child.status, 0, child.stderr);
-  assert.deepEqual(JSON.parse(child.stdout), { off: "legacy", cohort: "target", other: "legacy" });
+  assert.deepEqual(JSON.parse(child.stdout), {
+    off: "legacy",
+    cohort: "target",
+    other: "legacy",
+    cohortCanEnable: true,
+    disabledCanEnable: false,
+    expiredCanEnable: false,
+    malformedIsUndefined: true,
+  });
 });

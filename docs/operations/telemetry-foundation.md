@@ -20,7 +20,7 @@ contract.
 
 Exporter errors are caught, increment `telemetry.dropped`, and cannot change
 the route response. Provider adapters are deferred pending
-`HUMAN-DECISION-002`; they receive only the typed signal and must not add raw
+`HUMAN-DECISION-007`; they receive only the typed signal and must not add raw
 request headers, cookies, URLs, identities, or content.
 
 ## Rollback

@@ -159,7 +159,7 @@ No destructive database contraction, identity deletion, policy revocation, or Dy
 
 ## Launch gates
 
-- `HUMAN-DECISION-001` through `005` resolved where applicable
+- `HUMAN-DECISION-001` through `008` resolved where applicable
 - critical acceptance tests AT-001 through AT-035 pass
 - no open critical/high security, privacy, rights, or accessibility defect
 - production synthetic, dashboards, alerts, and runbooks verified
