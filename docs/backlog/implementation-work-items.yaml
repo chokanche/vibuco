@@ -143,6 +143,7 @@ items:
     likely_files:
       - scripts/synthetic-cards.mjs
       - .github/workflows/cards-synthetic.yml
+      - .github/workflows/ci.yml
       - src/pages/cards.js, only if application evidence requires it
       - actions/getDataFromDDBTable.js, only if dependency evidence requires it
       - docs/runbooks/core-workspace-unavailable.md
