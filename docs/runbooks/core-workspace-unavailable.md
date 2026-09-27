@@ -3,6 +3,43 @@
 Status: Validated during the 2026-07-27 legacy production recovery
 Primary diagnostic code: `TLS_HOSTNAME_MISMATCH`
 
+## 2026-09-27 recurrence: anonymous cards unavailable
+
+The historical `.com` TLS incident below is no longer the current public
+failure. `www.vibuco.app` is the canonical host and serves `/cards` over
+standard HTTPS with HTTP 200, but the page reaches its named "Cards are
+temporarily unavailable" alert instead of a gallery. The Netlify fallback
+hostname reaches the same alert. A successful HTTP response therefore does
+not establish card availability.
+
+The legacy anonymous path obtains Cognito identity-pool credentials in the
+browser and scans the public DynamoDB table before mapping metadata to the
+checked-in image files. This evidence bounds the failure to the client-side
+content dependency path; it does not distinguish missing build configuration,
+Cognito credential failure, DynamoDB status/policy, or malformed metadata.
+Do not publish fallback prompts or widen browser IAM to mask the failure.
+
+The scheduled synthetic still used the retired `.com` hostname at the start
+of this incident. The `VIB-STAB-005` patch points it at `www.vibuco.app/cards`
+and reports `cards_unavailable` when the visible alert appears. Its live run
+remains failing until a real gallery load and prompt reveal pass.
+
+Required next evidence: the AWS owner named through
+`ACCESS-VIB-STAB-005-001` must provide redacted identity-pool credential and
+public DynamoDB scan outcomes, resource status, and relevant policy changes.
+Marko can verify the presence of required Netlify build-environment keys
+without sharing their values. Access to the Netlify secret-settings page was
+denied in the agent's browser review because it may expose credentials; do
+not use another surface to retrieve those values. Any production AWS or
+Netlify mutation needs a separately approved exact change and rollback.
+
+Verification after an approved repair: use a standard browser at
+`https://www.vibuco.app/cards`, wait for the anonymous gallery, reveal one
+prompt, and run the scheduled synthetic twice without a retry-masked failure.
+Confirm `/`, `/about`, `/contact`, and `/login` still load. If application code
+or build configuration changes, retain the previous immutable Netlify deploy
+for rollback and make the rollback decision within 15 minutes.
+
 ## Symptoms
 
 - A standard browser refuses to open `https://www.vibuco.com`.
@@ -165,8 +202,9 @@ logs indicate unauthorized access, or evidence contains prohibited data.
 ## Scheduled guard
 
 `.github/workflows/cards-synthetic.yml` runs every 15 minutes and can also be
-started manually. It opens the production `/cards` route in Chromium, waits for
-the anonymous gallery, reveals one card, and emits only structured status,
+started manually. It opens the canonical production `/cards` route in
+Chromium, waits for the anonymous gallery, reveals one card, and emits only
+structured status,
 duration, route, request/trace ID, and actor classification. It never prints
 prompt text, image URLs, credentials, or contact data.
 
