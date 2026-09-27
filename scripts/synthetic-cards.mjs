@@ -1,7 +1,7 @@
 import { chromium } from "@playwright/test";
 
 const targetUrl =
-  process.env.VIBUCO_SYNTHETIC_URL || "https://www.vibuco.com/cards";
+  process.env.VIBUCO_SYNTHETIC_URL || "https://www.vibuco.app/cards";
 const startedAt = Date.now();
 const requestId = `synthetic-${startedAt}-${Math.random()
   .toString(36)
@@ -37,11 +37,25 @@ try {
   }
 
   const cards = page.locator(".react-photo-gallery--gallery img");
-  await cards.first().waitFor({ state: "visible", timeout: 15000 });
+  const cardFailure = page.locator("#cards-load-error-title");
+  await page
+    .locator(".react-photo-gallery--gallery img, #cards-load-error-title")
+    .first()
+    .waitFor({ state: "visible", timeout: 15000 })
+    .catch(() => {
+      throw new Error("cards_not_ready");
+    });
+  if (await cardFailure.isVisible()) {
+    throw new Error("cards_unavailable");
+  }
   await cards.first().click();
 
   const revealedPrompt = page.locator(".popup .text-container p");
-  await revealedPrompt.waitFor({ state: "visible", timeout: 5000 });
+  await revealedPrompt
+    .waitFor({ state: "visible", timeout: 5000 })
+    .catch(() => {
+      throw new Error("reveal_unavailable");
+    });
 
   if (!(await revealedPrompt.textContent())?.trim()) {
     throw new Error("reveal_empty");
@@ -51,6 +65,9 @@ try {
 } catch (error) {
   const safeReasons = new Set([
     "route_unavailable",
+    "cards_not_ready",
+    "cards_unavailable",
+    "reveal_unavailable",
     "reveal_empty",
   ]);
   const reason = safeReasons.has(error.message)

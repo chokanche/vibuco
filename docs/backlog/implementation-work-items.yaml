@@ -130,6 +130,41 @@ items:
     milestone: M1
     status: done
 
+  - id: VIB-STAB-005
+    epic: Stabilization
+    title: Restore anonymous cards and repair production synthetic after domain cutover
+    purpose: Diagnose the renewed public card-load failure without redesigning the legacy path, restore the approved content dependency, and monitor the current canonical domain.
+    specification_references:
+      - docs/specs/10-testing-quality-observability.md
+      - docs/specs/11-migration-and-redesign-plan.md
+      - docs/specs/17-observability-reliability.md
+      - docs/specs/21-non-functional-requirements-slos.md
+    dependencies: [VIB-STAB-002, VIB-STAB-004]
+    likely_files:
+      - scripts/synthetic-cards.mjs
+      - .github/workflows/cards-synthetic.yml
+      - .github/workflows/ci.yml
+      - src/pages/cards.js, only if application evidence requires it
+      - actions/getDataFromDDBTable.js, only if dependency evidence requires it
+      - docs/runbooks/core-workspace-unavailable.md
+    acceptance_criteria:
+      - The anonymous card route loads the approved public deck and reveals one prompt over standard HTTPS at www.vibuco.app.
+      - The scheduled production synthetic targets the canonical domain and passes without bypassing a failed card load.
+      - The root cause, owner, verification, and rollback are documented; any unapproved AWS or production mutation is recorded as a blocker.
+    testing_requirements:
+      - Reproduce and classify the failure; run the anonymous load-and-reveal browser check and relevant characterization tests.
+      - Run build, type, lint, specification validation, and the required CI checks.
+    observability_requirements: Preserve privacy-safe route and synthetic outcome signals with actionable failure classification.
+    security_requirements: Do not widen IAM, expose secrets, or substitute unapproved content.
+    accessibility_requirements: Keep error and retry states keyboard reachable and announced.
+    complexity: M
+    estimated_effort: 1-2 days
+    suggested_owner: Reliability agent
+    branch_name: agent/vib-stab-005-cards-incident
+    commit_prefix: "fix(stability):"
+    milestone: M0
+    status: blocked
+
   - id: VIB-PLAT-001
     epic: Platform
     title: Introduce TypeScript App Router shell

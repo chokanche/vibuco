@@ -3,6 +3,23 @@
 Status: Recovered production baseline for `VIB-STAB-001` and `VIB-STAB-002`
 Evidence captured: 2026-07-26T15:58:02Z; recovery verified 2026-07-27T20:49Z
 
+## Current domain and card status (2026-09-27)
+
+The canonical public host is now `www.vibuco.app` on the existing Netlify
+project `practical-austin-91bfaf`. Porkbun DNS has an apex ALIAS to
+`apex-loadbalancer.netlify.com` and a `www` CNAME to the project's
+`netlify.app` hostname; the apex redirects to `www`. Standard HTTPS serves
+the home and public information routes. This change did not select Porkbun
+hosting or change the application artifact.
+
+The anonymous `/cards` page returns HTTP 200 but subsequently displays
+"Cards are temporarily unavailable" on both the canonical host and the
+Netlify fallback. The scheduled load-and-reveal check is failing. The
+`VIB-STAB-005` incident and the
+[core-workspace runbook](../runbooks/core-workspace-unavailable.md) track the
+content-dependency investigation. The July `.com` observations below are
+historical evidence, not a current availability claim.
+
 This document describes the observable legacy production path. It does not grant
 permission to change Netlify, DNS, Cognito, DynamoDB, S3, or their credentials.
 All identifiers below are public DNS names, repository-defined logical resource

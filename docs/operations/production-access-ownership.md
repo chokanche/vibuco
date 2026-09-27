@@ -57,6 +57,23 @@ or documentation. It blocks the corresponding private read or mutation.
 | `ACCESS-VIB-STAB-001-002` | Product owner to route to the domain registrant or DNS administrator | Confirm zone ownership, intended records, TTLs, and DNS rollback procedure | DNS owner and intended/previous records are recorded |
 | `ACCESS-VIB-STAB-001-003` | Product owner to route to the AWS account owner | Read-only Cognito configuration/auth failures, DynamoDB table status/failures, and S3 policy/access failures | AWS owner and redacted dependency evidence are recorded |
 | `ACCESS-VIB-STAB-001-004` | Product owner | Name the incident change approver, rollback operator, previous known-good state, and maximum decision time | Production-change gate is fully assigned |
+| `ACCESS-VIB-STAB-005-001` | Product owner to name the AWS account owner | Read-only, redacted Cognito identity-pool credential outcomes and public DynamoDB table status, scan failures, and policy-change history for the anonymous cards path | Owner and failure boundary are recorded; any proposed IAM, table, or build-configuration mutation has its own exact approval and rollback |
+
+## 2026-09-27 card incident access boundary
+
+`www.vibuco.app/cards` and the Netlify fallback both display the application's
+card-unavailable alert after successful HTTPS/HTTP delivery. Repository code
+shows that the anonymous path obtains Cognito identity-pool credentials and
+scans DynamoDB from the browser. Public evidence cannot identify which AWS
+operation failed. `ACCESS-VIB-STAB-005-001` is the named escalation; the AWS
+owner and read role remain unconfirmed.
+
+The agent's attempt to inspect Netlify environment settings was denied by
+browser access review because secret values might be exposed. That denial is
+not evidence that a variable is absent or incorrect. Marko, the confirmed
+Netlify project owner, may report only whether the required public build keys
+are present in the production deploy, without disclosing values. Do not use
+another interface to work around the denied secret-settings access.
 
 ## Approved certificate change
 
