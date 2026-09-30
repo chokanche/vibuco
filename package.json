@@ -70,7 +70,7 @@
     "@types/react": "18.3.31",
     "@types/react-dom": "18.3.7",
     "autoprefixer": "^9.8.0",
-    "babel-plugin-inline-react-svg": "^1.1.1",
+    "babel-plugin-inline-react-svg": "^2.0.2",
     "babel-plugin-root-import": "^6.4.1",
     "css-loader": "^4.3.0",
     "emotion-server": "^10.0.27",
