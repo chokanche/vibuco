@@ -24,7 +24,7 @@ of this incident. The `VIB-STAB-005` patch points it at `www.vibuco.app/cards`
 and reports `cards_unavailable` when the visible alert appears. Its live run
 remains failing until a real gallery load and prompt reveal pass.
 
-Required next evidence: the AWS owner named through
+The initial required evidence (resolved by the 2026-10-04 diagnosis below): the AWS owner named through
 `ACCESS-VIB-STAB-005-001` must provide redacted identity-pool credential and
 public DynamoDB scan outcomes, resource status, and relevant policy changes.
 Marko can verify the presence of required Netlify build-environment keys
@@ -40,7 +40,56 @@ Confirm `/`, `/about`, `/contact`, and `/login` still load. If application code
 or build configuration changes, retain the previous immutable Netlify deploy
 for rollback and make the rollback decision within 15 minutes.
 
-## Symptoms
+## 2026-10-04 diagnosis and repository repair (VIB-STAB-005)
+
+Marko signed into the verified production AWS account `775286336077`
+(`vibuco-prod`) in Frankfurt (`eu-central-1`). Production Netlify configuration
+identifies Cognito user pool `eu-central-1_vz511x5xQ` and identity pool
+`eu-central-1:695a8338-72e2-4714-91d8-7dcc3ed6254c`. An anonymous identity-pool
+credential request and STS caller-identity check confirmed that account. Only
+the account identifier was retained; credentials were never logged.
+
+The public `vibuco-photos-public` metadata scan returned 16 records. All have a
+valid image basename and lack dimensions. Each matching source file exists in
+the repository's legacy `static/` directory, but all 16 `/static/` image requests
+returned HTTP 404 on `www.vibuco.app`. The published cards bundle still uses
+those URLs. `getImageAspectRatio` rejects on an image-load failure, which causes
+the gallery's `Promise.all` to reject and display its unavailable alert.
+
+Root cause: the published Netlify artifact omits the legacy card assets outside
+Next.js's supported `public/` directory. This is an application artifact failure, not evidence of a
+Cognito or DynamoDB permission failure. The repair copies the existing 16 card
+fronts and two card backs, byte-for-byte, into `public/static/`; URLs, prompts,
+deck membership, original files, and error handling remain unchanged. Existing
+route and synthetic signals remain the verification mechanism. The temporary
+duplicate assets belong to VIB-STAB-005 and are retired with legacy assets in
+migration phase M6, not during the rollback window.
+
+Owner/change approver: Marko. Required remaining access: repository merge and
+Netlify published-deploy/synthetic verification; no IAM, database, DNS, or
+Netlify configuration write is needed. VIB-STAB-005 remains `in_progress` until
+the production gallery, prompt reveal, and two synthetic runs pass. A green
+local build or HTTP 200 for `/cards` alone is insufficient.
+
+Before release, record the then-current immutable production deploy. The
+observed pre-repair deployment is `6ab96f0830b21a00087538cd` (source `e205705`).
+Marko may approve promoting the previous artifact or reverting this asset-only
+commit; the prior artifact is known to have unavailable cards, so that rollback
+only contains a new regression and does not restore the gallery. No data
+reversal is necessary. Decide within 15 minutes of a regression and rerun
+standard HTTPS route probes and the load-and-reveal synthetic after any deploy.
+
+Repository validation passed: seven stability tests (including asset byte
+equality/JPEG signatures), eight legacy unit tests, two characterization browser
+journeys, 16 platform tests, TypeScript, module/shell/route guards, specification
+validation, and the production build. All 18 image URLs on the built local
+server return HTTP 200 JPEG with byte-identical bodies. The existing anonymous
+load-and-reveal synthetic passes against that local build using the approved
+public AWS read path. No separate lint script exists in the current baseline;
+required Baseline CI remains unchanged and must pass on the PR. Production
+activation and provider mutations are not performed by this repository repair.
+
+## Historical TLS incident symptoms
 
 - A standard browser refuses to open `https://www.vibuco.com`.
 - curl returns code 60 and HTTP 000 with a certificate hostname mismatch.

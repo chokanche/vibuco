@@ -75,6 +75,24 @@ Netlify project owner, may report only whether the required public build keys
 are present in the production deploy, without disclosing values. Do not use
 another interface to work around the denied secret-settings access.
 
+## 2026-10-04 VIB-STAB-005 access resolution
+
+Marko confirmed ownership and signed into `vibuco-prod`, AWS account
+`775286336077`, in `eu-central-1`. Read-only resource inspection and anonymous
+public-path diagnostics resolved `ACCESS-VIB-STAB-005-001`: Cognito guest
+credentials and the 16-record public DynamoDB scan succeed. All corresponding
+website image URLs return 404; the exact failure is missing published legacy
+assets, documented in the core-workspace runbook. No policy-change audit was
+needed to explain this failure, and authenticated full-deck health remains
+unverified.
+
+The earlier blanket Netlify secret-settings denial remains in force. Subsequent
+owner-authorized inspection was restricted to named public AWS configuration
+references; it does not grant permission to inspect secret values or IAM users.
+Remaining acceptance requires Marko's repository merge/release approval and
+post-deploy load-and-reveal verification. No AWS/Netlify/DNS configuration
+mutation is proposed or authorized by this asset-only repair.
+
 ## Approved certificate change
 
 Change approver and rollback authority: Marko.
