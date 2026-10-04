@@ -163,7 +163,7 @@ items:
     branch_name: agent/vib-stab-005-cards-incident
     commit_prefix: "fix(stability):"
     milestone: M0
-    status: blocked
+    status: in_progress
 
   - id: VIB-PLAT-001
     epic: Platform
