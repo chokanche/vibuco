@@ -145,3 +145,19 @@ Required human action: the product owner/TPM confirms `VIB-WS-001` as the next
 work item and assigns its Workspace owner. After the auth review-fix PR passes
 and merges, one status commit may set `VIB-AUTH-001` to `done` and
 `VIB-WS-001` to `ready`. Do not start `VIB-DATA-001` as part of that transition.
+
+
+## 2026-10-05 readiness update
+
+Marko requested incident closure, a separate database approval, and continuation
+of one eligible redesign item. The implementing Workspace agent owns
+`VIB-WS-001`; its dependency and specification/test-fixture gates were verified
+and it was claimed on its specified branch. This authorization satisfies the
+successor selection gate above.
+
+`HUMAN-DECISION-006` remains pending. The request to approve a database does not
+identify a provider, region, budget or responsible operators. The approval brief
+and `ACCESS-VIB-DATA-001-001` through `003` above remain the concrete unblock
+checklist. No provider approval is inferred from Netlify hosting approval;
+`VIB-DATA-001` stays `planned` until those decisions are recorded. No staging
+resource or database credentials were created by this workspace slice.
