@@ -67,9 +67,8 @@ migration phase M6, not during the rollback window.
 
 Owner/change approver: Marko. Required remaining access: repository merge and
 Netlify published-deploy/synthetic verification; no IAM, database, DNS, or
-Netlify configuration write is needed. VIB-STAB-005 remains `in_progress` until
-the production gallery, prompt reveal, and two synthetic runs pass. A green
-local build or HTTP 200 for `/cards` alone is insufficient.
+Netlify configuration write is needed. VIB-STAB-005 is closed after the production verification recorded below. A
+green local build or HTTP 200 for `/cards` alone is insufficient.
 
 Before release, record the then-current immutable production deploy. The
 observed pre-repair deployment is `6ab96f0830b21a00087538cd` (source `e205705`).
@@ -88,6 +87,43 @@ load-and-reveal synthetic passes against that local build using the approved
 public AWS read path. No separate lint script exists in the current baseline;
 required Baseline CI remains unchanged and must pass on the PR. Production
 activation and provider mutations are not performed by this repository repair.
+
+## 2026-10-05 production recovery and incident closure
+
+`VIB-STAB-005` is `done`. Marko owns the incident change and rollback.
+The asset-only repair merged in PR #36; no AWS permission or data change was
+needed. Anonymous visitors can again load the existing public cards and reveal
+a prompt at `https://www.vibuco.app/cards` with standard TLS verification.
+
+Recovery evidence (UTC):
+
+- The scheduled anonymous load-and-reveal check first recovered at
+  [2026-10-04 21:27:54](https://github.com/chokanche/vibuco/actions/runs/37236194999).
+- Two subsequent scheduled runs passed without retry masking:
+  [2026-10-05 00:03:22](https://github.com/chokanche/vibuco/actions/runs/37245969032)
+  and [2026-10-05 05:32:34](https://github.com/chokanche/vibuco/actions/runs/37268246969).
+  Both executed the gallery-load and nonempty prompt-reveal step successfully.
+- A fresh local invocation of the same production synthetic on 2026-10-05
+  passed in 4510 ms. Standard HTTPS probes of `/`, `/about`, `/contact`, and
+  `/login` all returned 200. No prompts, credentials, or signed URLs were retained.
+- [Baseline CI on current master](https://github.com/chokanche/vibuco/actions/runs/37236239694)
+  passed for `f88a9e1`, covering the required build, type, boundaries,
+  specifications, stability, platform, and characterization checks.
+  This baseline has no separate lint command.
+
+The last observed failure was the scheduled run at 2026-10-04 18:14:31;
+recovery is bounded by that failure and the first passing run above, rather
+than an assumed deployment time. Impact was anonymous card unavailability
+following the domain cutover; metadata access succeeded but omitted static
+images caused the gallery load to reject. The prior artifact and 15-minute
+rollback decision remain as documented above. Authenticated production behavior
+and the seven-day stabilization SLO are not established by these anonymous checks.
+
+Continue the canonical-domain scheduled guard. Retire duplicate legacy assets
+only under `VIB-REL-004` after rollback expiry. The product owner's 2026-10-05
+instruction authorizes the next isolated work item, `VIB-WS-001`, owned by the
+implementing Workspace agent; `VIB-STAB-004` is done and synthetic test fixtures
+need no database. Database approval remains separate under `HUMAN-DECISION-006`.
 
 ## Historical TLS incident symptoms
 
