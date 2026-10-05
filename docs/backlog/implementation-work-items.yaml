@@ -702,7 +702,7 @@ items:
     branch_name: agent/vib-ws-001-state-machine
     commit_prefix: "feat(workspace):"
     milestone: M3
-    status: ready
+    status: in_progress
 
   - id: VIB-WS-002
     epic: Workspace
