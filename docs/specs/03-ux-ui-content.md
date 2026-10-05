@@ -58,6 +58,44 @@ Presets:
 
 Changing a preset updates controls atomically. The facilitator may then adjust individual controls.
 
+### Domain interaction contract (VIB-WS-001)
+
+The workspace starts from the supplied preset and an opaque, randomly generated
+128-bit seed. Shuffle derives a fresh permutation from the canonical deck,
+never from a previously shuffled order. Repeating a seed reproduces the order.
+The caller generates seeds without identity or timestamp information; they are
+not authentication tokens. Face-down numbering remains stable until shuffle or
+reset. Changing individual controls leaves the last selected preset available
+as context without reapplying it.
+
+Selecting a card reveals its image in the focused view regardless of grid
+orientation; its prompt still follows the independent prompt control. Face-down
+grid cards expose neither image nor prompt content. Presentation requires a
+selected card; closing the focused view also exits presentation. Preset and
+shuffle actions preserve the selected card ID and current presentation state.
+
+Reset requires explicit confirmation. Cancellation changes nothing. Confirmation
+restores the initial preset, initial seed and initial order, closes the selected
+card, and exits presentation while retaining the current locale. The domain
+retains only bounded card IDs and controls, with no image URLs, prompt text or
+coaching content. Local typed intents are mapped by the future session adapter;
+`shuffled` and `reset` are local control intents, not new analytics event names.
+
+Accessible state copy:
+
+| Context | Copy |
+| --- | --- |
+| Card name | `Card {position} of {count}, image shown` or `Card {position} of {count}, image hidden` |
+| Image control state | `Images shown` / `Images hidden` |
+| Prompt control state | `Prompts shown` / `Prompts hidden` |
+| Shuffle completion, polite live region | `Cards shuffled` |
+| Confirmed reset completion, polite live region | `Session reset` |
+
+Image/prompt control actions use the core microcopy below. Hidden card names
+contain only position and orientation, never hidden image or prompt descriptions.
+This domain slice exposes labels and visibility decisions; dialog semantics,
+focus handling and live-region rendering remain the dependent UI work items.
+
 ## Responsive composition
 
 - 320-639 px: two-column card grid, bottom-sheet controls, full-width focused dialog.
