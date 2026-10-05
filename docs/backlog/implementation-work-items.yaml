@@ -165,7 +165,7 @@ items:
     branch_name: agent/vib-stab-005-cards-incident
     commit_prefix: "fix(stability):"
     milestone: M0
-    status: in_progress
+    status: done
 
   - id: VIB-PLAT-001
     epic: Platform
@@ -702,7 +702,7 @@ items:
     branch_name: agent/vib-ws-001-state-machine
     commit_prefix: "feat(workspace):"
     milestone: M3
-    status: planned
+    status: ready
 
   - id: VIB-WS-002
     epic: Workspace
